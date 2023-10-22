@@ -35,7 +35,11 @@ out/
 
 ### VS Code ###
 .vscode/
-/apispecs/src/main/java/
+apispecs/src/main/java/.openapi-generator
+apispecs/src/main/java/generater/openapi
+/apispecs/src/main/java/.openapi-generator-ignore
+/apispecs/src/main/java/pom.xml
+/apispecs/src/main/java/README.md
 /mbGenerator/src/main/java/com/tdtu/mbGenerator/generate/
 /mbGenerator/src/main/resources/com/tdtu/mbGenerator/generate/
 .DS_Store
