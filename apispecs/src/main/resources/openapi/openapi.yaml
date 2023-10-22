@@ -1,0 +1,508 @@
+openapi: 3.0.0
+info:
+  title: Web Project API
+  description: Api connect to Database
+  version: 0.0.1
+  license:
+    name: TDTU Web Project
+servers:
+  - url: http://XXXXX/v1
+    description: Develop server
+  - url: http://XXXXX.com
+    description: Product server
+paths:
+
+  #    Start here
+
+  /v1/employee:
+    get:
+      tags:
+        - Employee
+      summary: Api for get Employee
+      operationId: employee
+      parameters:
+        - name: employeeId
+          in: query
+          schema:
+            type: string
+            pattern: '^[0-9]{1,19}$'
+            example: '123456'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmployeeResponse'
+
+  #    End here
+
+components:
+  parameters:
+    xForwardedRole:
+      in: header
+      name: x-forwarder-role
+      required: true
+      schema:
+        type: string
+    xForwardedEmployeeId:
+      in: header
+      name: x-forwarder-employee-id
+      required: true
+      schema:
+        type: string
+    xForwardedUser:
+      in: header
+      name: x-forwarder-user
+      required: true
+      schema:
+        type: string
+  schemas:
+    WebApiErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebApiErrorDetails'
+    WebApiErrorDetails:
+      type: object
+      properties:
+        field:
+          type: string
+        errorCd:
+          type: string
+        message:
+          type: string
+        errorIdList:
+          type: array
+          items:
+            type: integer
+            example: 1
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 400
+        message:
+          type: string
+
+    #    Start here
+
+    EmployeeResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            employee:
+              description: Employee list
+              type: array
+              items:
+                $ref: '#/components/schemas/EmployeeDetailResponse'
+            resultsTotalCount:
+              description: Number of Employee with condition
+              type: integer
+              format: int64
+              example: 1000
+    EmployeeDetailResponse:
+      type: object
+      properties:
+        ID:
+          description: ID of Employee
+          type: integer
+          format: int32
+          example: 200
+        EmployeeCode:
+          description: Code of Employee
+          type: string
+          example: '123456'
+        FirstName:
+          description: First Name of Employee
+          type: string
+          example: '123456'
+        FullName:
+          description: First Name of Employee
+          type: string
+          example: '123456'
+        CommonName:
+          description: Common Name of Employee
+          type: string
+          example: '123456'
+        Gender:
+          description: Gender of Employee
+          type: boolean
+          example: true
+        Images:
+          description: Images of Employee
+          type: string
+          example: '123456'
+        Birthday:
+          description: Birthday of Employee
+          type: string
+          example: '123456'
+        PlaceOfBirth:
+          description: Place Of Birth of Employee
+          type: string
+          example: '123456'
+        Married:
+          description: Married of Employee
+          type: boolean
+          example: true
+        Address:
+          description: Address of Employee
+          type: string
+          example: '123456'
+        AddressTmp:
+          description: AddressTmp of Employee
+          type: string
+          example: '123456'
+        Phone:
+          description: Phone of Employee
+          type: string
+          example: '123456'
+        Email:
+          description: Email of Employee
+          type: string
+          example: '123456'
+        CCCD:
+          description: CCCD of Employee
+          type: string
+          example: '123456'
+        DateCCCD:
+          description: Date CCCD of Employee
+          type: string
+          example: '123456'
+        IssuedBy:
+          description: Issued by of Employee
+          type: string
+          example: '123456'
+        DateStartWord:
+          description: Date start word of Employee
+          type: string
+          example: '123456'
+        Health:
+          description: Health of Employee
+          type: string
+          example: '123456'
+        Height:
+          description: Height of Employee
+          type: integer
+          format: int32
+          example: 200
+        Weight:
+          description: Weight of Employee
+          type: integer
+          format: int32
+          example: 200
+        StatusWork:
+          description: Status work of Employee
+          type: integer
+          format: int32
+          example: 200
+        NationalityID:
+          description: NationalityID of Employee
+          type: integer
+          format: int32
+          example: 200
+        NationID:
+          description: NationID of Employee
+          type: integer
+          format: int32
+          example: 200
+        ReligionID:
+          description: ReligionID of Employee
+          type: integer
+          format: int32
+          example: 200
+        DegreeID:
+          description: DegreeID of Employee
+          type: integer
+          format: int32
+          example: 200
+        ForeignID:
+          description: ForeignID of Employee
+          type: integer
+          format: int32
+          example: 200
+        BHXH:
+          description: BHXH of Employee
+          type: boolean
+          example: true
+        BHYT:
+          description: BHYT of Employee
+          type: boolean
+          example: true
+        BHTN:
+          description: BHTN of Employee
+          type: boolean
+          example: true
+        UnionDues:
+          description: UnionDues of Employee
+          type: boolean
+          example: true
+        Authority:
+          description: Authority of Employee
+          type: boolean
+          example: true
+        Note:
+          description: Note of Employee
+          type: string
+          example: '123456'
+        CreatedByUser:
+          description: Created by user of Employee
+          type: string
+          example: '123456'
+        CreatedByDate:
+          description: Created by date of Employee
+          type: string
+          example: '123456'
+        MaritalID:
+          description: MaritalID of Employee
+          type: integer
+          format: int32
+          example: 200
+        Comment:
+          description: Comment of Employee
+          type: string
+          example: '123456'
+        Department:
+          $ref: '#/components/schemas/Department'
+        DateUpdated:
+          description: Date updated of Employee
+          type: string
+          example: '123456'
+        UserLastUpdated:
+          description: User last updated of Employee
+          type: string
+          example: '123456'
+        Position:
+          $ref: '#/components/schemas/Position'
+        CompanyID:
+          description: CompanyID of Employee
+          type: integer
+          format: int32
+          example: 200
+        NoBHXH:
+          description: No BHXH of Employee
+          type: string
+          example: '123456'
+        DateBHXH:
+          description: Date BHXH of Employee
+          type: string
+          example: '123456'
+        IssueByBHXH:
+          description: Issue by BHXH of Employee
+          type: string
+          example: '123456'
+        NoBHYT:
+          description: No BHYT of Employee
+          type: string
+          example: '123456'
+        fromDateBHYT:
+          description: From Date BHYT of Employee
+          type: string
+          example: '123456'
+        toDateBHYT:
+          description: To Date BHYT of Employee
+          type: string
+          example: '123456'
+        ProvinceBHYT:
+          description: Province BHYT of Employee
+          type: string
+          example: '123456'
+        HopitalBHYT:
+          description: Hospital BHYT of Employee
+          type: string
+          example: '123456'
+        isActive:
+          description: Active of Employee
+          type: boolean
+          example: true
+        LeaderID:
+          description: Leader ID of Employee
+          type: integer
+          format: int32
+          example: 200
+        ManagerID:
+          description: Manager ID of Employee
+          type: integer
+          format: int32
+          example: 200
+        Salary:
+          description: Salary of Employee
+          type: integer
+          format: int32
+          example: 200
+    Department:
+      description: Department
+      type: object
+      properties:
+        ID:
+          description: ID of Department
+          type: integer
+          format: int32
+          example: 200
+        NameDepartmentVN:
+          description: Name VN of Department
+          type: string
+          example: '123456'
+        NameDepartmentEN:
+          description: Name EN of Department
+          type: string
+          example: '123456'
+        isActive:
+          description: Active of Department
+          type: boolean
+          example: true
+        DateCreated:
+          description: Date created of Department
+          type: string
+          example: '123456'
+        UserCreated:
+          description: User created of Department
+          type: string
+          example: '123456'
+        DateUpdated:
+          description: Date updated of Department
+          type: string
+          example: '123456'
+        UserUpdated:
+          description: User updated of Department
+          type: string
+          example: '123456'
+    Position:
+      description: Position
+      type: object
+      properties:
+        ID:
+          description: ID of Position
+          type: integer
+          format: int32
+          example: 200
+        PositionNameVN:
+          description: Name VN of Position
+          type: string
+          example: '123456'
+        PositionNameEN:
+          description: Name EN of Position
+          type: string
+          example: '123456'
+        isActive:
+          description: Active of Position
+          type: boolean
+          example: true
+        DateCreated:
+          description: Date created of Position
+          type: string
+          example: '123456'
+        UserCreated:
+          description: User created of Position
+          type: string
+          example: '123456'
+        DateUpdated:
+          description: Date updated of Position
+          type: string
+          example: '123456'
+        UserUpdated:
+          description: User updated of Position
+          type: string
+          example: '123456'
+
+  #    End here
+
+  responses:
+    webApiValidationError:
+      description: webApi input value validation failure
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/WebApiErrorResponse'
+            properties:
+              status:
+                example: 400
+    400:
+      description: Format check failed
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+            properties:
+              status:
+                example: 400
+              error:
+                example: Bad Request
+    401:
+      description: Restrict access
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+            properties:
+              status:
+                example: 401
+              error:
+                example: Unauthorized
+    403:
+      description: Access request denied
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+            properties:
+              status:
+                example: 403
+              error:
+                example: Forbidden
+    404:
+      description: Page not found
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+            properties:
+              status:
+                example: 404
+              error:
+                example: Not Found
+    500:
+      description: The server is having problems
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+            properties:
+              status:
+                example: 500
+              error:
+                example: Internal Server Error
+  headers:
+    Content-Disposition:
+      schema:
+        type: string

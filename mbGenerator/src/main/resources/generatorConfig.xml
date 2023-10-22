@@ -1,0 +1,166 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE generatorConfiguration PUBLIC
+        "-//mybatis.org//DTD MyBatis Generator Configuration 1.0//EN"
+        "http://mybatis.org/dtd/mybatis-generator-config.1_0.dtd">
+<generatorConfiguration>
+    <context id="handsOnTables" targetRuntime="MyBatis3">
+        <plugin type="org.mybatis.generator.plugins.RowBoundsPlugin"/>
+        <plugin type="org.mybatis.generator.plugins.MapperAnnotationPlugin"/>
+
+        <plugin type="org.mybatis.generator.plugins.UnmergeableXmlMappersPlugin"/>
+        <plugin type="com.softwareloop.mybatis.generator.plugins.LombokPlugin">
+            <property name="builder" value="true"/>
+        </plugin>
+        <plugin type="org.mybatis.generator.plugins.SerializablePlugin"/>
+
+        <commentGenerator>
+            <property name="suppressAllComments" value="true"/>
+        </commentGenerator>
+
+        <jdbcConnection
+                driverClass="${jdbcDriverClass}"
+                connectionURL="${jdbcUrl}"
+                userId="${jdbcUsername}"
+                password="${jdbcPassword}"
+        >
+        </jdbcConnection>
+
+        <javaTypeResolver>
+            <property name="useJSR310Types" value="true"/>
+        </javaTypeResolver>
+
+        <javaModelGenerator
+                targetPackage="com.tdtu.mbGenerator.generate.mybatis.model"
+                targetProject="${baseDir}/mbGenerator/src/main/java"
+        >
+            <property name="enableSubPackages" value="true"/>
+            <property name="exampleTargetPackage" value="com.tdtu.mbGenerator.generate.mybatis.example"/>
+            <property name="trimStrings" value="true"/>
+        </javaModelGenerator>
+
+        <sqlMapGenerator
+                targetPackage="com.tdtu.mbGenerator.generate.mybatis.mapper"
+                targetProject="${baseDir}/mbGenerator/src/main/resources"
+        >
+            <property name="enableSubPackages" value="true"/>
+        </sqlMapGenerator>
+
+        <javaClientGenerator
+                type="XMLMAPPER"
+                targetPackage="com.tdtu.mbGenerator.generate.mybatis.mapper"
+                targetProject="${baseDir}/mbGenerator/src/main/java"
+        >
+            <property name="enableSubPackages" value="true"/>
+        </javaClientGenerator>
+
+        <table schema="%" tableName="TDT_%">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <property name="useActualColumnNames" value="false"/>
+            <columnOverride
+                    column="isActive"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+        </table>
+
+        <table schema="%" tableName="TDT_Employee">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <property name="useActualColumnNames" value="false"/>
+            <columnOverride
+                    column="isActive"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+            <columnOverride
+                    column="Gender"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+            <columnOverride
+                    column="Married"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+            <columnOverride
+                    column="BHXH"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+            <columnOverride
+                    column="BHYT"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+            <columnOverride
+                    column="BHTN"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+            <columnOverride
+                    column="UnionDues"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+            <columnOverride
+                    column="Authority"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+        </table>
+
+        <table schema="%" tableName="TDT_Role">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <property name="useActualColumnNames" value="false"/>
+            <columnOverride
+                    column="isActive"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+            <columnOverride
+                    column="RoleView"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+            <columnOverride
+                    column="RoleUpdate"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+            <columnOverride
+                    column="RoleDelete"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+        </table>
+
+        <table schema="%" tableName="TDT_UserProfile">
+            <property name="ignoreQualifiersAtRuntime" value="true"/>
+            <property name="useActualColumnNames" value="false"/>
+            <columnOverride
+                    column="isActive"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+            <columnOverride
+                    column="isManagement"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+        </table>
+    </context>
+</generatorConfiguration>
