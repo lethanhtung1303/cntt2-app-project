@@ -62,17 +62,7 @@
                     jdbcType="CHAR"
                     typeHandler="CharBooleanTypeHandler"
             />
-        </table>
 
-        <table schema="%" tableName="TDT_Employee">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <property name="useActualColumnNames" value="false"/>
-            <columnOverride
-                    column="isActive"
-                    javaType="java.lang.Boolean"
-                    jdbcType="CHAR"
-                    typeHandler="CharBooleanTypeHandler"
-            />
             <columnOverride
                     column="Gender"
                     javaType="java.lang.Boolean"
@@ -115,17 +105,6 @@
                     jdbcType="CHAR"
                     typeHandler="CharBooleanTypeHandler"
             />
-        </table>
-
-        <table schema="%" tableName="TDT_Role">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <property name="useActualColumnNames" value="false"/>
-            <columnOverride
-                    column="isActive"
-                    javaType="java.lang.Boolean"
-                    jdbcType="CHAR"
-                    typeHandler="CharBooleanTypeHandler"
-            />
             <columnOverride
                     column="RoleView"
                     javaType="java.lang.Boolean"
@@ -140,17 +119,6 @@
             />
             <columnOverride
                     column="RoleDelete"
-                    javaType="java.lang.Boolean"
-                    jdbcType="CHAR"
-                    typeHandler="CharBooleanTypeHandler"
-            />
-        </table>
-
-        <table schema="%" tableName="TDT_UserProfile">
-            <property name="ignoreQualifiersAtRuntime" value="true"/>
-            <property name="useActualColumnNames" value="false"/>
-            <columnOverride
-                    column="isActive"
                     javaType="java.lang.Boolean"
                     jdbcType="CHAR"
                     typeHandler="CharBooleanTypeHandler"

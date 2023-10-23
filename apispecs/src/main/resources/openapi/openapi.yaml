@@ -115,7 +115,7 @@ components:
         results:
           type: object
           properties:
-            employee:
+            employees:
               description: Employee list
               type: array
               items:

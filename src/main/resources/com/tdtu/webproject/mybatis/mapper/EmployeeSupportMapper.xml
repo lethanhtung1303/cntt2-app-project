@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdtu.webproject.mybatis.mapper.EmployeeSupportMapper">
+    <resultMap id="BaseResultMap" type="com.tdtu.webproject.mybatis.result.EmployeeResult">
+        <id column="ID" jdbcType="NUMERIC" property="employeeId"/>
+        <result column="EMPLOYEECODE" jdbcType="VARCHAR" property="employeeCode"/>
+        <result column="FIRSTNAME" jdbcType="VARCHAR" property="firstName"/>
+        <result column="FULLNAME" jdbcType="VARCHAR" property="fullName"/>
+        <result column="COMMONNAME" jdbcType="VARCHAR" property="commonName"/>
+        <result column="GENDER" jdbcType="CHAR" property="gender" javaType="java.lang.Boolean"
+                typeHandler="CharBooleanTypeHandler"/>
+        <result column="IMAGES" jdbcType="VARCHAR" property="images"/>
+        <result column="BIRTHDAY" jdbcType="TIMESTAMP" property="birthday"/>
+        <result column="PLACEOFBIRTH" jdbcType="VARCHAR" property="placeOfBirth"/>
+        <result column="MARRIED" jdbcType="CHAR" property="married" javaType="java.lang.Boolean"
+                typeHandler="CharBooleanTypeHandler"/>
+    </resultMap>
+
+    <select id="select" resultMap="BaseResultMap">
+        SELECT TE.ID,
+               EMPLOYEECODE,
+               FIRSTNAME,
+               FULLNAME,
+               COMMONNAME,
+               GENDER,
+               IMAGES,
+               BIRTHDAY,
+               PLACEOFBIRTH,
+               MARRIED,
+               ADDRESS,
+               ADDRESSTMP,
+               PHONE,
+               EMAIL,
+               CCCD,
+               DATECCCD,
+               ISSUEDBY,
+               DATESTARTWORD,
+               HEALTH,
+               HEIGHT,
+               WEIGHT,
+               STATUSWORK,
+               NATIONALITYID,
+               NATIONID,
+               RELIGIONID,
+               DEGREEID,
+               FOREIGNID,
+               BHXH,
+               BHYT,
+               BHTN,
+               UNIONDUES,
+               NOTE,
+               MARITALID,
+               AUTHORITY,
+               COMMENT,
+               COMPANYID,
+               NOBHXH,
+               DATEBHXH,
+               ISSUEBYBHXH,
+               NOBHYT,
+               FROMDATEBHYT,
+               TODATEBHYT,
+               PROVINCEBHYT,
+               HOPITALBHYT,
+               TE.ISACTIVE,
+               LEADERID,
+               MANAGERID,
+               SALARY,
+               TE.CREATEDBYUSER,
+               TE.CREATEDBYDATE,
+               TE.DATEUPDATED,
+               TE.USERLASTUPDATED,
+
+               DEPARTMENTID,
+               NAMEDEPARTMENTVN AS nameDepartmentVN,
+               NAMEDEPARTMENTEN AS nameDepartmentEN,
+               TD.ISACTIVE      AS isActiveDepartment,
+               TD.DATECREATED   AS departmentDateCreated,
+               TD.USERCREATED   AS departmentUserCreated,
+               TD.DATEUPDATED   AS departmentDateUpdated,
+               TD.USERUPDATED   AS departmentUserUpdated,
+
+               POSITIONID,
+               POSITIONNAMEVN   AS positionNameVN,
+               POSITIONNAMEEN   AS positionNameEN,
+               TP.ISACTIVE      AS isActivePosition,
+               TP.DATECREATED   AS positionDateCreated,
+               TP.USERCREATED   AS positionUserCreated,
+               TP.DATEUPDATED   AS positionDateUpdated,
+               TP.USERUPDATED   AS positionUserUpdated
+        FROM TDT_EMPLOYEE AS TE
+                 INNER JOIN TDT_DEPARTMENT TD ON
+            TE.DEPARTMENTID = TD.ID
+                 INNER JOIN TDT_POSITION TP ON
+            TE.POSITIONID = TP.ID
+        WHERE TE.ISACTIVE = '1'
+          AND TE.ID IN (1, 2, 3, 4, 5, 6, 7, 8)
+        ORDER BY TE.CREATEDBYDATE, TE.ID;
+    </select>
+</mapper>
