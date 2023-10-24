@@ -21,11 +21,11 @@ paths:
       summary: Api for get Employee
       operationId: employee
       parameters:
-        - name: employeeId
+        - name: employeeIds
           in: query
           schema:
             type: string
-            pattern: '^[0-9]{1,19}$'
+            pattern: '^(\d{1,19},)*\d{1,19}$'
             example: '123456'
       responses:
         400:
@@ -130,8 +130,7 @@ components:
       properties:
         ID:
           description: ID of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         EmployeeCode:
           description: Code of Employee
@@ -207,44 +206,36 @@ components:
           example: '123456'
         Height:
           description: Height of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         Weight:
           description: Weight of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         StatusWork:
           description: Status work of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         NationalityID:
           description: NationalityID of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         NationID:
           description: NationID of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         ReligionID:
           description: ReligionID of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         DegreeID:
           description: DegreeID of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         ForeignID:
           description: ForeignID of Employee
-          type: integer
-          format: int32
-          example: 200
+          type: string
+          example: '123456'
         BHXH:
           description: BHXH of Employee
           type: boolean
@@ -279,8 +270,7 @@ components:
           example: '123456'
         MaritalID:
           description: MaritalID of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         Comment:
           description: Comment of Employee
@@ -300,8 +290,7 @@ components:
           $ref: '#/components/schemas/Position'
         CompanyID:
           description: CompanyID of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         NoBHXH:
           description: No BHXH of Employee
@@ -341,18 +330,15 @@ components:
           example: true
         LeaderID:
           description: Leader ID of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         ManagerID:
           description: Manager ID of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
         Salary:
           description: Salary of Employee
-          type: integer
-          format: int32
+          type: number
           example: 200
     Department:
       description: Department
@@ -360,8 +346,7 @@ components:
       properties:
         ID:
           description: ID of Department
-          type: integer
-          format: int32
+          type: number
           example: 200
         NameDepartmentVN:
           description: Name VN of Department
@@ -397,8 +382,7 @@ components:
       properties:
         ID:
           description: ID of Position
-          type: integer
-          format: int32
+          type: number
           example: 200
         PositionNameVN:
           description: Name VN of Position
