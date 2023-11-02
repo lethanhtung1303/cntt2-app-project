@@ -44,7 +44,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/EmployeeResponse'
-
+  /v1/login:
+    post:
+      tags:
+        - Authentication
+      summary: Api for login
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
   #    End here
 
 components:
@@ -410,6 +437,62 @@ components:
           example: '123456'
         UserUpdated:
           description: User updated of Position
+          type: string
+          example: '123456'
+    LoginRequest:
+      type: object
+      required:
+        - inputUserName
+        - inputPassword
+      properties:
+        inputUserName:
+          description: User name of user
+          type: string
+          example: 'username'
+          maxLength: 200
+        inputPassword:
+          description: Password of user
+          type: string
+          example: '123456'
+          maxLength: 64
+    UserResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            userRoles:
+              description: Roles of User
+              type: string
+              example: '123456'
+    User:
+      description: User
+      type: object
+      properties:
+        UserID:
+          description: UserID of User
+          type: string
+          example: '123456'
+        UserName:
+          description: UserName of User
+          type: string
+          example: '123456'
+        EmployeeID:
+          description: EmployeeID of User
+          type: string
+          example: '123456'
+        Password:
+          description: Password of User
+          type: string
+          example: '123456'
+        isManagerment:
+          description: User is Management
           type: string
           example: '123456'
 

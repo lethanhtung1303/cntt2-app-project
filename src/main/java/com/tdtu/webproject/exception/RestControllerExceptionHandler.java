@@ -55,31 +55,34 @@ public class RestControllerExceptionHandler extends ResponseEntityExceptionHandl
         resource.setResults(resultsList);
         return handleExceptionInternal(ex, resource, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
+
     @ExceptionHandler({RuntimeException.class})
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
     public Object handleInternalServerError(RuntimeException ex, WebRequest request) {
         WebApiErrorResponse resource = new WebApiErrorResponse();
-        resource.setStatus(HttpStatus. INTERNAL_SERVER_ERROR.value());
+        resource.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
         resource.setResults(List.of(getErrorDetail(ex.getMessage(), "ERROR_OTHER", null, null)));
         return handleExceptionInternal(ex, resource, new HttpHeaders(),
                 HttpStatus.INTERNAL_SERVER_ERROR, request);
     }
+
     @ExceptionHandler({BusinessException.class})
-    public Object handleBusinessException(BusinessException ex,WebRequest request) {
+    public Object handleBusinessException(BusinessException ex, WebRequest request) {
         WebApiErrorResponse resource = new WebApiErrorResponse();
-        resource.setStatus(HttpStatus.INTERNAL_SERVER_ERROR.value());
-        resource.setResults(List.of(getErrorDetail(ex.getMessage(), "ERROR_OTHER", null, null)));
-        return handleExceptionInternal(ex, resource, new HttpHeaders(), HttpStatus.INTERNAL_SERVER_ERROR, request);
+        resource.setStatus(HttpStatus.BAD_REQUEST.value());
+        resource.setResults(List.of(getErrorDetail(ex.getMessage(), ex.getErrorCode(), null, null)));
+        return handleExceptionInternal(ex, resource, new HttpHeaders(), HttpStatus.BAD_REQUEST, request);
     }
-        private WebApiErrorDetails getErrorDetail(String message,
-                                                  String errorCd,
-                                                  List<Integer> errorIdList,
-                                                  String field) {
-            WebApiErrorDetails detailError = new WebApiErrorDetails();
-            detailError.setMessage(message);
-            detailError.setErrorCd(errorCd);
-            detailError.setErrorIdList(errorIdList);
-            detailError.setField(field);
-            return detailError;
-        }
+
+    private WebApiErrorDetails getErrorDetail(String message,
+                                              String errorCd,
+                                              List<Integer> errorIdList,
+                                              String field) {
+        WebApiErrorDetails detailError = new WebApiErrorDetails();
+        detailError.setMessage(message);
+        detailError.setErrorCd(errorCd);
+        detailError.setErrorIdList(errorIdList);
+        detailError.setField(field);
+        return detailError;
+    }
 }
