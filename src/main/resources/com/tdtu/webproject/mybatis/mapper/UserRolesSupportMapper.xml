@@ -12,21 +12,21 @@
     </resultMap>
 
     <select id="loadRoleDetail" resultMap="BaseResultMap">
-        SELECT rc.id AS id,
-        rc.ID AS idCategory,
-        rc.categorynamevn AS nameCategoryNameVN,
-        ${employeeID} AS employeeID,
-        COALESCE(r.RoleView, 0) AS roleView,
-        COALESCE(r.RoleUpdate, 0) AS roleUpdate,
-        COALESCE(r.RoleDelete, 0) AS roleDelete
-        FROM tdt_RoleCategory rc
-        LEFT JOIN tdt_role r ON
-        r.CategoryRole = rc.id
+        SELECT rc.ID AS ID,
+        rc.ID AS IDCATEGORY,
+        rc.CATEGORYNAMEVN AS NAMECATEGORYNAMEVN,
+        ${employeeID} AS EMPLOYEEID,
+        COALESCE(r.ROLEVIEW, 0) AS ROLEVIEW,
+        COALESCE(r.ROLEUPDATE, 0) AS ROLEUPDATE,
+        COALESCE(r.ROLEDELETE, 0) AS ROLEDELETE
+        FROM TDT_ROLECATEGORY rc
+        LEFT JOIN TDT_ROLE r ON
+        r.CATEGORYROLE = rc.id
         <if test="(employeeID != null and employeeID != '')">
-            AND r.EmployeeID = ${employeeID}
+            AND r.EMPLOYEEID = ${employeeID}
         </if>
-        LEFT JOIN tdt_Employee e ON
-        e.id = r.EmployeeID
+        LEFT JOIN TDT_INSTRUCTOR e ON
+        e.INSTRUCTORID = r.EMPLOYEEID
         WHERE r.ISACTIVE IS NULL
         OR r.ISACTIVE != 0;
     </select>

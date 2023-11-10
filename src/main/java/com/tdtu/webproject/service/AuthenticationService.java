@@ -49,6 +49,7 @@ public class AuthenticationService {
 
                     userprofile.setIplastlogin(StringUtil.getLocalIPAddress());
                     userprofile.setDatelastlogin(DateUtil.getTimeNow());
+                    userprofile.setCountloginfailed(BigDecimal.ZERO);
                     authenticationRepository.update(userprofile, userprofile.getUserid());
 
                     return UserResponseResults.builder()
