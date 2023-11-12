@@ -138,23 +138,27 @@ CREATE TABLE TDT_giang_vien (
     CREATED_BY  VARCHAR2(255 CHAR) NOT NULL,
     UPDATED_AT DATE DEFAULT NULL,
     UPDATE_BY VARCHAR2(255 CHAR) DEFAULT NULL,
+	DELETED_FLAG CHAR(1 CHAR) DEFAULT '0' NOT NULL,
+    DELETED_AT DATE DEFAULT NULL,
+    DELETED_BY VARCHAR2(255 CHAR) DEFAULT NULL,
 	CONSTRAINT PK_giang_vien PRIMARY KEY (ID)
 );
 
-INSERT INTO TDT_giang_vien (ID,FIRST_NAME,FULL_NAME,GENDER,IMAGES,BIRTHDAY,PLACE_OF_BIRTH,ADDRESS,ADDRESS_TMP,PHONE,EMAIL,EMAIL_TDTU,WORKPLACE,MAIN_POSITION,SECONDARY_POSITION,IS_ACTIVE,CREATED_AT,CREATED_BY,UPDATED_AT,UPDATE_BY) VALUES
-    (1,'Hà Phú','Toàn','1','https://mir-s3-cdn-cf.behance.net/project_modules/fs/7383d138650505.598fa11956e27.jpg','1991-08-19 00:00:00.000','An Long, Tam Nông,Đồng Tháp','Đường Tống Văn Lê , Ấp Tân Phú 2 , xã Tân Lý Đông','Nguyễn văn Tăng, Quận 9 , TPHCM','0955667788','haphutoan@gmail.com','haphutoan@tdtu.edu.vn','TDTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user',NULL,NULL),
-    (2,'Lê Thị Cẩm','Tú','0','https://mir-s3-cdn-cf.behance.net/project_modules/fs/3671da38650505.598fa119575fb.jpg','1991-08-14 00:00:00.000','Tiền Giang','Cai lậy - Tiền Giang','Tân Uyên, Bình Dương','0366828282','tu@gmail.com','tu@tdtu.edu.vn','CTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user',NULL,NULL),
-    (3,'Nguyễn Thị Kim','Thanh','0','https://mir-s3-cdn-cf.behance.net/project_modules/fs/1454d038650505.598fa118c9674.jpg','1991-06-22 00:00:00.000','Đồng Nai','Đồng Nai','Long Bình - Đồng Nai','0123123123','thanhn@gmail.com','thanh@tdtu.edu.vn','RMIT',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user',NULL,NULL),
-    (4,'Nguyễn Thị Thu','Kim','0','https://mir-s3-cdn-cf.behance.net/project_modules/fs/e13eb438650505.598fa118c8eab.jpg','1991-04-18 00:00:00.000','Đồng Nai','Biên Hòa - Đồng Nai','Tân Uyên, Bình Dương','321634645','canhhongruclua@gmail.com','canhhongruclua@tdtu.edu.vn','UFM',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user',NULL,NULL),
-    (5,'Vũ Quốc','Hòa','0','https://mir-s3-cdn-cf.behance.net/project_modules/fs/0bdadd38650505.598fa118c9a00.jpg','1991-10-09 00:00:00.000','Hải Dương','Long Bình - Biên Hòa - Đồng Nai','Tân Uyên, Bình Dương','0972838671','hoa@gmail.com','hoan@tdtu.edu.vn','TDTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user',NULL,NULL),
-    (6,'Lê','Minh Châu','0','https://mir-s3-cdn-cf.behance.net/project_modules/fs/14809638650505.598fa118c91f3.jpg','1991-08-25 00:00:00.000','Đồng Nai','Đường Tống Văn Lê , Ấp Tân Phú 2 , xã Tân Lý Đông','Tân Uyên, Bình Dương','0972838671','haphutoanit@gmail.com','haphutoanit@tdtu.edu.vn','TDTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user',NULL,NULL),
-    (7,'Nguyễn Hoàng','Tú','1','https://mir-s3-cdn-cf.behance.net/project_modules/fs/db780138650505.598fa11956761.jpg','1990-05-17 00:00:00.000','Đồng Nai','Đường Tống Văn Lê , Ấp Tân Phú 2 , xã Tân Lý Đông','Tân Uyên, Bình Dương','03344558832','hatheduy@gmail.com','hatheduy@tdtu.edu.vn','TDTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user',NULL,NULL),
-    (8,'Hoàng Bảo','Ngọc','1','https://mir-s3-cdn-cf.behance.net/project_modules/fs/fd44d538650505.598fa11957245.jpg','1993-11-04 00:00:00.000','Đồng Nai','Biên Hòa - Đồng Nai','Tân Uyên, Bình Dương','01688786834','itw@gmail.com','itw@tdtu.edu.vn','TDTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user',NULL,NULL);
+INSERT INTO TDT_giang_vien (ID,FIRST_NAME,FULL_NAME,GENDER,IMAGES,BIRTHDAY,PLACE_OF_BIRTH,ADDRESS,ADDRESS_TMP,PHONE,EMAIL,EMAIL_TDTU,WORKPLACE,MAIN_POSITION,SECONDARY_POSITION,IS_ACTIVE,CREATED_AT,CREATED_BY) VALUES
+    (1,'Hà Phú','Toàn','1','https://mir-s3-cdn-cf.behance.net/project_modules/fs/7383d138650505.598fa11956e27.jpg','1991-08-19 00:00:00.000','An Long, Tam Nông,Đồng Tháp','Đường Tống Văn Lê , Ấp Tân Phú 2 , xã Tân Lý Đông','Nguyễn văn Tăng, Quận 9 , TPHCM','0955667788','haphutoan@gmail.com','haphutoan@tdtu.edu.vn','TDTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user'),
+    (2,'Lê Thị Cẩm','Tú','0','https://mir-s3-cdn-cf.behance.net/project_modules/fs/3671da38650505.598fa119575fb.jpg','1991-08-14 00:00:00.000','Tiền Giang','Cai lậy - Tiền Giang','Tân Uyên, Bình Dương','0366828282','tu@gmail.com','tu@tdtu.edu.vn','CTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user'),
+    (3,'Nguyễn Thị Kim','Thanh','0','https://mir-s3-cdn-cf.behance.net/project_modules/fs/1454d038650505.598fa118c9674.jpg','1991-06-22 00:00:00.000','Đồng Nai','Đồng Nai','Long Bình - Đồng Nai','0123123123','thanhn@gmail.com','thanh@tdtu.edu.vn','RMIT',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user'),
+    (4,'Nguyễn Thị Thu','Kim','0','https://mir-s3-cdn-cf.behance.net/project_modules/fs/e13eb438650505.598fa118c8eab.jpg','1991-04-18 00:00:00.000','Đồng Nai','Biên Hòa - Đồng Nai','Tân Uyên, Bình Dương','321634645','canhhongruclua@gmail.com','canhhongruclua@tdtu.edu.vn','UFM',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user'),
+    (5,'Vũ Quốc','Hòa','0','https://mir-s3-cdn-cf.behance.net/project_modules/fs/0bdadd38650505.598fa118c9a00.jpg','1991-10-09 00:00:00.000','Hải Dương','Long Bình - Biên Hòa - Đồng Nai','Tân Uyên, Bình Dương','0972838671','hoa@gmail.com','hoan@tdtu.edu.vn','TDTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user'),
+    (6,'Lê','Minh Châu','0','https://mir-s3-cdn-cf.behance.net/project_modules/fs/14809638650505.598fa118c91f3.jpg','1991-08-25 00:00:00.000','Đồng Nai','Đường Tống Văn Lê , Ấp Tân Phú 2 , xã Tân Lý Đông','Tân Uyên, Bình Dương','0972838671','haphutoanit@gmail.com','haphutoanit@tdtu.edu.vn','TDTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user'),
+    (7,'Nguyễn Hoàng','Tú','1','https://mir-s3-cdn-cf.behance.net/project_modules/fs/db780138650505.598fa11956761.jpg','1990-05-17 00:00:00.000','Đồng Nai','Đường Tống Văn Lê , Ấp Tân Phú 2 , xã Tân Lý Đông','Tân Uyên, Bình Dương','03344558832','hatheduy@gmail.com','hatheduy@tdtu.edu.vn','TDTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user'),
+    (8,'Hoàng Bảo','Ngọc','1','https://mir-s3-cdn-cf.behance.net/project_modules/fs/fd44d538650505.598fa11957245.jpg','1993-11-04 00:00:00.000','Đồng Nai','Biên Hòa - Đồng Nai','Tân Uyên, Bình Dương','01688786834','itw@gmail.com','itw@tdtu.edu.vn','TDTU',NULL,NULL,'1','2023-11-04 21:45:46.000','sys_user');
 
 CREATE TABLE TDT_trinh_do (
 	id NUMBER(19,0) GENERATED BY DEFAULT AS IDENTITY (START WITH 100 INCREMENT BY 3) NOT NULL,
 	trinh_do VARCHAR2(255 CHAR) NOT NULL,
 	ky_hieu VARCHAR2(255 CHAR) NOT NULL,
+    display_order  NUMBER(19,0) DEFAULT 9999 NOT NULL,
     IS_ACTIVE CHAR(1 CHAR) DEFAULT '0' NOT NULL,
     CREATED_AT DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CREATED_BY  VARCHAR2(255 CHAR) NOT NULL,
@@ -164,17 +168,17 @@ CREATE TABLE TDT_trinh_do (
 	CONSTRAINT UQ_cap_bac_01 UNIQUE(ky_hieu)
 );
 
-INSERT INTO TDT_trinh_do (id,trinh_do,ky_hieu,IS_ACTIVE,CREATED_AT,CREATED_BY) VALUES
-	 (1,'Thạc sĩ','Ths','1',CURRENT_TIMESTAMP,'sys_user'),
-	 (2,'Tiến sĩ ','TS','1',CURRENT_TIMESTAMP,'sys_user'),
-	 (3,'Nghiên cứu sinh','NCS','1',CURRENT_TIMESTAMP,'sys_user'),
-	 (4,'Phó giáo sư','PGS','1',CURRENT_TIMESTAMP,'sys_user'),
-	 (5,'Giáo sư','GS','1',CURRENT_TIMESTAMP,'sys_user');
+INSERT INTO TDT_trinh_do (id,trinh_do,ky_hieu,display_order,IS_ACTIVE,CREATED_AT,CREATED_BY) VALUES
+	 (1,'Thạc sĩ','Ths',4,'1',CURRENT_TIMESTAMP,'sys_user'),
+	 (2,'Tiến sĩ ','TS',3,'1',CURRENT_TIMESTAMP,'sys_user'),
+	 (3,'Nghiên cứu sinh','NCS',5,'1',CURRENT_TIMESTAMP,'sys_user'),
+	 (4,'Phó giáo sư','PGS',2,'1',CURRENT_TIMESTAMP,'sys_user'),
+	 (5,'Giáo sư','GS',1,'1',CURRENT_TIMESTAMP,'sys_user');
 
 CREATE TABLE TDT_qua_trinh_dao_tao (
 	id NUMBER(19,0) GENERATED BY DEFAULT AS IDENTITY (START WITH 100 INCREMENT BY 3) NOT NULL,
 	giang_vien_id NUMBER(19,0) NOT NULL,
-    trinh_do_id NUMBER(19,0) DEFAULT 1 NOT NULL,
+    trinh_do_id NUMBER(19,0) DEFAULT 0 NOT NULL,
 	truong VARCHAR2(255 CHAR),
 	nganh VARCHAR2(255 CHAR),
 	nam_tot_nghiep NUMBER(19,0),
@@ -219,7 +223,7 @@ INSERT INTO TDT_ngon_ngu (id,ten_ngon_ngu,IS_ACTIVE,CREATED_AT,CREATED_BY) VALUE
 CREATE TABLE TDT_ngon_ngu_dao_tao (
     id NUMBER(19,0) GENERATED BY DEFAULT AS IDENTITY (START WITH 100 INCREMENT BY 3) NOT NULL,
     qua_trinh_dao_tao_id NUMBER(19,0)  NOT NULL,
-    ngon_ngu_id VARCHAR2(50 CHAR) DEFAULT '1' NOT NULL,
+    ngon_ngu_id NUMBER(19,0) DEFAULT 1 NOT NULL,
     IS_ACTIVE CHAR(1 CHAR) DEFAULT '0' NOT NULL,
     CREATED_AT DATE DEFAULT CURRENT_TIMESTAMP NOT NULL,
     CREATED_BY  VARCHAR2(255 CHAR) NOT NULL,
@@ -231,17 +235,17 @@ CREATE TABLE TDT_ngon_ngu_dao_tao (
 );
 
 INSERT INTO TDT_ngon_ngu_dao_tao (ID,qua_trinh_dao_tao_id,ngon_ngu_id,IS_ACTIVE,CREATED_AT,CREATED_BY) VALUES
-    (1,1,'1','1',CURRENT_TIMESTAMP,'sys_user'),
-    (2,1,'2','1',CURRENT_TIMESTAMP,'sys_user'),
-    (3,1,'3','1',CURRENT_TIMESTAMP,'sys_user'),
-    (4,1,'4','1',CURRENT_TIMESTAMP,'sys_user'),
-    (5,2,'1','1',CURRENT_TIMESTAMP,'sys_user'),
-    (6,2,'2','1',CURRENT_TIMESTAMP,'sys_user'),
-    (7,3,'2','1',CURRENT_TIMESTAMP,'sys_user'),
-    (8,3,'5','1',CURRENT_TIMESTAMP,'sys_user'),
-    (9,4,'3','1',CURRENT_TIMESTAMP,'sys_user'),
-    (10,4,'5','1',CURRENT_TIMESTAMP,'sys_user'),
-    (11,5,'1','1',CURRENT_TIMESTAMP,'sys_user');
+    (1,1,1,'1',CURRENT_TIMESTAMP,'sys_user'),
+    (2,1,2,'1',CURRENT_TIMESTAMP,'sys_user'),
+    (3,1,3,'1',CURRENT_TIMESTAMP,'sys_user'),
+    (4,1,4,'1',CURRENT_TIMESTAMP,'sys_user'),
+    (5,2,1,'1',CURRENT_TIMESTAMP,'sys_user'),
+    (6,2,2,'1',CURRENT_TIMESTAMP,'sys_user'),
+    (7,3,2,'1',CURRENT_TIMESTAMP,'sys_user'),
+    (8,3,5,'1',CURRENT_TIMESTAMP,'sys_user'),
+    (9,4,3,'1',CURRENT_TIMESTAMP,'sys_user'),
+    (10,4,5,'1',CURRENT_TIMESTAMP,'sys_user'),
+    (11,5,1,'1',CURRENT_TIMESTAMP,'sys_user');
 
 CREATE TABLE TDT_chung_chi(
     id NUMBER(19,0) GENERATED BY DEFAULT AS IDENTITY (START WITH 100 INCREMENT BY 3) NOT NULL,

@@ -1,6 +1,6 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtUserprofile;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtUserProfile;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.result.UserRolesResult;
 import com.tdtu.webproject.repository.AuthenticationRepository;
@@ -24,43 +24,43 @@ public class AuthenticationService {
     private final AuthenticationRepository authenticationRepository;
 
     public UserResponseResults findUser(LoginRequest loginRequest) {
-        TdtUserprofile userprofile = authenticationRepository.findUser(loginRequest.getInputUserName());
+        TdtUserProfile userprofile = authenticationRepository.findUser(loginRequest.getInputUserName());
         if (Optional.ofNullable(userprofile).isPresent()) {
 
-            if (userprofile.getAccountstatus().equals(BigDecimal.ONE)) {
+            if (userprofile.getAccountStatus().equals(BigDecimal.ONE)) {
                 throw new BusinessException("40002", "Tài khoản của bạn đã bị khóa , vui lòng liên hệ bộ phận quản lý !");
             }
 
             if (!encoder.matches(loginRequest.getInputPassword(), userprofile.getPassword())) {
-                BigDecimal countLoginFailed = Optional.ofNullable(userprofile.getCountloginfailed()).orElse(BigDecimal.ZERO);
-                userprofile.setCountloginfailed(countLoginFailed.add(BigDecimal.ONE));
+                BigDecimal countLoginFailed = Optional.ofNullable(userprofile.getCountLoginFailed()).orElse(BigDecimal.ZERO);
+                userprofile.setCountLoginFailed(countLoginFailed.add(BigDecimal.ONE));
 
                 if (countLoginFailed.compareTo(BigDecimal.valueOf(4)) >= 0) {
-                    userprofile.setAccountstatus(BigDecimal.ONE);
-                    userprofile.setCountloginfailed(BigDecimal.ZERO);
+                    userprofile.setAccountStatus(BigDecimal.ONE);
+                    userprofile.setCountLoginFailed(BigDecimal.ZERO);
                 }
 
-                authenticationRepository.update(userprofile, userprofile.getUserid());
+                authenticationRepository.update(userprofile, userprofile.getUserId());
                 throw new BusinessException("40003", "Tài khoản hoặc mật khẩu không đúng , Bạn đã nhập sai " + (countLoginFailed.add(BigDecimal.ONE)) + " lần !");
             } else {
-                if (userprofile.getAccountstatus().equals(BigDecimal.ONE)) {
+                if (userprofile.getAccountStatus().equals(BigDecimal.ONE)) {
                     throw new BusinessException("40002", "Tài khoản của bạn đã bị khóa , vui lòng liên hệ bộ phận quản lý !");
                 } else {
 
-                    userprofile.setIplastlogin(StringUtil.getLocalIPAddress());
-                    userprofile.setDatelastlogin(DateUtil.getTimeNow());
-                    userprofile.setCountloginfailed(BigDecimal.ZERO);
-                    authenticationRepository.update(userprofile, userprofile.getUserid());
+                    userprofile.setIpLastLogin(StringUtil.getLocalIPAddress());
+                    userprofile.setDateLastLogin(DateUtil.getTimeNow());
+                    userprofile.setCountLoginFailed(BigDecimal.ZERO);
+                    authenticationRepository.update(userprofile, userprofile.getUserId());
 
                     return UserResponseResults.builder()
                             .user(User.builder()
-                                    .userID(StringUtil.convertBigDecimalToString(userprofile.getUserid()))
-                                    .userName(userprofile.getUsername())
-                                    .employeeID(StringUtil.convertBigDecimalToString(userprofile.getEmployeeid()))
+                                    .userID(StringUtil.convertBigDecimalToString(userprofile.getUserId()))
+                                    .userName(userprofile.getUserName())
+                                    .employeeID(StringUtil.convertBigDecimalToString(userprofile.getEmployeeId()))
                                     .password(userprofile.getPassword())
-                                    .isManagerment(userprofile.getIsmanagement() ? "1" : "0")
+                                    .isManagerment(userprofile.getIsManagement() ? "1" : "0")
                                     .build())
-                            .userRoles(this.loadRoleDetail(userprofile.getEmployeeid()))
+                            .userRoles(this.loadRoleDetail(userprofile.getEmployeeId()))
                             .build();
 
                 }

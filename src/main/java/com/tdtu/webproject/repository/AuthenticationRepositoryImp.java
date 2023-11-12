@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtUserprofileExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtUserprofileMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtUserprofile;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtUserProfileExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtUserProfileMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtUserProfile;
 import com.tdtu.webproject.mybatis.mapper.UserRolesSupportMapper;
 import com.tdtu.webproject.mybatis.result.UserRolesResult;
 import lombok.AllArgsConstructor;
@@ -17,26 +17,26 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class AuthenticationRepositoryImp implements AuthenticationRepository {
-    private final TdtUserprofileMapper userProfileMapper;
+    private final TdtUserProfileMapper userProfileMapper;
     private final UserRolesSupportMapper userRolesSupportMapper;
 
     @Override
-    public TdtUserprofile findUser(String userName) {
-        TdtUserprofileExample example = new TdtUserprofileExample();
-        TdtUserprofileExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(userName).ifPresent(criteria::andUsernameEqualTo);
-        criteria.andIsactiveEqualTo(true);
+    public TdtUserProfile findUser(String userName) {
+        TdtUserProfileExample example = new TdtUserProfileExample();
+        TdtUserProfileExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(userName).ifPresent(criteria::andUserNameEqualTo);
+        criteria.andIsActiveEqualTo(true);
         return userProfileMapper.selectByExample(example).stream()
-                .filter(userProfile -> userProfile.getUsername().equals(userName))
+                .filter(userProfile -> userProfile.getUserName().equals(userName))
                 .findFirst()
                 .orElse(null);
     }
 
     @Override
-    public int update(TdtUserprofile record, BigDecimal userId) {
-        TdtUserprofileExample example = new TdtUserprofileExample();
-        TdtUserprofileExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(userId).ifPresent(criteria::andUseridEqualTo);
+    public int update(TdtUserProfile record, BigDecimal userId) {
+        TdtUserProfileExample example = new TdtUserProfileExample();
+        TdtUserProfileExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(userId).ifPresent(criteria::andUserIdEqualTo);
         return userProfileMapper.updateByExampleSelective(record, example);
     }
 

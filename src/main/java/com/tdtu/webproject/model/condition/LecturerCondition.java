@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-public class EmployeeCondition {
-    private List<BigDecimal> employeeIds;
+public class LecturerCondition {
+    private List<BigDecimal> lecturerIds;
 }

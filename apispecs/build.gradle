@@ -20,21 +20,21 @@ openApiGenerate {
     invokerPackage = "generater.openapi.invoker"
     modelPackage = "generater.openapi.model"
 
-    templateDir ="${rootDir}/apispecs/src/main/resources/openapi/template"
+    templateDir = "${rootDir}/apispecs/src/main/resources/openapi/template"
     outputDir = "${rootDir}/apispecs/src/main/java"
 
     typeMappings = [
-            Double: "java.math.BigDecimal",
+            Double  : "java.math.BigDecimal",
             Datetime: "java.time.LocalDateTime",
-            Date: "java.time.LocalDate"
+            Date    : "java.time.LocalDate"
     ]
 
     configOptions = [
-            dateLibrary: "java17",
-            useTags: "true",
-            sourceFolder: "",
-            interfaceOnly: "true",
-            unhandledException: "true",
+            dateLibrary          : "java17",
+            useTags              : "true",
+            sourceFolder         : "",
+            interfaceOnly        : "true",
+            unhandledException   : "true",
             performBeanValidation: "true"
     ]
 }

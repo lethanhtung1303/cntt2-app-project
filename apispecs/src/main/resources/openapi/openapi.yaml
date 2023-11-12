@@ -14,19 +14,20 @@ paths:
 
   #    Start here
 
-  /v1/employee:
+  /v1/lecturer:
     get:
       tags:
-        - Employee
-      summary: Api for get Employee
-      operationId: employee
+        - Lecturer
+      summary: Api for get Lecturer
+      operationId: lecturer
       parameters:
-        - name: employeeIds
+        - name: lecturerIds
           in: query
           schema:
             type: string
             pattern: '^(\d{1,19},)*\d{1,19}$'
-            example: '123456'
+            description: List ID of Lecturer
+            example: '200'
       responses:
         400:
           $ref: '#/components/responses/webApiValidationError'
@@ -39,11 +40,12 @@ paths:
         500:
           $ref: '#/components/responses/500'
         200:
-          description: Product
+          description: Lecturer
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/EmployeeResponse'
+                $ref: '#/components/schemas/LecturerResponse'
+
   /v1/login:
     post:
       tags:
@@ -72,6 +74,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserResponse'
+
   #    End here
 
 components:
@@ -132,7 +135,7 @@ components:
 
     #    Start here
 
-    EmployeeResponse:
+    LecturerResponse:
       type: object
       properties:
         status:
@@ -142,303 +145,266 @@ components:
         results:
           type: object
           properties:
-            employees:
-              description: Employee list
+            lecturers:
+              description: Lecturer list
               type: array
               items:
-                $ref: '#/components/schemas/EmployeeDetailResponse'
+                $ref: '#/components/schemas/LecturerDetailResponse'
             resultsTotalCount:
-              description: Number of Employee with condition
+              description: Number of Lecturer with condition
               type: integer
               format: int64
               example: 1000
-    EmployeeDetailResponse:
+    LecturerDetailResponse:
       type: object
       properties:
-        ID:
-          description: ID of Employee
+        id:
           type: number
+          description: ID of Lecturer
           example: 200
-        EmployeeCode:
-          description: Code of Employee
+        firstName:
           type: string
-          example: '123456'
-        FirstName:
-          description: First Name of Employee
+          description: First Name of Lecturer
+          example: 'firstName'
+        fullName:
           type: string
-          example: '123456'
-        FullName:
-          description: First Name of Employee
-          type: string
-          example: '123456'
-        CommonName:
-          description: Common Name of Employee
-          type: string
-          example: '123456'
-        Gender:
-          description: Gender of Employee
+          description: Full Name of Lecturer
+          example: 'fullName'
+        gender:
           type: boolean
+          description: Gender of Lecturer
           example: true
-        Images:
-          description: Images of Employee
+        images:
           type: string
-          example: '123456'
-        Birthday:
-          description: Birthday of Employee
+          description: Images of Lecturer
+          example: 'images'
+        birthday:
           type: string
-          example: '123456'
-        PlaceOfBirth:
-          description: Place Of Birth of Employee
+          description: Birthday of Lecturer
+          example: 'Birthday'
+        placeOfBirth:
           type: string
-          example: '123456'
-        Married:
-          description: Married of Employee
-          type: boolean
-          example: true
-        Address:
-          description: Address of Employee
+          description: Place Of Birth of Lecturer
+          example: 'placeOfBirth'
+        address:
           type: string
-          example: '123456'
-        AddressTmp:
-          description: AddressTmp of Employee
+          description: Address of Lecturer
+          example: 'address'
+        addressTmp:
           type: string
-          example: '123456'
-        Phone:
-          description: Phone of Employee
+          description: Address Tmp of Lecturer
+          example: 'addressTmp'
+        phone:
           type: string
-          example: '123456'
-        Email:
-          description: Email of Employee
+          description: Phone of Lecturer
+          example: 'phone'
+        email:
           type: string
-          example: '123456'
-        CCCD:
-          description: CCCD of Employee
+          description: Email of Lecturer
+          example: 'email'
+        emailTdtu:
           type: string
-          example: '123456'
-        DateCCCD:
-          description: Date CCCD of Employee
+          description: Email TDTU of Lecturer
+          example: 'emailTdtu'
+        workplace:
           type: string
-          example: '123456'
-        IssuedBy:
-          description: Issued by of Employee
+          description: Workplace of Lecturer
+          example: 'workplace'
+        mainPosition:
           type: string
-          example: '123456'
-        DateStartWord:
-          description: Date start word of Employee
+          description: Main Position of Lecturer
+          example: 'mainPosition'
+        secondaryPosition:
           type: string
-          example: '123456'
-        Health:
-          description: Health of Employee
-          type: string
-          example: '123456'
-        Height:
-          description: Height of Employee
-          type: number
-          example: 200
-        Weight:
-          description: Weight of Employee
-          type: number
-          example: 200
-        StatusWork:
-          description: Status work of Employee
-          type: number
-          example: 200
-        NationalityID:
-          description: NationalityID of Employee
-          type: number
-          example: 200
-        NationID:
-          description: NationID of Employee
-          type: number
-          example: 200
-        ReligionID:
-          description: ReligionID of Employee
-          type: number
-          example: 200
-        DegreeID:
-          description: DegreeID of Employee
-          type: number
-          example: 200
-        ForeignID:
-          description: ForeignID of Employee
-          type: string
-          example: '123456'
-        BHXH:
-          description: BHXH of Employee
-          type: boolean
-          example: true
-        BHYT:
-          description: BHYT of Employee
-          type: boolean
-          example: true
-        BHTN:
-          description: BHTN of Employee
-          type: boolean
-          example: true
-        UnionDues:
-          description: UnionDues of Employee
-          type: boolean
-          example: true
-        Authority:
-          description: Authority of Employee
-          type: boolean
-          example: true
-        Note:
-          description: Note of Employee
-          type: string
-          example: '123456'
-        CreatedByUser:
-          description: Created by user of Employee
-          type: string
-          example: '123456'
-        CreatedByDate:
-          description: Created by date of Employee
-          type: string
-          example: '123456'
-        MaritalID:
-          description: MaritalID of Employee
-          type: number
-          example: 200
-        Comment:
-          description: Comment of Employee
-          type: string
-          example: '123456'
-        Department:
-          $ref: '#/components/schemas/Department'
-        DateUpdated:
-          description: Date updated of Employee
-          type: string
-          example: '123456'
-        UserLastUpdated:
-          description: User last updated of Employee
-          type: string
-          example: '123456'
-        Position:
-          $ref: '#/components/schemas/Position'
-        CompanyID:
-          description: CompanyID of Employee
-          type: number
-          example: 200
-        NoBHXH:
-          description: No BHXH of Employee
-          type: string
-          example: '123456'
-        DateBHXH:
-          description: Date BHXH of Employee
-          type: string
-          example: '123456'
-        IssueByBHXH:
-          description: Issue by BHXH of Employee
-          type: string
-          example: '123456'
-        NoBHYT:
-          description: No BHYT of Employee
-          type: string
-          example: '123456'
-        fromDateBHYT:
-          description: From Date BHYT of Employee
-          type: string
-          example: '123456'
-        toDateBHYT:
-          description: To Date BHYT of Employee
-          type: string
-          example: '123456'
-        ProvinceBHYT:
-          description: Province BHYT of Employee
-          type: string
-          example: '123456'
-        HopitalBHYT:
-          description: Hospital BHYT of Employee
-          type: string
-          example: '123456'
+          description: Secondary Position of Lecturer
+          example: 'secondaryPosition'
+        certificate:
+          description: Certificates of Lecturer
+          type: array
+          items:
+            $ref: '#/components/schemas/Certificate'
+        trainingProcess:
+          description: Training Process of Lecturer
+          type: array
+          items:
+            $ref: '#/components/schemas/TrainingProcess'
+        satisfactionScore:
+          description: Satisfaction Score of Lecturer
+          type: array
+          items:
+            $ref: '#/components/schemas/SatisfactionScore'
         isActive:
-          description: Active of Employee
           type: boolean
+          description: Is active of Lecturer
           example: true
-        LeaderID:
-          description: Leader ID of Employee
-          type: number
-          example: 200
-        ManagerID:
-          description: Manager ID of Employee
-          type: number
-          example: 200
-        Salary:
-          description: Salary of Employee
-          type: number
-          example: 200
-    Department:
-      description: Department
+        createdAt:
+          type: string
+          description: Created At of Lecturer
+          example: 'createdAt'
+        createdBy:
+          type: string
+          description: Created By of Lecturer
+          example: 'createdBy'
+        updatedAt:
+          type: string
+          description: Updated At of Lecturer
+          example: 'updatedAt'
+        updateBy:
+          type: string
+          description: Updated By of Lecturer
+          example: 'updateBy'
+        deletedFlag:
+          type: boolean
+          description: Deleted Flag of Lecturer
+          example: true
+        deletedAt:
+          type: string
+          description: Deleted At of Lecturer
+          example: 'deletedAt'
+        deletedBy:
+          type: string
+          description: Deleted By of Lecturer
+          example: 'deletedBy'
+    Certificate:
+      description: Certificate
       type: object
       properties:
-        ID:
-          description: ID of Department
+        id:
           type: number
+          description: Id of Certificate
           example: 200
-        NameDepartmentVN:
-          description: Name VN of Department
+        loaiChungChi:
           type: string
-          example: '123456'
-        NameDepartmentEN:
-          description: Name EN of Department
-          type: string
-          example: '123456'
-        isActive:
-          description: Active of Department
-          type: boolean
-          example: true
-        DateCreated:
-          description: Date created of Department
-          type: string
-          example: '123456'
-        UserCreated:
-          description: User created of Department
-          type: string
-          example: '123456'
-        DateUpdated:
-          description: Date updated of Department
-          type: string
-          example: '123456'
-        UserUpdated:
-          description: User updated of Department
-          type: string
-          example: '123456'
-    Position:
-      description: Position
+          description: Loai chung chi
+          example: 'loaiChungChi'
+        diem:
+          type: number
+          description: Diem of Certificate
+          example: 200
+    TrainingProcess:
+      description: Training Process
       type: object
       properties:
-        ID:
-          description: ID of Position
+        id:
           type: number
+          description: Id of Training Process
           example: 200
-        PositionNameVN:
-          description: Name VN of Position
+        level:
+          $ref: '#/components/schemas/Level'
+        language:
+          description: Languages of Training Process
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
+        truong:
           type: string
-          example: '123456'
-        PositionNameEN:
-          description: Name EN of Position
+          description: Truong of Training Process
+          example: 'truong'
+        nganh:
           type: string
-          example: '123456'
-        isActive:
-          description: Active of Position
-          type: boolean
-          example: true
-        DateCreated:
-          description: Date created of Position
+          description: Nganh of Training Process
+          example: 'nganh'
+        namTotNghiep:
+          type: number
+          description: Nam tot nghiep of Training Process
+          example: 'namTotNghiep'
+        deTaiTotNghiep:
           type: string
-          example: '123456'
-        UserCreated:
-          description: User created of Position
+          description: De tai tot nghiep of Training Process
+          example: 'deTaiTotNghiep'
+        nguoiHuongDan:
           type: string
-          example: '123456'
-        DateUpdated:
-          description: Date updated of Position
+          description: Nguoi huong dan of Training Process
+          example: 'nguoiHuongDan'
+        loaiTotNghiep:
           type: string
-          example: '123456'
-        UserUpdated:
-          description: User updated of Position
+          description: Loai tot nghiep of Training Process
+          example: 'loaiTotNghiep'
+    Level:
+      description: Level
+      type: object
+      properties:
+        id:
+          type: number
+          description: id of Level
+          example: 200
+        trinhDo:
           type: string
-          example: '123456'
+          description: Level
+          example: 'trinhDo'
+        kyHieu:
+          type: string
+          description: Ki hieu
+          example: 'kyHieu'
+        displayOrder:
+          type: number
+          description: Display order of Level
+          example: 200
+    Language:
+      description: Language
+      type: object
+      properties:
+        id:
+          type: number
+          description: id of Language
+          example: 200
+        tenNgonNgu:
+          type: string
+          description: Language
+          example: 'tenNgonNgu'
+    SatisfactionScore:
+      description: Satisfaction score
+      type: object
+      properties:
+        id:
+          type: number
+          description: id of Satisfaction score
+          example: 200
+        subject:
+          $ref: '#/components/schemas/Subject'
+        hocKy:
+          type: number
+          description: Hoc ky of Satisfaction score
+          example: 200
+        diemHaiLong:
+          type: number
+          description: Diem hai long of Satisfaction score
+          example: 200
+    Subject:
+      description: Subject
+      type: object
+      properties:
+        maMon:
+          type: string
+          description: Ma mon of Subject
+          example: 'maMon'
+        subjectGroup:
+          $ref: '#/components/schemas/SubjectGroup'
+        tenMon:
+          type: string
+          description: Subject
+          example: 'tenMon'
+        soTietLyThuyet:
+          type: number
+          description: So tiet ly thuyet of Subject
+          example: 200
+        soTietThucHanh:
+          type: number
+          description: So tiet thuc hanh of Subject
+          example: 200
+    SubjectGroup:
+      description: Subject group
+      type: object
+      properties:
+        maNhom:
+          type: string
+          description: Ma nhom of Subject group
+          example: 'maNhom'
+        tenNhom:
+          type: string
+          description: Subject group
+          example: 'tenNhom'
+
     LoginRequest:
       type: object
       required:

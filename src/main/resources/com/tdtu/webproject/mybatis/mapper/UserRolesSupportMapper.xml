@@ -14,20 +14,20 @@
     <select id="loadRoleDetail" resultMap="BaseResultMap">
         SELECT rc.ID AS ID,
         rc.ID AS IDCATEGORY,
-        rc.CATEGORYNAMEVN AS NAMECATEGORYNAMEVN,
+        rc.CATEGORY_NAME_VN AS NAMECATEGORYNAMEVN,
         ${employeeID} AS EMPLOYEEID,
-        COALESCE(r.ROLEVIEW, 0) AS ROLEVIEW,
-        COALESCE(r.ROLEUPDATE, 0) AS ROLEUPDATE,
-        COALESCE(r.ROLEDELETE, 0) AS ROLEDELETE
-        FROM TDT_ROLECATEGORY rc
+        COALESCE(r.ROLE_VIEW, 0) AS ROLEVIEW,
+        COALESCE(r.ROLE_UPDATE, 0) AS ROLEUPDATE,
+        COALESCE(r.ROLE_DELETE, 0) AS ROLEDELETE
+        FROM TDT_ROLE_CATEGORY rc
         LEFT JOIN TDT_ROLE r ON
-        r.CATEGORYROLE = rc.id
+        r.CATEGORY_ROLE = rc.ID
         <if test="(employeeID != null and employeeID != '')">
-            AND r.EMPLOYEEID = ${employeeID}
+            AND r.EMPLOYEE_ID = ${employeeID}
         </if>
-        LEFT JOIN TDT_INSTRUCTOR e ON
-        e.INSTRUCTORID = r.EMPLOYEEID
-        WHERE r.ISACTIVE IS NULL
-        OR r.ISACTIVE != 0;
+        LEFT JOIN TDT_giang_vien e ON
+        e.ID = r.EMPLOYEE_ID
+        WHERE r.IS_ACTIVE IS NULL
+        OR r.IS_ACTIVE != 0;
     </select>
 </mapper>

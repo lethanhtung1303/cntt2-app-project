@@ -1,9 +1,9 @@
 package com.tdtu.webproject.controller;
 
-import com.tdtu.webproject.service.EmployeeService;
-import generater.openapi.api.EmployeeApi;
-import generater.openapi.model.EmployeeResponse;
-import generater.openapi.model.EmployeeResponseResults;
+import com.tdtu.webproject.service.LecturerService;
+import generater.openapi.api.LecturerApi;
+import generater.openapi.model.LecturerResponse;
+import generater.openapi.model.LecturerResponseResults;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,22 +18,22 @@ import javax.validation.constraints.Pattern;
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequiredArgsConstructor
-public class EmployeeController implements EmployeeApi {
+public class LecturerController implements LecturerApi {
 
-    private final EmployeeService employeeService;
+    private final LecturerService lecturerService;
 
     @Override
-    public ResponseEntity<EmployeeResponse> employee(
+    public ResponseEntity<LecturerResponse> lecturer(
             @Pattern(regexp = "^(\\d{1,19},)*\\d{1,19}$")
             @ApiParam(value = "")
             @Validated
-            @RequestParam(value = "employeeIds", required = false)
-            String employeeIds) {
-        return ResponseEntity.ok(EmployeeResponse.builder()
+            @RequestParam(value = "lecturerIds", required = false)
+            String lecturerIds) {
+        return ResponseEntity.ok(LecturerResponse.builder()
                 .status(HttpStatus.OK.value())
-                .results(EmployeeResponseResults.builder()
-                        .resultsTotalCount(employeeService.count(employeeIds))
-                        .employees(employeeService.find(employeeIds))
+                .results(LecturerResponseResults.builder()
+                        .resultsTotalCount(lecturerService.count(lecturerIds))
+                        .lecturers(lecturerService.find(lecturerIds))
                         .build())
                 .build());
     }

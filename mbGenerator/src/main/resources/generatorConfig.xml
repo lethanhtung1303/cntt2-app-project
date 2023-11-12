@@ -56,75 +56,48 @@
         <table schema="%" tableName="TDT_%">
             <property name="ignoreQualifiersAtRuntime" value="true"/>
             <property name="useActualColumnNames" value="false"/>
+
             <columnOverride
-                    column="isActive"
+                    column="DELETED_FLAG"
                     javaType="java.lang.Boolean"
                     jdbcType="CHAR"
                     typeHandler="CharBooleanTypeHandler"
             />
 
             <columnOverride
-                    column="Gender"
+                    column="IS_ACTIVE"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+
+            <columnOverride
+                    column="GENDER"
+                    javaType="java.lang.Boolean"
+                    jdbcType="CHAR"
+                    typeHandler="CharBooleanTypeHandler"
+            />
+
+            <columnOverride
+                    column="ROLE_VIEW"
                     javaType="java.lang.Boolean"
                     jdbcType="CHAR"
                     typeHandler="CharBooleanTypeHandler"
             />
             <columnOverride
-                    column="Married"
+                    column="ROLE_UPDATE"
                     javaType="java.lang.Boolean"
                     jdbcType="CHAR"
                     typeHandler="CharBooleanTypeHandler"
             />
             <columnOverride
-                    column="BHXH"
+                    column="ROLE_DELETE"
                     javaType="java.lang.Boolean"
                     jdbcType="CHAR"
                     typeHandler="CharBooleanTypeHandler"
             />
             <columnOverride
-                    column="BHYT"
-                    javaType="java.lang.Boolean"
-                    jdbcType="CHAR"
-                    typeHandler="CharBooleanTypeHandler"
-            />
-            <columnOverride
-                    column="BHTN"
-                    javaType="java.lang.Boolean"
-                    jdbcType="CHAR"
-                    typeHandler="CharBooleanTypeHandler"
-            />
-            <columnOverride
-                    column="UnionDues"
-                    javaType="java.lang.Boolean"
-                    jdbcType="CHAR"
-                    typeHandler="CharBooleanTypeHandler"
-            />
-            <columnOverride
-                    column="Authority"
-                    javaType="java.lang.Boolean"
-                    jdbcType="CHAR"
-                    typeHandler="CharBooleanTypeHandler"
-            />
-            <columnOverride
-                    column="RoleView"
-                    javaType="java.lang.Boolean"
-                    jdbcType="CHAR"
-                    typeHandler="CharBooleanTypeHandler"
-            />
-            <columnOverride
-                    column="RoleUpdate"
-                    javaType="java.lang.Boolean"
-                    jdbcType="CHAR"
-                    typeHandler="CharBooleanTypeHandler"
-            />
-            <columnOverride
-                    column="RoleDelete"
-                    javaType="java.lang.Boolean"
-                    jdbcType="CHAR"
-                    typeHandler="CharBooleanTypeHandler"
-            />
-            <columnOverride
-                    column="isManagement"
+                    column="IS_MANAGEMENT"
                     javaType="java.lang.Boolean"
                     jdbcType="CHAR"
                     typeHandler="CharBooleanTypeHandler"
