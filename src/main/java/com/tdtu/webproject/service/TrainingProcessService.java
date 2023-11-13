@@ -27,7 +27,7 @@ public class TrainingProcessService {
         return TrainingProcessCondition.builder()
                 .lecturerIds(Optional.ofNullable(lecturerIds).isPresent()
                         ? Arrays.stream(lecturerIds.split(","))
-                        .map(contact -> NumberUtil.toBigDeimal(contact).orElse(null))
+                        .map(lecturerId -> NumberUtil.toBigDeimal(lecturerId).orElse(null))
                         .collect(Collectors.toList())
                         : Collections.emptyList())
                 // Add conditions if needed

@@ -4,12 +4,12 @@ import com.tdtu.mbGenerator.generate.mybatis.example.TdtDiemHaiLongExample;
 import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtDiemHaiLongMapper;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtDiemHaiLong;
 import com.tdtu.webproject.model.condition.SatisfactionScoreCondition;
+import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -21,7 +21,9 @@ public class SatisfactionScoreRepositoryImp implements SatisfactionScoreReposito
     public Long countSatisfactionScore(SatisfactionScoreCondition condition) {
         TdtDiemHaiLongExample example = new TdtDiemHaiLongExample();
         TdtDiemHaiLongExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(condition.getLecturerIds()).ifPresent(criteria::andIdIn);
+        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+            criteria.andGiangVienIdIn(condition.getLecturerIds());
+        }
         criteria.andIsActiveEqualTo(true);
         return satisfactionScoreMapper.countByExample(example);
     }
@@ -30,7 +32,9 @@ public class SatisfactionScoreRepositoryImp implements SatisfactionScoreReposito
     public List<TdtDiemHaiLong> findSatisfactionScore(SatisfactionScoreCondition condition) {
         TdtDiemHaiLongExample example = new TdtDiemHaiLongExample();
         TdtDiemHaiLongExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(condition.getLecturerIds()).ifPresent(criteria::andIdIn);
+        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+            criteria.andGiangVienIdIn(condition.getLecturerIds());
+        }
         criteria.andIsActiveEqualTo(true);
         return satisfactionScoreMapper.selectByExample(example);
     }

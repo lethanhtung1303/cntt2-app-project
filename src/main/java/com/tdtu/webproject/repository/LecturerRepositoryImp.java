@@ -4,12 +4,12 @@ import com.tdtu.mbGenerator.generate.mybatis.example.TdtGiangVienExample;
 import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtGiangVienMapper;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
 import com.tdtu.webproject.model.condition.LecturerCondition;
+import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -21,7 +21,9 @@ public class LecturerRepositoryImp implements LecturerRepository {
     public Long countLecturer(LecturerCondition condition) {
         TdtGiangVienExample example = new TdtGiangVienExample();
         TdtGiangVienExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(condition.getLecturerIds()).ifPresent(criteria::andIdIn);
+        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+            criteria.andIdIn(condition.getLecturerIds());
+        }
         criteria.andDeletedFlagEqualTo(false);
         return lecturerMapper.countByExample(example);
     }
@@ -30,7 +32,9 @@ public class LecturerRepositoryImp implements LecturerRepository {
     public List<TdtGiangVien> findLecturer(LecturerCondition condition) {
         TdtGiangVienExample example = new TdtGiangVienExample();
         TdtGiangVienExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(condition.getLecturerIds()).ifPresent(criteria::andIdIn);
+        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+            criteria.andIdIn(condition.getLecturerIds());
+        }
         criteria.andDeletedFlagEqualTo(false);
         return lecturerMapper.selectByExample(example);
     }

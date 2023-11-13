@@ -4,12 +4,12 @@ import com.tdtu.mbGenerator.generate.mybatis.example.TdtQuaTrinhDaoTaoExample;
 import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtQuaTrinhDaoTaoMapper;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
 import com.tdtu.webproject.model.condition.TrainingProcessCondition;
+import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
-import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -21,7 +21,9 @@ public class TrainingProcessRepositoryImp implements TrainingProcessRepository {
     public Long countTrainingProcess(TrainingProcessCondition condition) {
         TdtQuaTrinhDaoTaoExample example = new TdtQuaTrinhDaoTaoExample();
         TdtQuaTrinhDaoTaoExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(condition.getLecturerIds()).ifPresent(criteria::andIdIn);
+        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+            criteria.andGiangVienIdIn(condition.getLecturerIds());
+        }
         criteria.andIsActiveEqualTo(true);
         return trainingProcessMapper.countByExample(example);
     }
@@ -30,7 +32,9 @@ public class TrainingProcessRepositoryImp implements TrainingProcessRepository {
     public List<TdtQuaTrinhDaoTao> findTrainingProcess(TrainingProcessCondition condition) {
         TdtQuaTrinhDaoTaoExample example = new TdtQuaTrinhDaoTaoExample();
         TdtQuaTrinhDaoTaoExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(condition.getLecturerIds()).ifPresent(criteria::andIdIn);
+        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+            criteria.andGiangVienIdIn(condition.getLecturerIds());
+        }
         criteria.andIsActiveEqualTo(true);
         return trainingProcessMapper.selectByExample(example);
     }
