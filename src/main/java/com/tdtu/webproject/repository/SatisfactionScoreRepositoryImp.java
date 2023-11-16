@@ -21,7 +21,7 @@ public class SatisfactionScoreRepositoryImp implements SatisfactionScoreReposito
     public Long countSatisfactionScore(SatisfactionScoreCondition condition) {
         TdtDiemHaiLongExample example = new TdtDiemHaiLongExample();
         TdtDiemHaiLongExample.Criteria criteria = example.createCriteria();
-        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andGiangVienIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);
@@ -32,7 +32,7 @@ public class SatisfactionScoreRepositoryImp implements SatisfactionScoreReposito
     public List<TdtDiemHaiLong> findSatisfactionScore(SatisfactionScoreCondition condition) {
         TdtDiemHaiLongExample example = new TdtDiemHaiLongExample();
         TdtDiemHaiLongExample.Criteria criteria = example.createCriteria();
-        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andGiangVienIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);

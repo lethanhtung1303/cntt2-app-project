@@ -8,6 +8,7 @@ import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -29,5 +30,16 @@ public class SubjectGroupRepositoryImp implements SubjectGroupRepository {
         TdtNhomMonExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
         return subjectGroupMapper.selectByExample(example);
+    }
+
+    @Override
+    public TdtNhomMon getSubjectGroupById(String groupId) {
+        TdtNhomMonExample example = new TdtNhomMonExample();
+        TdtNhomMonExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(groupId).ifPresent(criteria::andMaNhomEqualTo);
+        criteria.andIsActiveEqualTo(true);
+        return subjectGroupMapper.selectByExample(example).stream()
+                .findFirst()
+                .orElse(null);
     }
 }

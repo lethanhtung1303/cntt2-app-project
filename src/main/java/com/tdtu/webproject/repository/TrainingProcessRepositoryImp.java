@@ -21,7 +21,7 @@ public class TrainingProcessRepositoryImp implements TrainingProcessRepository {
     public Long countTrainingProcess(TrainingProcessCondition condition) {
         TdtQuaTrinhDaoTaoExample example = new TdtQuaTrinhDaoTaoExample();
         TdtQuaTrinhDaoTaoExample.Criteria criteria = example.createCriteria();
-        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andGiangVienIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);
@@ -32,7 +32,7 @@ public class TrainingProcessRepositoryImp implements TrainingProcessRepository {
     public List<TdtQuaTrinhDaoTao> findTrainingProcess(TrainingProcessCondition condition) {
         TdtQuaTrinhDaoTaoExample example = new TdtQuaTrinhDaoTaoExample();
         TdtQuaTrinhDaoTaoExample.Criteria criteria = example.createCriteria();
-        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andGiangVienIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);

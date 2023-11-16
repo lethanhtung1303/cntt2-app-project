@@ -21,7 +21,7 @@ public class CertificateRepositoryImp implements CertificateRepository {
     public Long countCertificate(CertificateCondition condition) {
         TdtChungChiExample example = new TdtChungChiExample();
         TdtChungChiExample.Criteria criteria = example.createCriteria();
-        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andGiangVienIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);
@@ -32,7 +32,7 @@ public class CertificateRepositoryImp implements CertificateRepository {
     public List<TdtChungChi> findCertificate(CertificateCondition condition) {
         TdtChungChiExample example = new TdtChungChiExample();
         TdtChungChiExample.Criteria criteria = example.createCriteria();
-        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andGiangVienIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);

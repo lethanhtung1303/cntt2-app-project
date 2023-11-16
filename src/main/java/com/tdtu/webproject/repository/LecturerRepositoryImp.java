@@ -21,7 +21,7 @@ public class LecturerRepositoryImp implements LecturerRepository {
     public Long countLecturer(LecturerCondition condition) {
         TdtGiangVienExample example = new TdtGiangVienExample();
         TdtGiangVienExample.Criteria criteria = example.createCriteria();
-        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andIdIn(condition.getLecturerIds());
         }
         criteria.andDeletedFlagEqualTo(false);
@@ -32,7 +32,7 @@ public class LecturerRepositoryImp implements LecturerRepository {
     public List<TdtGiangVien> findLecturer(LecturerCondition condition) {
         TdtGiangVienExample example = new TdtGiangVienExample();
         TdtGiangVienExample.Criteria criteria = example.createCriteria();
-        if (!ArrayUtil.isNotNullOrEmptyList(condition.getLecturerIds())) {
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andIdIn(condition.getLecturerIds());
         }
         criteria.andDeletedFlagEqualTo(false);

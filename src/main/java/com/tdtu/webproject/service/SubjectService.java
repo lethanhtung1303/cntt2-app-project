@@ -12,7 +12,7 @@ import java.util.List;
 public class SubjectService {
     private final SubjectRepository subjectRepository;
 
-    public List<TdtMonHoc> findSubjectByMaMon(String maMon) {
-        return subjectRepository.findSubjectByMaMon(maMon);
+    public List<TdtMonHoc> getAllSubject() {
+        return subjectRepository.getAllSubject();
     }
 }

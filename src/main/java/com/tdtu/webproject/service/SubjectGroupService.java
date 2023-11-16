@@ -15,4 +15,8 @@ public class SubjectGroupService {
     public List<TdtNhomMon> getAllSubjectGroup() {
         return subjectGroupRepository.getAllSubjectGroup();
     }
+
+    public TdtNhomMon getSubjectGroupById(String groupId) {
+        return subjectGroupRepository.getSubjectGroupById(groupId);
+    }
 }

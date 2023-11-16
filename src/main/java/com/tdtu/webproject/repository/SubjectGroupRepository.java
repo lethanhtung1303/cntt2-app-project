@@ -8,4 +8,6 @@ public interface SubjectGroupRepository {
     Long countAllSubjectGroup();
 
     List<TdtNhomMon> getAllSubjectGroup();
+
+    TdtNhomMon getSubjectGroupById(String groupId);
 }

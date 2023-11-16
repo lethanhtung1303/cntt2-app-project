@@ -1,14 +1,11 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtChungChi;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtDiemHaiLong;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.model.*;
 import com.tdtu.webproject.model.condition.LecturerCondition;
 import com.tdtu.webproject.repository.LecturerRepository;
 import com.tdtu.webproject.utils.DateUtil;
 import com.tdtu.webproject.utils.NumberUtil;
-import generater.openapi.model.LecturerDetailResponse;
+import generater.openapi.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -23,6 +20,11 @@ public class LecturerService {
     private final CertificateService certificateService;
     private final TrainingProcessService trainingProcessService;
     private final SatisfactionScoreService satisfactionScoreService;
+    private final TrainingLanguageService trainingLanguageService;
+    private final LanguageService languageService;
+    private final LevelService levelService;
+    private final SubjectService subjectService;
+    private final SubjectGroupService subjectGroupService;
 
     public Long count(String lecturerIds) {
         LecturerCondition condition = this.buildLecturerCondition(lecturerIds);
@@ -46,7 +48,10 @@ public class LecturerService {
 
         return Optional.ofNullable(lecturerList).isPresent()
                 ? lecturerList.stream()
-                .map(lecturer -> this.buildLecturerDetailResponse(lecturer, certificateMap.get(lecturer.getId()), trainingProcessMap.get(lecturer.getId()), satisfactionScoreMap.get(lecturer.getId())))
+                .map(lecturer -> this.buildLecturerDetailResponse(lecturer,
+                        certificateMap.getOrDefault(lecturer.getId(), Collections.emptyList()),
+                        trainingProcessMap.getOrDefault(lecturer.getId(), Collections.emptyList()),
+                        satisfactionScoreMap.getOrDefault(lecturer.getId(), Collections.emptyList())))
                 .toList().stream()
                 .sorted(Comparator
                         .comparing(LecturerDetailResponse::getCreatedAt)
@@ -55,8 +60,52 @@ public class LecturerService {
                 : Collections.emptyList();
     }
 
-    private LecturerDetailResponse buildLecturerDetailResponse(TdtGiangVien lecturer, List<TdtChungChi> certificateList, List<TdtQuaTrinhDaoTao> trainingProcessList, List<TdtDiemHaiLong> satisfactionScoreList) {
-        
+    private LecturerDetailResponse buildLecturerDetailResponse(TdtGiangVien lecturer,
+                                                               List<TdtChungChi> certificateList,
+                                                               List<TdtQuaTrinhDaoTao> trainingProcessList,
+                                                               List<TdtDiemHaiLong> satisfactionScoreList) {
+        List<TdtNgonNguDaoTao> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
+        List<TdtNgonNgu> languageList = languageService.getAllLanguage();
+        List<TdtTrinhDo> levelList = levelService.getAllLevel();
+        List<TdtMonHoc> subjectList = subjectService.getAllSubject();
+
+        Map<BigDecimal, List<Language>> trainingLanguageMap = trainingLanguageList.stream()
+                .collect(Collectors.groupingBy(TdtNgonNguDaoTao::getQuaTrinhDaoTaoId,
+                        Collectors.mapping(trainingLanguage -> getLanguageById(trainingLanguage.getNgonNguId(),
+                                        languageList),
+                                Collectors.toList())));
+
+        Map<BigDecimal, TdtTrinhDo> levelMap = levelList.stream()
+                .collect(Collectors.toMap(TdtTrinhDo::getId, level -> level));
+
+        List<TrainingProcess> trainingProcesses = trainingProcessList.stream()
+                .map(trainingProcess -> TrainingProcess.builder()
+                        .id(trainingProcess.getId())
+                        .level(Optional.ofNullable(levelMap.getOrDefault(trainingProcess.getTrinhDoId(), null)).isPresent()
+                                ? this.buildLevel(levelMap.get(trainingProcess.getTrinhDoId()))
+                                : null)
+                        .language(trainingLanguageMap.getOrDefault(trainingProcess.getId(), Collections.emptyList()))
+                        .truong(trainingProcess.getTruong())
+                        .nganh(trainingProcess.getNganh())
+                        .namTotNghiep(trainingProcess.getNamTotNghiep())
+                        .deTaiTotNghiep(trainingProcess.getDeTaiTotNghiep())
+                        .nguoiHuongDan(trainingProcess.getNguoiHuongDan())
+                        .loaiTotNghiep(trainingProcess.getLoaiTotNghiep())
+                        .build())
+                .toList();
+
+        Map<String, TdtMonHoc> subjectMap = subjectList.stream()
+                .collect(Collectors.toMap(TdtMonHoc::getMaMon, subject -> subject));
+
+        List<SatisfactionScore> satisfactionScores = satisfactionScoreList.stream()
+                .map(satisfactionScore -> SatisfactionScore.builder()
+                        .id(satisfactionScore.getId())
+                        .subject(this.buildSubject(subjectMap.getOrDefault(satisfactionScore.getMaMon(), null)))
+                        .hocKy(satisfactionScore.getHocKy())
+                        .diemHaiLong(satisfactionScore.getDiemHaiLong())
+                        .build())
+                .toList();
+
         return LecturerDetailResponse.builder()
                 .id(lecturer.getId())
                 .firstName(lecturer.getFirstName())
@@ -75,9 +124,13 @@ public class LecturerService {
                 .workplace(lecturer.getWorkplace())
                 .mainPosition(lecturer.getMainPosition())
                 .secondaryPosition(lecturer.getSecondaryPosition())
-//                .certificate()
-//                .trainingProcess()
-//                .satisfactionScore()
+                .certificate(Optional.ofNullable(certificateList).isPresent()
+                        ? certificateList.stream()
+                        .map(this::buildCertificate)
+                        .collect(Collectors.toList())
+                        : Collections.emptyList())
+                .trainingProcess(trainingProcesses)
+                .satisfactionScore(satisfactionScores)
                 .isActive(lecturer.getIsActive())
                 .createdAt(Optional.ofNullable(lecturer.getCreatedAt()).isPresent()
                         ? DateUtil.getValueFromLocalDateTime(lecturer.getCreatedAt(), DateUtil.DATETIME_FORMAT_SLASH)
@@ -99,9 +152,55 @@ public class LecturerService {
         return LecturerCondition.builder()
                 .lecturerIds(Optional.ofNullable(lecturerIds).isPresent()
                         ? Arrays.stream(lecturerIds.split(","))
-                        .map(contact -> NumberUtil.toBigDeimal(contact).orElse(null))
+                        .map(lecturerId -> NumberUtil.toBigDeimal(lecturerId).orElse(null))
                         .collect(Collectors.toList())
                         : Collections.emptyList())
+                .build();
+    }
+
+    public Certificate buildCertificate(TdtChungChi certificateList) {
+        return Certificate.builder()
+                .id(certificateList.getId())
+                .loaiChungChi(certificateList.getLoaiChungChi())
+                .diem(certificateList.getDiem())
+                .build();
+    }
+
+    public Language getLanguageById(BigDecimal languageId, List<TdtNgonNgu> languageList) {
+        return languageList.stream()
+                .filter(language -> language.getId().equals(languageId))
+                .map(this::buildLanguage)
+                .findFirst()
+                .orElse(null);
+    }
+
+    public Language buildLanguage(TdtNgonNgu language) {
+        return Language.builder()
+                .id(language.getId())
+                .tenNgonNgu(language.getTenNgonNgu())
+                .build();
+    }
+
+    public Level buildLevel(TdtTrinhDo level) {
+        return Level.builder()
+                .id(level.getId())
+                .trinhDo(level.getTrinhDo())
+                .kyHieu(level.getKyHieu())
+                .displayOrder(level.getDisplayOrder())
+                .build();
+    }
+
+    private Subject buildSubject(TdtMonHoc subject) {
+        TdtNhomMon subjectGroup = subjectGroupService.getSubjectGroupById(subject.getMaNhom());
+        return Subject.builder()
+                .maMon(subject.getMaMon())
+                .subjectGroup(SubjectGroup.builder()
+                        .maNhom(subjectGroup.getMaNhom())
+                        .tenNhom(subjectGroup.getTenNhom())
+                        .build())
+                .tenMon(subject.getTenMon())
+                .soTietLyThuyet(subject.getSoTietLyThuyet())
+                .soTietThucHanh(subject.getSoTietThucHanh())
                 .build();
     }
 }

@@ -21,7 +21,7 @@ public class TrainingLanguageRepositoryImp implements TrainingLanguageRepository
     public Long countAllTrainingLanguage(TrainingLanguageCondition condition) {
         TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
         TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
-        if (!ArrayUtil.isNotNullOrEmptyList(condition.getTrainingProcessIds())) {
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getTrainingProcessIds())) {
             criteria.andQuaTrinhDaoTaoIdIn(condition.getTrainingProcessIds());
         }
         criteria.andIsActiveEqualTo(true);
@@ -32,7 +32,7 @@ public class TrainingLanguageRepositoryImp implements TrainingLanguageRepository
     public List<TdtNgonNguDaoTao> findTrainingLanguage(TrainingLanguageCondition condition) {
         TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
         TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
-        if (!ArrayUtil.isNotNullOrEmptyList(condition.getTrainingProcessIds())) {
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getTrainingProcessIds())) {
             criteria.andQuaTrinhDaoTaoIdIn(condition.getTrainingProcessIds());
         }
         criteria.andIsActiveEqualTo(true);
