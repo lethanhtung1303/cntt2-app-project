@@ -9,6 +9,8 @@ import java.time.format.ResolverStyle;
 
 public class DateUtil {
     public static final String YYYYMMDD_FORMAT_SLASH = "uuuu/MM/dd";
+    public static final String DDMMYYYY_FORMAT_HYPHEN = "dd-MM-uuuu";
+    public static final String YYYYMMDD_FORMAT_HYPHEN = "uuuu-MM-dd";
     public static final String DATETIME_FORMAT_SLASH = "uuuu/MM/dd HH:mm:ss";
 
     public static LocalDateTime getTimeNow() {

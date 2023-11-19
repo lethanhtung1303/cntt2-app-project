@@ -218,6 +218,8 @@ components:
           type: string
           description: Secondary Position of Lecturer
           example: 'secondaryPosition'
+        classificationLecturers:
+          $ref: '#/components/schemas/ClassificationLecturers'
         certificate:
           description: Certificates of Lecturer
           type: array
@@ -265,6 +267,18 @@ components:
           type: string
           description: Deleted By of Lecturer
           example: 'deletedBy'
+    ClassificationLecturers:
+      description: Classification Lecturers
+      type: object
+      properties:
+        maLoai:
+          type: number
+          description: Ma Loai of Classification Lecturers
+          example: 200
+        phanLoai:
+          type: string
+          description: Classification Lecturers
+          example: 'phanLoai'
     Certificate:
       description: Certificate
       type: object

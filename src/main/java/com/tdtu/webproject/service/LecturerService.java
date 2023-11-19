@@ -25,6 +25,7 @@ public class LecturerService {
     private final LevelService levelService;
     private final SubjectService subjectService;
     private final SubjectGroupService subjectGroupService;
+    private final ClassificationLecturerService classificationLecturerService;
 
     public Long count(String lecturerIds) {
         LecturerCondition condition = this.buildLecturerCondition(lecturerIds);
@@ -68,6 +69,10 @@ public class LecturerService {
         List<TdtNgonNgu> languageList = languageService.getAllLanguage();
         List<TdtTrinhDo> levelList = levelService.getAllLevel();
         List<TdtMonHoc> subjectList = subjectService.getAllSubject();
+        List<TdtLoaiGiangVien> classificationLecturerList = classificationLecturerService.getAllClassification();
+
+        Map<BigDecimal, TdtLoaiGiangVien> classificationLecturerMap = classificationLecturerList.stream()
+                .collect(Collectors.toMap(TdtLoaiGiangVien::getMaLoai, classification -> classification));
 
         Map<BigDecimal, List<Language>> trainingLanguageMap = trainingLanguageList.stream()
                 .collect(Collectors.groupingBy(TdtNgonNguDaoTao::getQuaTrinhDaoTaoId,
@@ -113,7 +118,7 @@ public class LecturerService {
                 .gender(lecturer.getGender())
                 .images(lecturer.getImages())
                 .birthday(Optional.ofNullable(lecturer.getBirthday()).isPresent()
-                        ? DateUtil.getValueFromLocalDateTime(lecturer.getBirthday(), DateUtil.DATETIME_FORMAT_SLASH)
+                        ? DateUtil.getValueFromLocalDateTime(lecturer.getBirthday(), DateUtil.YYYYMMDD_FORMAT_HYPHEN)
                         : null)
                 .placeOfBirth(lecturer.getPlaceOfBirth())
                 .address(lecturer.getAddress())
@@ -124,6 +129,7 @@ public class LecturerService {
                 .workplace(lecturer.getWorkplace())
                 .mainPosition(lecturer.getMainPosition())
                 .secondaryPosition(lecturer.getSecondaryPosition())
+                .classificationLecturers(this.buildClassificationLecturers(classificationLecturerMap.getOrDefault(lecturer.getClassificationLecturers(), null)))
                 .certificate(Optional.ofNullable(certificateList).isPresent()
                         ? certificateList.stream()
                         .map(this::buildCertificate)
@@ -201,6 +207,13 @@ public class LecturerService {
                 .tenMon(subject.getTenMon())
                 .soTietLyThuyet(subject.getSoTietLyThuyet())
                 .soTietThucHanh(subject.getSoTietThucHanh())
+                .build();
+    }
+
+    private ClassificationLecturers buildClassificationLecturers(TdtLoaiGiangVien classification) {
+        return ClassificationLecturers.builder()
+                .maLoai(classification.getMaLoai())
+                .phanLoai(classification.getPhanLoai())
                 .build();
     }
 }
