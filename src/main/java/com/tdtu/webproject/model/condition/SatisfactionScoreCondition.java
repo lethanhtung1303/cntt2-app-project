@@ -12,4 +12,6 @@ import java.util.List;
 @AllArgsConstructor
 public class SatisfactionScoreCondition {
     private List<BigDecimal> lecturerIds;
+    private List<BigDecimal> satisfactionScoreIds;
+    private String updateBy;
 }

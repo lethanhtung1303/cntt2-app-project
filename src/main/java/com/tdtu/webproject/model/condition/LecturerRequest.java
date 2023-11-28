@@ -4,14 +4,11 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 
-import java.math.BigDecimal;
-import java.util.List;
-
 @Data
 @Builder
 @AllArgsConstructor
-public class LecturerCondition {
-    private List<BigDecimal> lecturerIds;
+public class LecturerRequest {
+    private String lecturerIds;
     private String deleteBy;
     private String emailTdtu;
 }

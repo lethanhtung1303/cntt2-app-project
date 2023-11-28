@@ -1,8 +1,12 @@
 package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtNgonNguDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
 import com.tdtu.webproject.model.condition.TrainingLanguageCondition;
+import com.tdtu.webproject.model.condition.TrainingProcessCondition;
 import com.tdtu.webproject.repository.TrainingLanguageRepository;
+import com.tdtu.webproject.repository.TrainingProcessRepository;
+import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -15,6 +19,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class TrainingProcessManageService {
     private final TrainingLanguageRepository trainingLanguageRepository;
+    private final TrainingProcessRepository trainingProcessRepository;
 
     public List<TdtNgonNguDaoTao> getAllLanguageOfTrainingProcess(BigDecimal trainingProcessId) {
         return trainingLanguageRepository.findTrainingLanguage(this.buildTrainingLanguageCondition(trainingProcessId));
@@ -27,5 +32,14 @@ public class TrainingProcessManageService {
                         : Collections.emptyList())
                 // Add conditions if needed
                 .build();
+    }
+
+    public boolean checkExistTrainingProcess(BigDecimal processId) {
+        List<TdtQuaTrinhDaoTao> trainingProcessList = trainingProcessRepository
+                .findTrainingProcess(
+                        TrainingProcessCondition.builder()
+                                .processIds(List.of(processId))
+                                .build());
+        return ArrayUtil.isNotNullAndNotEmptyList(trainingProcessList);
     }
 }

@@ -9,7 +9,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.Optional;
 
 @Repository
 @AllArgsConstructor
@@ -53,5 +55,21 @@ public class TrainingLanguageRepositoryImp implements TrainingLanguageRepository
         TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
         return trainingLanguageMapper.selectByExample(example);
+    }
+
+    @Override
+    public int create(TdtNgonNguDaoTao record) {
+        return trainingLanguageMapper.insertSelective(record);
+    }
+
+    @Override
+    public int deleteByTrainingId(BigDecimal trainingId) {
+        TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
+        TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(trainingId).ifPresent(criteria::andQuaTrinhDaoTaoIdEqualTo);
+        TdtNgonNguDaoTao record = TdtNgonNguDaoTao.builder()
+                .isActive(false)
+                .build();
+        return trainingLanguageMapper.updateByExampleSelective(record, example);
     }
 }

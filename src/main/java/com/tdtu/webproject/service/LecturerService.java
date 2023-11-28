@@ -1,8 +1,12 @@
 package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.*;
+import com.tdtu.webproject.constant.Const;
+import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.model.condition.LecturerCondition;
+import com.tdtu.webproject.model.condition.LecturerRequest;
 import com.tdtu.webproject.repository.LecturerRepository;
+import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;
 import com.tdtu.webproject.utils.NumberUtil;
 import generater.openapi.model.*;
@@ -23,17 +27,26 @@ public class LecturerService {
     private final TrainingLanguageService trainingLanguageService;
     private final LanguageService languageService;
     private final LevelService levelService;
+    private final GraduationTypeService graduationTypeService;
     private final SubjectService subjectService;
     private final SubjectGroupService subjectGroupService;
     private final ClassificationLecturerService classificationLecturerService;
+    private final LecturerManageService lecturerManageService;
+    private final ClassificationManageService classificationManageService;
 
     public Long count(String lecturerIds) {
-        LecturerCondition condition = this.buildLecturerCondition(lecturerIds);
+        LecturerRequest request = LecturerRequest.builder()
+                .lecturerIds(lecturerIds)
+                .build();
+        LecturerCondition condition = this.buildLecturerCondition(request);
         return lecturerRepository.countLecturer(condition);
     }
 
     public List<LecturerDetailResponse> find(String lecturerIds) {
-        List<TdtGiangVien> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(lecturerIds));
+        LecturerRequest request = LecturerRequest.builder()
+                .lecturerIds(lecturerIds)
+                .build();
+        List<TdtGiangVien> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
 
         List<TdtChungChi> certificateList = certificateService.findByLecturerId(lecturerIds);
         Map<BigDecimal, List<TdtChungChi>> certificateMap = certificateList.stream()
@@ -68,6 +81,7 @@ public class LecturerService {
         List<TdtNgonNguDaoTao> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
         List<TdtNgonNgu> languageList = languageService.getAllLanguage();
         List<TdtTrinhDo> levelList = levelService.getAllLevel();
+        List<TdtLoaiTotNghiep> graduationTypeList = graduationTypeService.getAllGraduationType();
         List<TdtMonHoc> subjectList = subjectService.getAllSubject();
         List<TdtLoaiGiangVien> classificationLecturerList = classificationLecturerService.getAllClassification();
 
@@ -83,6 +97,9 @@ public class LecturerService {
         Map<BigDecimal, TdtTrinhDo> levelMap = levelList.stream()
                 .collect(Collectors.toMap(TdtTrinhDo::getId, level -> level));
 
+        Map<BigDecimal, TdtLoaiTotNghiep> graduationTypeMap = graduationTypeList.stream()
+                .collect(Collectors.toMap(TdtLoaiTotNghiep::getId, graduationType -> graduationType));
+
         List<TrainingProcess> trainingProcesses = trainingProcessList.stream()
                 .map(trainingProcess -> TrainingProcess.builder()
                         .id(trainingProcess.getId())
@@ -95,7 +112,12 @@ public class LecturerService {
                         .namTotNghiep(trainingProcess.getNamTotNghiep())
                         .deTaiTotNghiep(trainingProcess.getDeTaiTotNghiep())
                         .nguoiHuongDan(trainingProcess.getNguoiHuongDan())
-                        .loaiTotNghiep(trainingProcess.getLoaiTotNghiep())
+                        .graduationType(Optional.ofNullable(graduationTypeMap.getOrDefault(trainingProcess.getLoaiTotNghiepId(), null)).isPresent()
+                                ? GraduationType.builder()
+                                .id(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getId())
+                                .loaiTotNghiep(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getLoaiTotNghiep())
+                                .build()
+                                : null)
                         .build())
                 .toList();
 
@@ -154,10 +176,22 @@ public class LecturerService {
                 .build();
     }
 
-    private LecturerCondition buildLecturerCondition(String lecturerIds) {
+    private LecturerCondition buildLecturerConditionForDelete(LecturerDeleteRequest request) {
         return LecturerCondition.builder()
-                .lecturerIds(Optional.ofNullable(lecturerIds).isPresent()
-                        ? Arrays.stream(lecturerIds.split(","))
+                .lecturerIds(Optional.ofNullable(request.getLecturerIds()).isPresent()
+                        ? Arrays.stream(request.getLecturerIds().split(","))
+                        .map(lecturerId -> NumberUtil.toBigDeimal(lecturerId).orElse(null))
+                        .collect(Collectors.toList())
+                        : Collections.emptyList())
+                .deleteBy(request.getDeleteBy())
+                .build();
+    }
+
+    private LecturerCondition buildLecturerCondition(LecturerRequest request) {
+        return LecturerCondition.builder()
+                .emailTdtu(request.getEmailTdtu())
+                .lecturerIds(Optional.ofNullable(request.getLecturerIds()).isPresent()
+                        ? Arrays.stream(request.getLecturerIds().split(","))
                         .map(lecturerId -> NumberUtil.toBigDeimal(lecturerId).orElse(null))
                         .collect(Collectors.toList())
                         : Collections.emptyList())
@@ -214,6 +248,91 @@ public class LecturerService {
         return ClassificationLecturers.builder()
                 .maLoai(classification.getMaLoai())
                 .phanLoai(classification.getPhanLoai())
+                .build();
+    }
+
+    public String updateLecturer(BigDecimal lecturerId, LecturerUpdate lecturer, String updateBy) {
+        if (Optional.ofNullable(lecturerId).isPresent()) {
+            if (!lecturerManageService.checkExistLecturer(lecturerId)) {
+                throw new BusinessException("40001", "Not found Lecturer with ID: " + lecturerId);
+            }
+            if (!classificationManageService.checkExistClassification(lecturer.getClassification())) {
+                throw new BusinessException("40002", "Invalid Lecturer Classification!");
+            }
+            return lecturerRepository.update(this.buildTdtGiangVienForUpdate(lecturer, updateBy), lecturerId) > 0
+                    ? Const.SUCCESSFUL
+                    : Const.FAIL;
+        }
+        return Const.FAIL;
+    }
+
+    private TdtGiangVien buildTdtGiangVienForUpdate(LecturerUpdate lecturer, String updateBy) {
+        return TdtGiangVien.builder()
+                .firstName(lecturer.getFirstName())
+                .fullName(lecturer.getFullName())
+                .gender(lecturer.getGender())
+                .images(lecturer.getImages())
+                .birthday(DateUtil.parseLocalDateTime(DateUtil.parseLocalDate(lecturer.getBirthday(), DateUtil.YYYYMMDD_FORMAT_HYPHEN)))
+                .placeOfBirth(lecturer.getPlaceOfBirth())
+                .address(lecturer.getAddress())
+                .addressTmp(lecturer.getAddressTmp())
+                .phone(lecturer.getPhone())
+                .email(lecturer.getEmail())
+                .emailTdtu(lecturer.getEmailTdtu())
+                .workplace(lecturer.getWorkplace())
+                .mainPosition(lecturer.getMainPosition())
+                .secondaryPosition(lecturer.getSecondaryPosition())
+                .classificationLecturers(lecturer.getClassification())
+                .updateBy(updateBy)
+                .updatedAt(DateUtil.getTimeNow())
+                .build();
+    }
+
+    public String deleteLecturer(LecturerDeleteRequest request) {
+        LecturerCondition condition = this.buildLecturerConditionForDelete(request);
+        if (!ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
+            throw new BusinessException("40001", "The list of deleted Lecturers is empty!");
+        }
+        return lecturerRepository.delete(condition) > 0
+                ? Const.SUCCESSFUL
+                : Const.FAIL;
+    }
+
+    public String createLecturer(LecturerCreate lecturer, String createBy) {
+        if (!classificationManageService.checkExistClassification(lecturer.getClassification())) {
+            throw new BusinessException("40001", "Invalid Lecturer Classification!");
+        }
+        LecturerRequest request = LecturerRequest.builder()
+                .emailTdtu(lecturer.getEmailTdtu())
+                .build();
+        List<TdtGiangVien> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
+        if (ArrayUtil.isNotNullAndNotEmptyList(lecturerList)) {
+            throw new BusinessException("40002", "Lecturer already exists in the system!");
+        }
+        return lecturerRepository.create(this.buildTdtGiangVienForCreate(lecturer, createBy)) > 0
+                ? Const.SUCCESSFUL
+                : Const.FAIL;
+    }
+
+    private TdtGiangVien buildTdtGiangVienForCreate(LecturerCreate lecturer, String createBy) {
+        return TdtGiangVien.builder()
+                .firstName(lecturer.getFirstName())
+                .fullName(lecturer.getFullName())
+                .gender(lecturer.getGender())
+                .images(lecturer.getImages())
+                .birthday(DateUtil.parseLocalDateTime(DateUtil.parseLocalDate(lecturer.getBirthday(), DateUtil.YYYYMMDD_FORMAT_HYPHEN)))
+                .placeOfBirth(lecturer.getPlaceOfBirth())
+                .address(lecturer.getAddress())
+                .addressTmp(lecturer.getAddressTmp())
+                .phone(lecturer.getPhone())
+                .email(lecturer.getEmail())
+                .emailTdtu(lecturer.getEmailTdtu())
+                .workplace(lecturer.getWorkplace())
+                .mainPosition(lecturer.getMainPosition())
+                .secondaryPosition(lecturer.getSecondaryPosition())
+                .classificationLecturers(lecturer.getClassification())
+                .createdBy(createBy)
+                .createdAt(DateUtil.getTimeNow())
                 .build();
     }
 }

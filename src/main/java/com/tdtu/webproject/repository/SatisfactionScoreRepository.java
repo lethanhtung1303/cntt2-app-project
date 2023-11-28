@@ -9,4 +9,8 @@ public interface SatisfactionScoreRepository {
     Long countSatisfactionScore(SatisfactionScoreCondition condition);
 
     List<TdtDiemHaiLong> findSatisfactionScore(SatisfactionScoreCondition condition);
+
+    int delete(SatisfactionScoreCondition condition);
+
+    int create(TdtDiemHaiLong record);
 }
