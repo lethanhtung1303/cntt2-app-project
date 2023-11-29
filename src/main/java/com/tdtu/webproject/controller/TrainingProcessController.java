@@ -2,10 +2,7 @@ package com.tdtu.webproject.controller;
 
 import com.tdtu.webproject.service.TrainingProcessService;
 import generater.openapi.api.TrainingProcessApi;
-import generater.openapi.model.TrainingProcessCreateRequest;
-import generater.openapi.model.TrainingProcessCreateResponse;
-import generater.openapi.model.TrainingProcessUpdateRequest;
-import generater.openapi.model.TrainingProcessUpdateResponse;
+import generater.openapi.model.*;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -44,6 +41,18 @@ public class TrainingProcessController implements TrainingProcessApi {
         return ResponseEntity.ok(TrainingProcessUpdateResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(trainingProcessService.updateTrainingProcess(trainingProcessUpdateRequest.getProcessId(), trainingProcessUpdateRequest.getTrainingProcessUpdate(), trainingProcessUpdateRequest.getUpdateBy()))
+                .build());
+    }
+
+    @Override
+    public ResponseEntity<TrainingProcessDeleteResponse> deleteTrainingProcess(
+            @ApiParam(value = "")
+            @Valid
+            @RequestBody TrainingProcessDeleteRequest trainingProcessDeleteRequest,
+            BindingResult bindingResult1) {
+        return ResponseEntity.ok(TrainingProcessDeleteResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(trainingProcessService.deleteTrainingProcess(trainingProcessDeleteRequest))
                 .build());
     }
 }

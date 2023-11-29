@@ -14,4 +14,6 @@ public interface TrainingProcessRepository {
     List<TdtQuaTrinhDaoTao> create(TdtQuaTrinhDaoTao tdtQuaTrinhDaoTao);
 
     int update(TdtQuaTrinhDaoTao tdtQuaTrinhDaoTao, BigDecimal processId);
+
+    int delete(TrainingProcessCondition condition);
 }

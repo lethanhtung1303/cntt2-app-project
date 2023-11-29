@@ -13,4 +13,5 @@ import java.util.List;
 public class TrainingProcessCondition {
     private List<BigDecimal> lecturerIds;
     private List<BigDecimal> processIds;
+    private String updateBy;
 }

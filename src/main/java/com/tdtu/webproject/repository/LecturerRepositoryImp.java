@@ -38,6 +38,7 @@ public class LecturerRepositoryImp implements LecturerRepository {
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andIdIn(condition.getLecturerIds());
         }
+        Optional.ofNullable(condition.getEmailTdtu()).ifPresent(criteria::andEmailTdtuEqualTo);
         criteria.andDeletedFlagEqualTo(false);
         return lecturerMapper.selectByExample(example);
     }

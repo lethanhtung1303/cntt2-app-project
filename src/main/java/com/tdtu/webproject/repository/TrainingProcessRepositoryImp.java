@@ -5,6 +5,7 @@ import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtQuaTrinhDaoTaoMapper;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
 import com.tdtu.webproject.model.condition.TrainingProcessCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
+import com.tdtu.webproject.utils.DateUtil;
 import com.tdtu.webproject.utils.StringUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
@@ -78,6 +79,23 @@ public class TrainingProcessRepositoryImp implements TrainingProcessRepository {
         TdtQuaTrinhDaoTaoExample example = new TdtQuaTrinhDaoTaoExample();
         TdtQuaTrinhDaoTaoExample.Criteria criteria = example.createCriteria();
         Optional.ofNullable(processId).ifPresent(criteria::andIdEqualTo);
+        return trainingProcessMapper.updateByExampleSelective(record, example);
+    }
+
+    @Override
+    public int delete(TrainingProcessCondition condition) {
+        TdtQuaTrinhDaoTaoExample example = new TdtQuaTrinhDaoTaoExample();
+        TdtQuaTrinhDaoTaoExample.Criteria criteria = example.createCriteria();
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getProcessIds())) {
+            criteria.andIdIn(condition.getProcessIds());
+        }
+        criteria.andIsActiveEqualTo(true);
+
+        TdtQuaTrinhDaoTao record = TdtQuaTrinhDaoTao.builder()
+                .isActive(false)
+                .updatedAt(DateUtil.getTimeNow())
+                .updateBy(condition.getUpdateBy())
+                .build();
         return trainingProcessMapper.updateByExampleSelective(record, example);
     }
 }

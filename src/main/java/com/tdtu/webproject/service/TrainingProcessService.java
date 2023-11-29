@@ -11,6 +11,7 @@ import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;
 import com.tdtu.webproject.utils.NumberUtil;
 import generater.openapi.model.TrainingProcessCreate;
+import generater.openapi.model.TrainingProcessDeleteRequest;
 import generater.openapi.model.TrainingProcessUpdate;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -150,6 +151,27 @@ public class TrainingProcessService {
                 .loaiTotNghiepId(trainingProcess.getLoaiTotNghiep())
                 .updatedAt(DateUtil.getTimeNow())
                 .updateBy(updateBy)
+                .build();
+    }
+
+    public String deleteTrainingProcess(TrainingProcessDeleteRequest request) {
+        TrainingProcessCondition condition = this.buildTrainingProcessConditionForDelete(request);
+        if (!ArrayUtil.isNotNullAndNotEmptyList(condition.getProcessIds())) {
+            throw new BusinessException("40001", "The list of deleted Training Process is empty!");
+        }
+        return trainingProcessRepository.delete(condition) > 0
+                ? Const.SUCCESSFUL
+                : Const.FAIL;
+    }
+
+    private TrainingProcessCondition buildTrainingProcessConditionForDelete(TrainingProcessDeleteRequest request) {
+        return TrainingProcessCondition.builder()
+                .processIds(Optional.ofNullable(request.getTrainingProcessId()).isPresent()
+                        ? Arrays.stream(request.getTrainingProcessId().split(","))
+                        .map(lecturerId -> NumberUtil.toBigDeimal(lecturerId).orElse(null))
+                        .collect(Collectors.toList())
+                        : Collections.emptyList())
+                .updateBy(request.getDeleteBy())
                 .build();
     }
 }

@@ -361,6 +361,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SatisfactionScoreCreateResponse'
+  /v1/deleteTrainingProcess:
+    delete:
+      tags:
+        - TrainingProcess
+      summary: Api for delete TrainingProcess
+      operationId: deleteTrainingProcess
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingProcessDeleteRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Delete TrainingProcess
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingProcessDeleteResponse'
   #    End here
 
 components:
@@ -1349,6 +1377,32 @@ components:
           example: 200
         message:
           description: Message of the create Satisfaction Score
+          type: string
+          example: 'OK'
+    TrainingProcessDeleteRequest:
+      type: object
+      required:
+        - trainingProcessId
+        - deleteBy
+      properties:
+        trainingProcessId:
+          type: string
+          pattern: '^(\d{1,19},)*\d{1,19}$'
+          description: List ID of Training Process
+          example: '200'
+        deleteBy:
+          type: string
+          description: Deleted By of Training Process
+          example: 'deleteBy'
+    TrainingProcessDeleteResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the delete Training Process
           type: string
           example: 'OK'
     #    End here
