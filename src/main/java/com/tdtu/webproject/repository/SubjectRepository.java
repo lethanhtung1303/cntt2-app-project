@@ -11,4 +11,10 @@ public interface SubjectRepository {
     List<TdtMonHoc> findSubject(SubjectCondition condition);
 
     List<TdtMonHoc> getAllSubject();
+
+    int create(TdtMonHoc record);
+
+    int delete(SubjectCondition condition);
+
+    int update(TdtMonHoc record, String subjectId);
 }

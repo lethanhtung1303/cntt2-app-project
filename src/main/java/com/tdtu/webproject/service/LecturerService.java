@@ -30,6 +30,8 @@ public class LecturerService {
     private final GraduationTypeService graduationTypeService;
     private final SubjectService subjectService;
     private final SubjectGroupService subjectGroupService;
+    private final SubjectTypeService subjectTypeService;
+    private final CertificateTypeService certificateTypeService;
     private final ClassificationLecturerService classificationLecturerService;
     private final LecturerManageService lecturerManageService;
     private final ClassificationManageService classificationManageService;
@@ -199,9 +201,13 @@ public class LecturerService {
     }
 
     public Certificate buildCertificate(TdtChungChi certificateList) {
+        TdtLoaiChungChi certificateType = certificateTypeService.getCertificateTypeById(certificateList.getLoaiChungChi());
         return Certificate.builder()
                 .id(certificateList.getId())
-                .loaiChungChi(certificateList.getLoaiChungChi())
+                .certificateType(CertificateType.builder()
+                        .maLoai(certificateType.getMaLoai())
+                        .tenLoai(certificateType.getPhanLoai())
+                        .build())
                 .diem(certificateList.getDiem())
                 .build();
     }
@@ -232,15 +238,16 @@ public class LecturerService {
 
     private Subject buildSubject(TdtMonHoc subject) {
         TdtNhomMon subjectGroup = subjectGroupService.getSubjectGroupById(subject.getMaNhom());
+        TdtLoaiMon subjectType = subjectTypeService.getSubjectTypeById(subject.getMaLoai());
         return Subject.builder()
                 .maMon(subject.getMaMon())
+                .phanLoai(subjectType.getPhanLoai())
                 .subjectGroup(SubjectGroup.builder()
                         .maNhom(subjectGroup.getMaNhom())
                         .tenNhom(subjectGroup.getTenNhom())
                         .build())
-                .tenMon(subject.getTenMon())
-                .soTietLyThuyet(subject.getSoTietLyThuyet())
-                .soTietThucHanh(subject.getSoTietThucHanh())
+                .tenMon("[".concat(subjectType.getKyHieu()).concat("] ").concat(subject.getTenMon()))
+                .soTiet(subject.getSoTiet())
                 .build();
     }
 

@@ -3,6 +3,8 @@ package com.tdtu.webproject.repository;
 import com.tdtu.mbGenerator.generate.mybatis.example.TdtNhomMonExample;
 import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtNhomMonMapper;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtNhomMon;
+import com.tdtu.webproject.model.condition.SubjectGroupCondition;
+import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
@@ -25,6 +27,17 @@ public class SubjectGroupRepositoryImp implements SubjectGroupRepository {
     }
 
     @Override
+    public Long countSubjectGroup(SubjectGroupCondition condition) {
+        TdtNhomMonExample example = new TdtNhomMonExample();
+        TdtNhomMonExample.Criteria criteria = example.createCriteria();
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getGroupIds())) {
+            criteria.andMaNhomIn(condition.getGroupIds());
+        }
+        criteria.andIsActiveEqualTo(true);
+        return subjectGroupMapper.countByExample(example);
+    }
+
+    @Override
     public List<TdtNhomMon> getAllSubjectGroup() {
         TdtNhomMonExample example = new TdtNhomMonExample();
         TdtNhomMonExample.Criteria criteria = example.createCriteria();
@@ -41,5 +54,16 @@ public class SubjectGroupRepositoryImp implements SubjectGroupRepository {
         return subjectGroupMapper.selectByExample(example).stream()
                 .findFirst()
                 .orElse(null);
+    }
+
+    @Override
+    public List<TdtNhomMon> findSubjectGroup(SubjectGroupCondition condition) {
+        TdtNhomMonExample example = new TdtNhomMonExample();
+        TdtNhomMonExample.Criteria criteria = example.createCriteria();
+        if (ArrayUtil.isNotNullAndNotEmptyList(condition.getGroupIds())) {
+            criteria.andMaNhomIn(condition.getGroupIds());
+        }
+        criteria.andIsActiveEqualTo(true);
+        return subjectGroupMapper.selectByExample(example);
     }
 }

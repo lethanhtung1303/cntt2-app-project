@@ -1,9 +1,9 @@
 package com.tdtu.webproject.controller;
 
-import com.tdtu.webproject.service.SchoolYearService;
-import generater.openapi.api.SchoolYearApi;
-import generater.openapi.model.SchoolYearResponse;
-import generater.openapi.model.SchoolYearResponseResults;
+import com.tdtu.webproject.service.CertificateTypeService;
+import generater.openapi.api.CertificateTypeApi;
+import generater.openapi.model.CertificateTypeResponse;
+import generater.openapi.model.CertificateTypeResponseResults;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -18,19 +18,19 @@ import javax.validation.constraints.Pattern;
 @CrossOrigin(origins = "http://localhost:4200")
 @RestController
 @RequiredArgsConstructor
-public class SchoolYearController implements SchoolYearApi {
-    private final SchoolYearService schoolYearService;
+public class CertificateTypeController implements CertificateTypeApi {
+    private final CertificateTypeService certificateTypeService;
 
     @Override
-    public ResponseEntity<SchoolYearResponse> schoolYear(
+    public ResponseEntity<CertificateTypeResponse> certificateType(
             @Pattern(regexp = "^(\\d{1,19},)*\\d{1,19}$")
             @ApiParam(value = "")
             @Validated
-            @RequestParam(value = "semesters", required = false) String semesters) {
-        return ResponseEntity.ok(SchoolYearResponse.builder()
+            @RequestParam(value = "typeIds", required = false) String typeIds) {
+        return ResponseEntity.ok(CertificateTypeResponse.builder()
                 .status(HttpStatus.OK.value())
-                .results(SchoolYearResponseResults.builder()
-                        .schoolYear(schoolYearService.findAll())
+                .results(CertificateTypeResponseResults.builder()
+                        .certificateType(certificateTypeService.findAll())
                         .build())
                 .build());
     }

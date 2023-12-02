@@ -9,4 +9,8 @@ public interface CertificateRepository {
     Long countCertificate(CertificateCondition condition);
 
     List<TdtChungChi> findCertificate(CertificateCondition condition);
+
+    int delete(CertificateCondition condition);
+
+    int create(TdtChungChi record);
 }
