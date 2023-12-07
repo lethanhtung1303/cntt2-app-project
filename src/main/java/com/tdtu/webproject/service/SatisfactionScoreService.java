@@ -35,7 +35,7 @@ public class SatisfactionScoreService {
         return SatisfactionScoreCondition.builder()
                 .lecturerIds(Optional.ofNullable(lecturerIds).isPresent()
                         ? Arrays.stream(lecturerIds.split(","))
-                        .map(lecturerId -> NumberUtil.toBigDeimal(lecturerId).orElse(null))
+                        .map(lecturerId -> NumberUtil.toBigDecimal(lecturerId).orElse(null))
                         .collect(Collectors.toList())
                         : Collections.emptyList())
                 .build();
@@ -55,7 +55,7 @@ public class SatisfactionScoreService {
         return SatisfactionScoreCondition.builder()
                 .satisfactionScoreIds(Optional.ofNullable(request.getSatisfactionScoreId()).isPresent()
                         ? Arrays.stream(request.getSatisfactionScoreId().split(","))
-                        .map(id -> NumberUtil.toBigDeimal(id).orElse(null))
+                        .map(id -> NumberUtil.toBigDecimal(id).orElse(null))
                         .collect(Collectors.toList())
                         : Collections.emptyList())
                 .updateBy(request.getDeleteBy())

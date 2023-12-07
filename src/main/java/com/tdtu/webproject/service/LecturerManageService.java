@@ -38,6 +38,10 @@ public class LecturerManageService {
                 .collect(Collectors.toList());
     }
 
+    public List<TdtGiangVien> getAllLecturer() {
+        return lecturerRepository.findLecturer(LecturerCondition.builder().build());
+    }
+
     public boolean checkExistLecturer(BigDecimal lecturerId) {
         List<TdtGiangVien> lecturerList = lecturerRepository
                 .findLecturer(

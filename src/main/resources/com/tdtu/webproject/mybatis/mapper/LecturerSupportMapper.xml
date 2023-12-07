@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdtu.webproject.mybatis.mapper.LecturerSupportMapper">
+    <resultMap id="LecturerTeachingResult" type="com.tdtu.webproject.mybatis.result.LecturerTeachingResult">
+        <id column="GIANG_VIEN_ID" jdbcType="NUMERIC" property="lecturerId"/>
+        <result column="MA_MON" jdbcType="VARCHAR" property="subjectCode"/>
+        <result column="TEN_MON" jdbcType="VARCHAR" property="subjectName"/>
+        <result column="SO_TIET" jdbcType="NUMERIC" property="numberLessons"/>
+        <result column="MA_LOAI" jdbcType="NUMERIC" property="subjectType"/>
+    </resultMap>
+
+    <resultMap id="LecturerTrainingProcessResult"
+               type="com.tdtu.webproject.mybatis.result.LecturerTrainingProcessResult">
+        <id column="ID" jdbcType="NUMERIC" property="lecturerId"/>
+        <result column="FULL_NAME" jdbcType="VARCHAR" property="fullName"/>
+        <result column="IMAGES" jdbcType="VARCHAR" property="images"/>
+        <result column="EMAIL_TDTU" jdbcType="VARCHAR" property="emailTdtu"/>
+        <result column="TRUONG" jdbcType="VARCHAR" property="school"/>
+        <result column="NGANH" jdbcType="VARCHAR" property="majors"/>
+        <result column="NAM_TOT_NGHIEP" jdbcType="NUMERIC" property="graduationYear"/>
+        <result column="LOAI_TOT_NGHIEP" jdbcType="VARCHAR" property="graduationType"/>
+        <result column="LOAI_TOT_NGHIEP_ID" jdbcType="NUMERIC" property="graduationTypeCode"/>
+        <result column="TRINH_DO" jdbcType="VARCHAR" property="level"/>
+        <result column="DISPLAY_ORDER" jdbcType="NUMERIC" property="displayOrder"/>
+    </resultMap>
+
+    <resultMap id="LecturerTrainingLanguageResult"
+               type="com.tdtu.webproject.mybatis.result.LecturerTrainingLanguageResult">
+        <id column="ID" jdbcType="NUMERIC" property="lecturerId"/>
+        <result column="NGON_NGU_ID" jdbcType="NUMERIC" property="languageCode"/>
+        <result column="TEN_NGON_NGU" jdbcType="VARCHAR" property="languageName"/>
+    </resultMap>
+
+    <resultMap id="LecturerCertificateResult"
+               type="com.tdtu.webproject.mybatis.result.LecturerCertificateResult">
+        <id column="ID" jdbcType="NUMERIC" property="lecturerId"/>
+        <result column="DIEM" jdbcType="VARCHAR" property="certificateScore"/>
+        <result column="MA_LOAI" jdbcType="NUMERIC" property="certificateCode"/>
+        <result column="PHAN_LOAI" jdbcType="VARCHAR" property="certificateName"/>
+    </resultMap>
+
+    <resultMap id="LecturerSatisfactionScoreResult"
+               type="com.tdtu.webproject.mybatis.result.LecturerSatisfactionScoreResult">
+        <id column="ID" jdbcType="NUMERIC" property="lecturerId"/>
+        <result column="HOC_KY" jdbcType="NUMERIC" property="semester"/>
+        <result column="DIEM_HAI_LONG" jdbcType="NUMERIC" property="satisfactionScore"/>
+    </resultMap>
+
+    <select id="getLecturerTeaching" resultMap="LecturerTeachingResult">
+        SELECT TLSGD.GIANG_VIEN_ID,
+               TMH.MA_MON,
+               TMH.TEN_MON,
+               TMH.SO_TIET,
+               TMH.MA_LOAI
+        FROM TDT_LICH_SU_GIANG_DAY TLSGD
+                 LEFT JOIN TDT_MON_HOC TMH
+                           ON
+                               TLSGD.MA_MON = TMH.MA_MON
+        WHERE TLSGD.IS_ACTIVE = '1'
+          AND TMH.IS_ACTIVE = '1'
+        ;
+    </select>
+
+    <select id="getLecturerTrainingProcess" resultMap="LecturerTrainingProcessResult">
+        SELECT TGV.ID,
+               CONCAT(TGV.FIRST_NAME, ' ', TGV.FULL_NAME) AS FULL_NAME,
+               TGV.IMAGES,
+               TGV.EMAIL_TDTU,
+               TQTDT.TRUONG,
+               TQTDT.NGANH,
+               TQTDT.NAM_TOT_NGHIEP,
+               TLTN.LOAI_TOT_NGHIEP,
+               TLTN.ID,
+               TTD.TRINH_DO,
+               TTD.DISPLAY_ORDER
+        FROM TDT_QUA_TRINH_DAO_TAO TQTDT
+                 LEFT JOIN TDT_GIANG_VIEN TGV
+                           ON
+                               TQTDT.GIANG_VIEN_ID = TGV.ID
+                 LEFT JOIN TDT_LOAI_TOT_NGHIEP TLTN
+                           ON
+                               TQTDT.LOAI_TOT_NGHIEP_ID = TLTN.ID
+                 LEFT JOIN TDT_TRINH_DO TTD
+                           ON
+                               TQTDT.TRINH_DO_ID = TTD.ID
+        WHERE TQTDT.IS_ACTIVE = '1'
+          AND TGV.IS_ACTIVE = '1'
+          AND TGV.DELETED_FLAG = '0'
+          AND TLTN.IS_ACTIVE = '1'
+          AND TTD.IS_ACTIVE = '1'
+        ORDER BY TGV.ID
+        ;
+    </select>
+
+    <select id="getLecturerTrainingLanguage" resultMap="LecturerTrainingLanguageResult">
+        SELECT TGV.ID,
+               TNN.ID AS NGON_NGU_ID,
+               TNN.TEN_NGON_NGU
+        FROM TDT_QUA_TRINH_DAO_TAO TQTDT
+                 LEFT JOIN TDT_GIANG_VIEN TGV
+                           ON
+                               TQTDT.GIANG_VIEN_ID = TGV.ID
+                 LEFT JOIN TDT_NGON_NGU_DAO_TAO TNNDT
+                           ON
+                               TQTDT.ID = TNNDT.QUA_TRINH_DAO_TAO_ID
+                 LEFT JOIN TDT_NGON_NGU TNN
+                           ON
+                               TNNDT.NGON_NGU_ID = TNN.ID
+        WHERE TNN.ID IS NOT NULL
+          AND TQTDT.IS_ACTIVE = '1'
+          AND TGV.IS_ACTIVE = '1'
+          AND TGV.DELETED_FLAG = '0'
+          AND (TNNDT.IS_ACTIVE = '1'
+            OR TNNDT.IS_ACTIVE IS NULL)
+          AND (TNN.IS_ACTIVE = '1'
+            OR TNN.IS_ACTIVE IS NULL)
+        ORDER BY TGV.ID
+        ;
+    </select>
+
+    <select id="getLecturerCertificate" resultMap="LecturerCertificateResult">
+        SELECT TGV.ID,
+               TCC.DIEM,
+               TLCC.MA_LOAI,
+               TLCC.PHAN_LOAI
+        FROM TDT_CHUNG_CHI TCC
+                 LEFT JOIN TDT_GIANG_VIEN TGV
+                           ON
+                               TCC.GIANG_VIEN_ID = TGV.ID
+                 LEFT JOIN TDT_LOAI_CHUNG_CHI TLCC
+                           ON
+                               TCC.LOAI_CHUNG_CHI = TLCC.MA_LOAI
+        WHERE TCC.IS_ACTIVE = '1'
+          AND TGV.IS_ACTIVE = '1'
+          AND TGV.DELETED_FLAG = '0'
+          AND TLCC.IS_ACTIVE = '1'
+        ORDER BY TGV.ID
+        ;
+    </select>
+
+    <select id="getLecturerSatisfactionScore" resultMap="LecturerSatisfactionScoreResult">
+        SELECT TGV.ID,
+        TDHL.HOC_KY,
+        TDHL.DIEM_HAI_LONG
+        FROM TDT_DIEM_HAI_LONG TDHL
+        LEFT JOIN TDT_GIANG_VIEN TGV
+        ON
+        TDHL.GIANG_VIEN_ID = TGV.ID
+        LEFT JOIN TDT_MON_HOC TMH
+        ON
+        TDHL.MA_MON = TMH.MA_MON
+        WHERE TDHL.IS_ACTIVE = '1'
+        AND TGV.IS_ACTIVE = '1'
+        AND TGV.DELETED_FLAG = '0'
+        AND TMH.IS_ACTIVE = '1'
+        <if test="(semester != null and semester != '')">
+            AND TDHL.HOC_KY = ${semester}
+        </if>
+        ORDER BY TGV.ID
+        ;
+    </select>
+</mapper>

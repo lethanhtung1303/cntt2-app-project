@@ -182,7 +182,7 @@ public class LecturerService {
         return LecturerCondition.builder()
                 .lecturerIds(Optional.ofNullable(request.getLecturerIds()).isPresent()
                         ? Arrays.stream(request.getLecturerIds().split(","))
-                        .map(lecturerId -> NumberUtil.toBigDeimal(lecturerId).orElse(null))
+                        .map(lecturerId -> NumberUtil.toBigDecimal(lecturerId).orElse(null))
                         .collect(Collectors.toList())
                         : Collections.emptyList())
                 .deleteBy(request.getDeleteBy())
@@ -194,7 +194,7 @@ public class LecturerService {
                 .emailTdtu(request.getEmailTdtu())
                 .lecturerIds(Optional.ofNullable(request.getLecturerIds()).isPresent()
                         ? Arrays.stream(request.getLecturerIds().split(","))
-                        .map(lecturerId -> NumberUtil.toBigDeimal(lecturerId).orElse(null))
+                        .map(lecturerId -> NumberUtil.toBigDecimal(lecturerId).orElse(null))
                         .collect(Collectors.toList())
                         : Collections.emptyList())
                 .build();
