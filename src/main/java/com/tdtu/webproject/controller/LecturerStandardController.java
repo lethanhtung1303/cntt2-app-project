@@ -2,8 +2,10 @@ package com.tdtu.webproject.controller;
 
 import com.tdtu.webproject.service.LecturerStandardService;
 import generater.openapi.api.LecturerStandardApi;
-import generater.openapi.model.LecturerStandardsResponse;
-import generater.openapi.model.LecturerStandardsResponseResults;
+import generater.openapi.model.MasterStandardsResponse;
+import generater.openapi.model.MasterStandardsResponseResults;
+import generater.openapi.model.UniversityStandardsResponse;
+import generater.openapi.model.UniversityStandardsResponseResults;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -25,15 +27,25 @@ public class LecturerStandardController implements LecturerStandardApi {
     private final LecturerStandardService lecturerStandardService;
 
     @Override
-    public ResponseEntity<LecturerStandardsResponse> lecturerStandards(
+    public ResponseEntity<UniversityStandardsResponse> universityStandards(
             @NotNull @DecimalMin("190001") @DecimalMax("299903")
             @ApiParam(value = "", required = true)
             @Validated
             @RequestParam(value = "semester", required = true) BigDecimal semester) {
-        return ResponseEntity.ok(LecturerStandardsResponse.builder()
+        return ResponseEntity.ok(UniversityStandardsResponse.builder()
                 .status(HttpStatus.OK.value())
-                .results(LecturerStandardsResponseResults.builder()
-                        .lecturerStandards(lecturerStandardService.getLecturerStandards(semester))
+                .results(UniversityStandardsResponseResults.builder()
+                        .universityStandards(lecturerStandardService.getUniversityStandards(semester))
+                        .build())
+                .build());
+    }
+
+    @Override
+    public ResponseEntity<MasterStandardsResponse> masterStandards() {
+        return ResponseEntity.ok(MasterStandardsResponse.builder()
+                .status(HttpStatus.OK.value())
+                .results(MasterStandardsResponseResults.builder()
+                        .masterStandards(lecturerStandardService.getMasterStandards())
                         .build())
                 .build());
     }

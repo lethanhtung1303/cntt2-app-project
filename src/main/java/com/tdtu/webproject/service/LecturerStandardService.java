@@ -4,8 +4,10 @@ import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
 import com.tdtu.webproject.mybatis.result.*;
 import com.tdtu.webproject.repository.LecturerRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
+import com.tdtu.webproject.utils.DateUtil;
 import com.tdtu.webproject.utils.NumberUtil;
-import generater.openapi.model.LecturerStandardDetailResponse;
+import generater.openapi.model.MasterStandardDetailResponse;
+import generater.openapi.model.UniversityStandardDetailResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,9 +24,9 @@ public class LecturerStandardService {
     private final LecturerManageService lecturerManageService;
     private final LecturerRepository lecturerRepository;
 
-    public List<LecturerStandardDetailResponse> getLecturerStandards(BigDecimal semester) {
+    public List<UniversityStandardDetailResponse> getUniversityStandards(BigDecimal semester) {
         List<TdtGiangVien> lecturerList = lecturerManageService.getAllLecturer();
-        List<LecturerStandardDetailResponse> lecturerStandardRawData = this.buildLecturerStandardDetailResponse(lecturerList);
+        List<UniversityStandardDetailResponse> lecturerStandardRawData = this.buildLecturerStandardDetailResponse(lecturerList);
 
         List<LecturerTrainingProcessResult> trainingProcessList = lecturerRepository.getLecturerTrainingProcess();
         List<LecturerTeachingResult> teachingList = lecturerRepository.getLecturerTeaching();
@@ -49,11 +51,11 @@ public class LecturerStandardService {
         return Optional.ofNullable(lecturerStandardRawData).isPresent()
                 ? lecturerStandardRawData.stream()
                 .map(lecturer -> this.buildResponse(lecturer,
-                        lecturerTrainingProcessMap.getOrDefault(lecturer.getId(), null),
+                        lecturerTrainingProcessMap.getOrDefault(lecturer.getId(), Collections.emptyList()),
                         lecturerTotalNumberLessonsMap.getOrDefault(lecturer.getId(), null),
-                        trainingLanguageMap.getOrDefault(lecturer.getId(), null),
-                        certificateMap.getOrDefault(lecturer.getId(), null),
-                        satisfactionScoreMap.getOrDefault(lecturer.getId(), null)))
+                        trainingLanguageMap.getOrDefault(lecturer.getId(), Collections.emptyList()),
+                        certificateMap.getOrDefault(lecturer.getId(), Collections.emptyList()),
+                        satisfactionScoreMap.getOrDefault(lecturer.getId(), Collections.emptyList())))
                 .collect(Collectors.toList())
                 : Collections.emptyList();
     }
@@ -76,12 +78,12 @@ public class LecturerStandardService {
         return NumberUtil.toBigDecimal(newSemesterStr).get();
     }
 
-    private LecturerStandardDetailResponse buildResponse(LecturerStandardDetailResponse lecturer,
-                                                         List<LecturerTrainingProcessResult> trainingProcessList,
-                                                         BigDecimal totalNumberLessons,
-                                                         List<LecturerTrainingLanguageResult> trainingLanguage,
-                                                         List<LecturerCertificateResult> certificate,
-                                                         List<LecturerSatisfactionScoreResult> satisfactionScore) {
+    private UniversityStandardDetailResponse buildResponse(UniversityStandardDetailResponse lecturer,
+                                                           List<LecturerTrainingProcessResult> trainingProcessList,
+                                                           BigDecimal totalNumberLessons,
+                                                           List<LecturerTrainingLanguageResult> trainingLanguage,
+                                                           List<LecturerCertificateResult> certificate,
+                                                           List<LecturerSatisfactionScoreResult> satisfactionScore) {
         lecturer.setIsTeachingTheory(this.checkTeachingTheory(trainingProcessList, totalNumberLessons));
         lecturer.setIsTeachingPractice(this.checkTeachingPractice(trainingProcessList));
         lecturer.setIsTeachingVietnamese(this.checkHighQualityInspection(trainingProcessList, totalNumberLessons));
@@ -91,7 +93,7 @@ public class LecturerStandardService {
         return lecturer;
     }
 
-    private List<LecturerStandardDetailResponse> buildLecturerStandardDetailResponse(List<TdtGiangVien> lecturerList) {
+    private List<UniversityStandardDetailResponse> buildLecturerStandardDetailResponse(List<TdtGiangVien> lecturerList) {
         return Optional.ofNullable(lecturerList).isPresent()
                 ? lecturerList.stream()
                 .map(this::buildLecturerStandardDetail)
@@ -99,8 +101,8 @@ public class LecturerStandardService {
                 : Collections.emptyList();
     }
 
-    private LecturerStandardDetailResponse buildLecturerStandardDetail(TdtGiangVien lecturer) {
-        return LecturerStandardDetailResponse.builder()
+    private UniversityStandardDetailResponse buildLecturerStandardDetail(TdtGiangVien lecturer) {
+        return UniversityStandardDetailResponse.builder()
                 .id(lecturer.getId())
                 .fullName(lecturer.getFirstName().concat(" ").concat(lecturer.getFullName()))
                 .images(lecturer.getImages())
@@ -186,5 +188,46 @@ public class LecturerStandardService {
                 .mapToDouble(result -> result.getSatisfactionScore().doubleValue())
                 .average();
         return averageScore.orElse(0.0) >= 5.2;
+    }
+
+    public List<MasterStandardDetailResponse> getMasterStandards() {
+        List<TdtGiangVien> lecturerList = lecturerManageService.getAllLecturer();
+        List<MasterStandardDetailResponse> masterStandardRawData = this.buildMasterStandardDetailResponse(lecturerList);
+
+        List<LecturerTrainingProcessResult> trainingProcessList = lecturerRepository.getLecturerTrainingProcess();
+        Map<BigDecimal, List<LecturerTrainingProcessResult>> lecturerTrainingProcessMap = trainingProcessList.stream()
+                .collect(Collectors.groupingBy(LecturerTrainingProcessResult::getLecturerId, Collectors.toList()));
+
+        return this.checkMasterStandards(masterStandardRawData, lecturerTrainingProcessMap);
+    }
+
+    private List<MasterStandardDetailResponse> checkMasterStandards(List<MasterStandardDetailResponse> masterStandardRawData, Map<BigDecimal, List<LecturerTrainingProcessResult>> lecturerTrainingProcessMap) {
+        int currentYear = DateUtil.getTimeNow().getYear();
+        return masterStandardRawData.stream()
+                .filter(master -> {
+                    List<LecturerTrainingProcessResult> matchingResults =
+                            lecturerTrainingProcessMap.getOrDefault(master.getId(), Collections.emptyList()).stream()
+                                    .filter(result -> (result.getDisplayOrder().intValue() <= 3) && ((currentYear - result.getGraduationYear().intValue()) >= 2))
+                                    .toList();
+                    return !matchingResults.isEmpty();
+                })
+                .collect(Collectors.toList());
+    }
+
+    private List<MasterStandardDetailResponse> buildMasterStandardDetailResponse(List<TdtGiangVien> lecturerList) {
+        return Optional.ofNullable(lecturerList).isPresent()
+                ? lecturerList.stream()
+                .map(this::buildMasterStandardDetail)
+                .collect(Collectors.toList())
+                : Collections.emptyList();
+    }
+
+    private MasterStandardDetailResponse buildMasterStandardDetail(TdtGiangVien lecturer) {
+        return MasterStandardDetailResponse.builder()
+                .id(lecturer.getId())
+                .fullName(lecturer.getFirstName().concat(" ").concat(lecturer.getFullName()))
+                .images(lecturer.getImages())
+                .emailTdtu(lecturer.getEmailTdtu())
+                .build();
     }
 }
