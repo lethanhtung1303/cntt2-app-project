@@ -1,0 +1,76 @@
+plugins {
+    id "com.thinkimi.gradle.MybatisGenerator" version "2.4"
+    id 'org.springframework.boot' version '2.7.3'
+    id 'io.spring.dependency-management' version '1.0.13.RELEASE'
+    id 'java'
+}
+
+group 'com.tdtu'
+version '0.0.1-SNAPSHOT'
+
+repositories {
+    mavenCentral()
+}
+
+mbGenerator.doFirst {
+    delete "${rootDir}/bin/"
+    delete "${rootDir}/apispecs/bin/"
+    delete "${rootDir}/mbGenerator/bin/"
+    delete "${rootDir}/mbGenerator/src/main/java/com/tdtu/mbGenerator/generate"
+    delete "${rootDir}/mbGenerator/src/main/resources/com/tdtu/mbGenerator/generate"
+    mkdir "${rootDir}/mbGenerator/src/main/java/com/tdtu/mbGenerator"
+    mkdir "${rootDir}/mbGenerator/src/main/resources"
+}
+mybatisGenerator {
+    verbose = true
+    overwrite = true
+    configFile = "${rootDir}/mbGenerator/src/main/resources/generatorConfig.xml"
+    targetDir = "."
+    mybatisProperties = [
+            'baseDir'        : "${rootDir}",
+            'jdbcDriverClass': "org.h2.Driver",
+            'jdbcUrl'        : "jdbc:h2:tcp://localhost/~/project;MODE=Oracle",
+            'jdbcUsername'   : "user",
+            'jdbcPassword'   : "test111"
+    ]
+
+    dependencies {
+        mybatisGenerator 'com.itfsw:mybatis-generator-plugin:1.3.10'
+        mybatisGenerator 'org.mybatis.generator:mybatis-generator-core:1.4.0'
+        mybatisGenerator 'com.oracle.database.jdbc:ojdbc8:19.13.0.0.1'
+        mybatisGenerator 'com.softwareloop:mybatis-generator-lombok-plugin:1.0'
+        mybatisGenerator 'com.h2database:h2:2.1.214'
+    }
+}
+
+configurations {
+    mybatisGenerator
+}
+
+dependencies {
+    compileOnly 'org.projectlombok:lombok'
+    annotationProcessor 'org.projectlombok:lombok'
+    implementation 'org.springframework.boot:spring-boot-starter'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    implementation 'org.springframework.boot:spring-boot-starter-cache'
+    implementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter:2.2.2'
+    implementation 'org.mybatis:mybatis:3.5.11'
+    testImplementation 'org.mybatis.spring.boot:mybatis-spring-boot-starter-test:2.2.2'
+    testImplementation 'com.h2database:h2'
+    testCompileOnly 'org.projectlombok:lombok'
+    testAnnotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    testImplementation 'org.springframework.boot:spring-boot-test-autoconfigure'
+    testImplementation 'org.junit.jupiter:junit-jupiter'
+    testImplementation 'org.junit.jupiter:junit-jupiter-migrationsupport'
+    testImplementation 'org.assertj:assertj-core'
+    testImplementation 'org.hamcrest:hamcrest'
+    testImplementation 'org.mockito:mockito-core'
+    testImplementation 'org.mockito:mockito-junit-jupiter'
+    runtimeOnly 'mysql:mysql-connector-java'
+    implementation 'mysql:mysql-connector-java'
+}
+
+test {
+    useJUnitPlatform()
+}

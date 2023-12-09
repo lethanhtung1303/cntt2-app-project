@@ -1,0 +1,1931 @@
+openapi: 3.0.0
+info:
+  title: Web Project API
+  description: Api connect to Database
+  version: 0.0.1
+  license:
+    name: TDTU Web Project
+servers:
+  - url: http://XXXXX/v1
+    description: Develop server
+  - url: http://XXXXX.com
+    description: Product server
+paths:
+
+  #    Start here
+
+  /v1/lecturer:
+    get:
+      tags:
+        - Lecturer
+      summary: Api for get Lecturer
+      operationId: lecturer
+      parameters:
+        - name: lecturerIds
+          in: query
+          schema:
+            type: string
+            pattern: '^(\d{1,19},)*\d{1,19}$'
+            description: List ID of Lecturer
+            example: '200'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Lecturer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LecturerResponse'
+  /v1/login:
+    post:
+      tags:
+        - Authentication
+      summary: Api for login
+      operationId: login
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserResponse'
+  /v1/updateLecturer:
+    put:
+      tags:
+        - Lecturer
+      summary: Api for update info of Lecturer
+      operationId: updateLecturer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LecturerUpdateRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Status update Lecturer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LecturerUpdateResponse'
+  /v1/deleteLecturer:
+    delete:
+      tags:
+        - Lecturer
+      summary: Api for delete Lecturer
+      operationId: deleteLecturer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LecturerDeleteRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Lecturer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LecturerDeleteResponse'
+  /v1/semester:
+    get:
+      tags:
+        - Semester
+      summary: Api for get Semester
+      operationId: semester
+      parameters:
+        - name: semesters
+          in: query
+          schema:
+            type: string
+            pattern: '^(\d{1,19},)*\d{1,19}$'
+            description: Semester
+            example: '200'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Semester
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SemesterResponse'
+  /v1/schoolYear:
+    get:
+      tags:
+        - SchoolYear
+      summary: Api for get School Year
+      operationId: schoolYear
+      parameters:
+        - name: semesters
+          in: query
+          schema:
+            type: string
+            pattern: '^(\d{1,19},)*\d{1,19}$'
+            description: Semester
+            example: '200'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Semester
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SchoolYearResponse'
+  /v1/subject:
+    get:
+      tags:
+        - Subject
+      summary: Api for get Subject
+      operationId: Subject
+      parameters:
+        - name: subjectIds
+          in: query
+          schema:
+            type: string
+            description: subjectIds
+            example: '200'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Semester
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectResponse'
+  /v1/createLecturer:
+    post:
+      tags:
+        - Lecturer
+      summary: Api for create Lecturer
+      operationId: createLecturer
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LecturerCreateRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Product
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LecturerCreateResponse'
+  /v1/createTrainingProcess:
+    post:
+      tags:
+        - TrainingProcess
+      summary: Api for create Training Process
+      operationId: createTrainingProcess
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingProcessCreateRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Create Training Process
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingProcessCreateResponse'
+  /v1/updateTrainingProcess:
+    put:
+      tags:
+        - TrainingProcess
+      summary: Api for update Training Process
+      operationId: updateTrainingProcess
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingProcessUpdateRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Update Training Process
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingProcessUpdateResponse'
+  /v1/deleteSatisfactionScore:
+    delete:
+      tags:
+        - SatisfactionScore
+      summary: Api for delete SatisfactionScore
+      operationId: deleteSatisfactionScore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SatisfactionScoreDeleteRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Lecturer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SatisfactionScoreDeleteResponse'
+  /v1/createSatisfactionScore:
+    post:
+      tags:
+        - SatisfactionScore
+      summary: Api for create SatisfactionScore
+      operationId: createSatisfactionScore
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SatisfactionScoreCreateRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Create Training Process
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SatisfactionScoreCreateResponse'
+  /v1/deleteTrainingProcess:
+    delete:
+      tags:
+        - TrainingProcess
+      summary: Api for delete TrainingProcess
+      operationId: deleteTrainingProcess
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TrainingProcessDeleteRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Delete TrainingProcess
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TrainingProcessDeleteResponse'
+  /v1/certificateType:
+    get:
+      tags:
+        - CertificateType
+      summary: Api for get Certificate Type
+      operationId: certificateType
+      parameters:
+        - name: typeIds
+          in: query
+          schema:
+            type: string
+            pattern: '^(\d{1,19},)*\d{1,19}$'
+            description: List of ID Certificate Type
+            example: '200'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Certificate Type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateTypeResponse'
+  /v1/deleteCertificate:
+    delete:
+      tags:
+        - Certificate
+      summary: Api for delete Certificate
+      operationId: deleteCertificate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateDeleteRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Lecturer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateDeleteResponse'
+  /v1/createCertificate:
+    post:
+      tags:
+        - Certificate
+      summary: Api for create Certificate
+      operationId: createCertificate
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CertificateCreateRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Create Certificate
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CertificateCreateResponse'
+  /v1/subjectGroup:
+    get:
+      tags:
+        - Subject
+      summary: Api for get Subject Group
+      operationId: subjectGroup
+      parameters:
+        - name: groupIds
+          in: query
+          schema:
+            type: string
+            description: subjectIds
+            example: '200'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Subject Group
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectGroupResponse'
+  /v1/createSubject:
+    post:
+      tags:
+        - Subject
+      summary: Api for create Subject
+      operationId: createSubject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubjectCreateRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Create Training Process
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectCreateResponse'
+  /v1/deleteSubject:
+    delete:
+      tags:
+        - Subject
+      summary: Api for delete Subject
+      operationId: deleteSubject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubjectDeleteRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Subject
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectDeleteResponse'
+  /v1/updateSubject:
+    put:
+      tags:
+        - Subject
+      summary: Api for update Subject
+      operationId: updateSubject
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubjectUpdateRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Subject
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectUpdateResponse'
+  #    End here
+
+components:
+  parameters:
+    xForwardedRole:
+      in: header
+      name: x-forwarder-role
+      required: true
+      schema:
+        type: string
+    xForwardedEmployeeId:
+      in: header
+      name: x-forwarder-employee-id
+      required: true
+      schema:
+        type: string
+    xForwardedUser:
+      in: header
+      name: x-forwarder-user
+      required: true
+      schema:
+        type: string
+  schemas:
+    WebApiErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: array
+          items:
+            $ref: '#/components/schemas/WebApiErrorDetails'
+    WebApiErrorDetails:
+      type: object
+      properties:
+        field:
+          type: string
+        errorCd:
+          type: string
+        message:
+          type: string
+        errorIdList:
+          type: array
+          items:
+            type: integer
+            example: 1
+    ErrorResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 400
+        message:
+          type: string
+
+    #    Start here
+
+    LecturerResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            lecturers:
+              description: Lecturer list
+              type: array
+              items:
+                $ref: '#/components/schemas/LecturerDetailResponse'
+            resultsTotalCount:
+              description: Number of Lecturer with condition
+              type: integer
+              format: int64
+              example: 1000
+    LecturerDetailResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          description: ID of Lecturer
+          example: 200
+        firstName:
+          type: string
+          description: First Name of Lecturer
+          example: 'firstName'
+        fullName:
+          type: string
+          description: Full Name of Lecturer
+          example: 'fullName'
+        gender:
+          type: boolean
+          description: Gender of Lecturer
+          example: true
+        images:
+          type: string
+          description: Images of Lecturer
+          example: 'images'
+        birthday:
+          type: string
+          description: Birthday of Lecturer
+          example: 'Birthday'
+        placeOfBirth:
+          type: string
+          description: Place Of Birth of Lecturer
+          example: 'placeOfBirth'
+        address:
+          type: string
+          description: Address of Lecturer
+          example: 'address'
+        addressTmp:
+          type: string
+          description: Address Tmp of Lecturer
+          example: 'addressTmp'
+        phone:
+          type: string
+          description: Phone of Lecturer
+          example: 'phone'
+        email:
+          type: string
+          description: Email of Lecturer
+          example: 'email'
+        emailTdtu:
+          type: string
+          description: Email TDTU of Lecturer
+          example: 'emailTdtu'
+        workplace:
+          type: string
+          description: Workplace of Lecturer
+          example: 'workplace'
+        mainPosition:
+          type: string
+          description: Main Position of Lecturer
+          example: 'mainPosition'
+        secondaryPosition:
+          type: string
+          description: Secondary Position of Lecturer
+          example: 'secondaryPosition'
+        classificationLecturers:
+          $ref: '#/components/schemas/ClassificationLecturers'
+        certificate:
+          description: Certificates of Lecturer
+          type: array
+          items:
+            $ref: '#/components/schemas/Certificate'
+        trainingProcess:
+          description: Training Process of Lecturer
+          type: array
+          items:
+            $ref: '#/components/schemas/TrainingProcess'
+        satisfactionScore:
+          description: Satisfaction Score of Lecturer
+          type: array
+          items:
+            $ref: '#/components/schemas/SatisfactionScore'
+        isActive:
+          type: boolean
+          description: Is active of Lecturer
+          example: true
+        createdAt:
+          type: string
+          description: Created At of Lecturer
+          example: 'createdAt'
+        createdBy:
+          type: string
+          description: Created By of Lecturer
+          example: 'createdBy'
+        updatedAt:
+          type: string
+          description: Updated At of Lecturer
+          example: 'updatedAt'
+        updateBy:
+          type: string
+          description: Updated By of Lecturer
+          example: 'updateBy'
+        deletedFlag:
+          type: boolean
+          description: Deleted Flag of Lecturer
+          example: true
+        deletedAt:
+          type: string
+          description: Deleted At of Lecturer
+          example: 'deletedAt'
+        deletedBy:
+          type: string
+          description: Deleted By of Lecturer
+          example: 'deletedBy'
+    ClassificationLecturers:
+      description: Classification Lecturers
+      type: object
+      properties:
+        maLoai:
+          type: number
+          description: Ma Loai of Classification Lecturers
+          example: 200
+        phanLoai:
+          type: string
+          description: Classification Lecturers
+          example: 'phanLoai'
+    Certificate:
+      description: Certificate
+      type: object
+      properties:
+        id:
+          type: number
+          description: Id of Certificate
+          example: 200
+        certificateType:
+          $ref: '#/components/schemas/CertificateType'
+        diem:
+          type: string
+          description: Diem of Certificate
+          example: 'diem'
+    CertificateType:
+      description: Certificate Type
+      type: object
+      properties:
+        maLoai:
+          type: number
+          description: Ma Loai of Certificate Type
+          example: 200
+        tenLoai:
+          type: string
+          description: Ten Loai of Certificate Type
+          example: 'tenNhom'
+    TrainingProcess:
+      description: Training Process
+      type: object
+      properties:
+        id:
+          type: number
+          description: Id of Training Process
+          example: 200
+        level:
+          $ref: '#/components/schemas/Level'
+        language:
+          description: Languages of Training Process
+          type: array
+          items:
+            $ref: '#/components/schemas/Language'
+        truong:
+          type: string
+          description: Truong of Training Process
+          example: 'truong'
+        nganh:
+          type: string
+          description: Nganh of Training Process
+          example: 'nganh'
+        namTotNghiep:
+          type: number
+          description: Nam tot nghiep of Training Process
+          example: 'namTotNghiep'
+        deTaiTotNghiep:
+          type: string
+          description: De tai tot nghiep of Training Process
+          example: 'deTaiTotNghiep'
+        nguoiHuongDan:
+          type: string
+          description: Nguoi huong dan of Training Process
+          example: 'nguoiHuongDan'
+        graduationType:
+          $ref: '#/components/schemas/GraduationType'
+    Level:
+      description: Level
+      type: object
+      properties:
+        id:
+          type: number
+          description: id of Level
+          example: 200
+        trinhDo:
+          type: string
+          description: Level
+          example: 'trinhDo'
+        kyHieu:
+          type: string
+          description: Ki hieu
+          example: 'kyHieu'
+        displayOrder:
+          type: number
+          description: Display order of Level
+          example: 200
+    Language:
+      description: Language
+      type: object
+      properties:
+        id:
+          type: number
+          description: id of Language
+          example: 200
+        tenNgonNgu:
+          type: string
+          description: Language
+          example: 'tenNgonNgu'
+    SatisfactionScore:
+      description: Satisfaction score
+      type: object
+      properties:
+        id:
+          type: number
+          description: id of Satisfaction score
+          example: 200
+        subject:
+          $ref: '#/components/schemas/Subject'
+        hocKy:
+          type: number
+          description: Hoc ky of Satisfaction score
+          example: 200
+        diemHaiLong:
+          type: number
+          description: Diem hai long of Satisfaction score
+          example: 200
+    Subject:
+      description: Subject
+      type: object
+      properties:
+        maMon:
+          type: string
+          description: Ma mon of Subject
+          example: 'maMon'
+        phanLoai:
+          type: string
+          description: Phan Loai of Subject
+          example: 'phanLoai'
+        subjectGroup:
+          $ref: '#/components/schemas/SubjectGroup'
+        tenMon:
+          type: string
+          description: Subject
+          example: 'tenMon'
+        soTiet:
+          type: number
+          description: So tiet ly thuyet of Subject
+          example: 200
+    SubjectGroup:
+      description: Subject group
+      type: object
+      properties:
+        maNhom:
+          type: string
+          description: Ma nhom of Subject group
+          example: 'maNhom'
+        tenNhom:
+          type: string
+          description: Subject group
+          example: 'tenNhom'
+    GraduationType:
+      description: Level
+      type: object
+      properties:
+        id:
+          type: number
+          description: id of Level
+          example: 200
+        loaiTotNghiep:
+          type: string
+          description: Level
+          example: 'trinhDo'
+    LoginRequest:
+      type: object
+      required:
+        - inputUserName
+        - inputPassword
+      properties:
+        inputUserName:
+          description: User name of user
+          type: string
+          example: 'username'
+          maxLength: 200
+        inputPassword:
+          description: Password of user
+          type: string
+          example: '123456'
+          maxLength: 64
+    UserResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            user:
+              $ref: '#/components/schemas/User'
+            userRoles:
+              description: Roles of User
+              type: string
+              example: '123456'
+    User:
+      description: User
+      type: object
+      properties:
+        UserID:
+          description: UserID of User
+          type: string
+          example: '123456'
+        UserName:
+          description: UserName of User
+          type: string
+          example: '123456'
+        EmployeeID:
+          description: EmployeeID of User
+          type: string
+          example: '123456'
+        Password:
+          description: Password of User
+          type: string
+          example: '123456'
+        isManagerment:
+          description: User is Management
+          type: string
+          example: '123456'
+    LecturerUpdateRequest:
+      type: object
+      required:
+        - lecturerId
+        - lecturerUpdate
+        - updateBy
+      properties:
+        lecturerId:
+          type: number
+          description: ID of Lecturer
+          example: 200
+        lecturerUpdate:
+          $ref: '#/components/schemas/LecturerUpdate'
+        updateBy:
+          type: string
+          description: Updated By of Lecturer
+          example: 'updateBy'
+    LecturerUpdate:
+      description: LecturerUpdate Lecturers
+      type: object
+      required:
+        - firstName
+        - fullName
+        - gender
+        - images
+        - birthday
+        - placeOfBirth
+        - address
+        - addressTmp
+        - phone
+        - email
+        - emailTdtu
+        - workplace
+        - classification
+      properties:
+        firstName:
+          type: string
+          description: First Name of Lecturer
+          example: 'firstName'
+        fullName:
+          type: string
+          description: Full Name of Lecturer
+          example: 'fullName'
+        gender:
+          type: boolean
+          description: Gender of Lecturer
+          example: true
+        images:
+          type: string
+          description: Images of Lecturer
+          example: 'images'
+        birthday:
+          type: string
+          description: Birthday of Lecturer
+          example: 'Birthday'
+          pattern: '^([12]\d{3})-(0[1-9]|1[0-2])-(0[1-9]|1\d|2[0-8]|29(?=\/\d\d\/(?!1[01345789]00|2[1235679]00)\d\d(?:[02468][048]|[13579][26]))|30(?!\/02)|31(?=\/0[13578]|\/1[02]))$'
+        placeOfBirth:
+          type: string
+          description: Place Of Birth of Lecturer
+          example: 'placeOfBirth'
+        address:
+          type: string
+          description: Address of Lecturer
+          example: 'address'
+        addressTmp:
+          type: string
+          description: Address Tmp of Lecturer
+          example: 'addressTmp'
+        phone:
+          type: string
+          description: Phone of Lecturer
+          example: 'phone'
+          pattern: '^(84|0[3|5|7|8|9])+([0-9]{8})\b$'
+        email:
+          type: string
+          description: Email of Lecturer
+          example: 'email'
+          pattern: '^\w+([.\-]?\w+)*@\w+([.\-]?\w+)*(\.\w{2,3})+$'
+        emailTdtu:
+          type: string
+          description: Email TDTU of Lecturer
+          example: 'emailTdtu'
+          pattern: '^\w+([.\-]?\w+)*@tdtu\.edu\.vn$'
+        workplace:
+          type: string
+          description: Workplace of Lecturer
+          example: 'workplace'
+        mainPosition:
+          type: string
+          description: Main Position of Lecturer
+          example: 'mainPosition'
+        secondaryPosition:
+          type: string
+          description: Secondary Position of Lecturer
+          example: 'secondaryPosition'
+        classification:
+          type: number
+          description: ID of Classification
+          example: 200
+          minimum: 0
+          maximum: 1
+    LecturerUpdateResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the update Lecturer
+          type: string
+          example: 'OK'
+    LecturerDeleteResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the delete Lecturer
+          type: string
+          example: 'OK'
+    LecturerDeleteRequest:
+      type: object
+      required:
+        - lecturerIds
+        - deleteBy
+      properties:
+        lecturerIds:
+          type: string
+          pattern: '^(\d{1,19},)*\d{1,19}$'
+          description: List ID of Lecturer
+          example: '200'
+        deleteBy:
+          type: string
+          description: Deleted By of Lecturer
+          example: 'deleteBy'
+    SemesterDetailResponse:
+      type: object
+      properties:
+        label:
+          type: string
+          description: Label of School year
+          example: 'label'
+        value:
+          type: number
+          description: Value of School year
+          example: 200
+        items:
+          description: Semester
+          type: array
+          items:
+            $ref: '#/components/schemas/Semester'
+    Semester:
+      description: Semester
+      type: object
+      properties:
+        label:
+          type: string
+          description: Label of Semester
+          example: 'label'
+        value:
+          type: number
+          description: Value of Semester
+          example: 200
+    SemesterResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            semesters:
+              description: Semester list
+              type: array
+              items:
+                $ref: '#/components/schemas/SemesterDetailResponse'
+    SchoolYearResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            schoolYear:
+              description: School Year list
+              type: array
+              items:
+                $ref: '#/components/schemas/SchoolYearDetailResponse'
+    SchoolYearDetailResponse:
+      type: object
+      properties:
+        label:
+          type: string
+          description: Label of School year
+          example: 'label'
+        value:
+          type: number
+          description: Value of School year
+          example: 200
+    SubjectResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            subjects:
+              description: Subject list
+              type: array
+              items:
+                $ref: '#/components/schemas/Subject'
+            resultsTotalCount:
+              description: Number of Subject with condition
+              type: integer
+              format: int64
+              example: 1000
+    LecturerCreateRequest:
+      type: object
+      required:
+        - lecturerCreate
+        - createBy
+      properties:
+        lecturerCreate:
+          $ref: '#/components/schemas/LecturerCreate'
+        createBy:
+          type: string
+          description: Updated By of Lecturer
+          example: 'updateBy'
+    LecturerCreate:
+      description: New Lecturers
+      type: object
+      required:
+        - firstName
+        - fullName
+        - gender
+        - images
+        - birthday
+        - placeOfBirth
+        - address
+        - addressTmp
+        - phone
+        - email
+        - emailTdtu
+        - workplace
+        - classification
+      properties:
+        firstName:
+          type: string
+          description: First Name of Lecturer
+          example: 'firstName'
+        fullName:
+          type: string
+          description: Full Name of Lecturer
+          example: 'fullName'
+        gender:
+          type: boolean
+          description: Gender of Lecturer
+          example: true
+        images:
+          type: string
+          description: Images of Lecturer
+          example: 'images'
+        birthday:
+          type: string
+          description: Birthday of Lecturer
+          example: 'Birthday'
+          pattern: '^([12]\d{3})-(0[1-9]|1[0-2])-(0[1-9]|1\d|2[0-8]|29(?=\/\d\d\/(?!1[01345789]00|2[1235679]00)\d\d(?:[02468][048]|[13579][26]))|30(?!\/02)|31(?=\/0[13578]|\/1[02]))$'
+        placeOfBirth:
+          type: string
+          description: Place Of Birth of Lecturer
+          example: 'placeOfBirth'
+        address:
+          type: string
+          description: Address of Lecturer
+          example: 'address'
+        addressTmp:
+          type: string
+          description: Address Tmp of Lecturer
+          example: 'addressTmp'
+        phone:
+          type: string
+          description: Phone of Lecturer
+          example: 'phone'
+          pattern: '^(84|0[3|5|7|8|9])+([0-9]{8})\b$'
+        email:
+          type: string
+          description: Email of Lecturer
+          example: 'email'
+          pattern: '^\w+([.\-]?\w+)*@\w+([.\-]?\w+)*(\.\w{2,3})+$'
+        emailTdtu:
+          type: string
+          description: Email TDTU of Lecturer
+          example: 'emailTdtu'
+          pattern: '^\w+([.\-]?\w+)*@tdtu\.edu\.vn$'
+        workplace:
+          type: string
+          description: Workplace of Lecturer
+          example: 'workplace'
+        mainPosition:
+          type: string
+          description: Main Position of Lecturer
+          example: 'mainPosition'
+        secondaryPosition:
+          type: string
+          description: Secondary Position of Lecturer
+          example: 'secondaryPosition'
+        classification:
+          type: number
+          description: ID of Classification
+          example: 200
+          minimum: 0
+          maximum: 1
+    LecturerCreateResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the update Lecturer
+          type: string
+          example: 'OK'
+    TrainingProcessCreateRequest:
+      type: object
+      required:
+        - lecturerId
+        - trainingProcessCreate
+        - createBy
+      properties:
+        lecturerId:
+          type: number
+          description: ID of Lecturer
+          example: 200
+        trainingProcessCreate:
+          $ref: '#/components/schemas/TrainingProcessCreate'
+        createBy:
+          type: string
+          description: Create By of Training Process
+          example: 'createBy'
+    TrainingProcessCreate:
+      description: New Training Process
+      type: object
+      required:
+        - level
+        - languageIds
+        - truong
+        - nganh
+        - loaiTotNghiep
+        - namTotNghiep
+      properties:
+        namTotNghiep:
+          type: number
+          description: namTotNghiep of Training Process
+          example: 200
+          minimum: 1900
+          maximum: 2999
+        loaiTotNghiep:
+          type: number
+          description: loaiTotNghiep of Training Process
+          example: 200
+          minimum: 1
+          maximum: 6
+        nguoiHuongDan:
+          type: string
+          description: nguoiHuongDan of Training Process
+          example: 'nguoiHuongDan'
+        deTaiTotNghiep:
+          type: string
+          description: deTaiTotNghiep of Training Process
+          example: 'deTaiTotNghiep'
+        nganh:
+          type: string
+          description: Nganh of Training Process
+          example: 'nganh'
+        truong:
+          type: string
+          description: Truong of Training Process
+          example: 'truong'
+        languageIds:
+          type: string
+          description: Id list of Training Process
+          example: 'languageIds'
+          pattern: '^(?:[1-5],){0,4}[1-5]$'
+        level:
+          type: number
+          description: ID Level of Training Process
+          example: 200
+          minimum: 1
+          maximum: 6
+    TrainingProcessResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the update Training Process
+          type: string
+          example: 'OK'
+    TrainingProcessCreateResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the create TrainingProcess
+          type: string
+          example: 'OK'
+    TrainingProcessUpdateRequest:
+      type: object
+      required:
+        - processId
+        - trainingProcessUpdate
+        - updateBy
+      properties:
+        processId:
+          type: number
+          description: ID of Training Process
+          example: 200
+        trainingProcessUpdate:
+          $ref: '#/components/schemas/TrainingProcessUpdate'
+        updateBy:
+          type: string
+          description: Update By of Training Process
+          example: 'updateBy'
+    TrainingProcessUpdate:
+      description: Update Training Process
+      type: object
+      required:
+        - level
+        - languageIds
+        - truong
+        - nganh
+        - loaiTotNghiep
+        - namTotNghiep
+      properties:
+        namTotNghiep:
+          type: number
+          description: namTotNghiep of Training Process
+          example: 200
+          minimum: 1900
+          maximum: 2999
+        loaiTotNghiep:
+          type: number
+          description: loaiTotNghiep of Training Process
+          example: 200
+          minimum: 1
+          maximum: 6
+        nguoiHuongDan:
+          type: string
+          description: nguoiHuongDan of Training Process
+          example: 'nguoiHuongDan'
+        deTaiTotNghiep:
+          type: string
+          description: deTaiTotNghiep of Training Process
+          example: 'deTaiTotNghiep'
+        nganh:
+          type: string
+          description: Nganh of Training Process
+          example: 'nganh'
+        truong:
+          type: string
+          description: Truong of Training Process
+          example: 'truong'
+        languageIds:
+          type: string
+          description: Id list of Training Process
+          example: 'languageIds'
+          pattern: '^(?:[1-5],){0,4}[1-5]$'
+        level:
+          type: number
+          description: ID Level of Training Process
+          example: 200
+          minimum: 1
+          maximum: 6
+    TrainingProcessUpdateResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the Update TrainingProcess
+          type: string
+          example: 'OK'
+    SatisfactionScoreDeleteRequest:
+      type: object
+      required:
+        - satisfactionScoreId
+        - deleteBy
+      properties:
+        satisfactionScoreId:
+          type: string
+          pattern: '^(\d{1,19},)*\d{1,19}$'
+          description: List ID of SatisfactionScore
+          example: '200'
+        deleteBy:
+          type: string
+          description: Deleted By of SatisfactionScore
+          example: 'deleteBy'
+    SatisfactionScoreDeleteResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the delete SatisfactionScore
+          type: string
+          example: 'OK'
+    SatisfactionScoreCreateRequest:
+      type: object
+      required:
+        - lecturerId
+        - satisfactionScoreCreate
+        - createBy
+      properties:
+        lecturerId:
+          type: number
+          description: ID of Lecturer
+          example: 200
+        satisfactionScoreCreate:
+          $ref: '#/components/schemas/SatisfactionScoreCreate'
+        createBy:
+          type: string
+          description: Create By of Satisfaction Score
+          example: 'createBy'
+    SatisfactionScoreCreate:
+      description: New Satisfaction Score
+      type: object
+      required:
+        - maMon
+        - hocKy
+        - diemHaiLong
+      properties:
+        maMon:
+          type: string
+          description: maMon of Satisfaction Score
+          example: 'nguoiHuongDan'
+        hocKy:
+          type: number
+          description: hocKy of Satisfaction Score
+          example: 200
+          minimum: 190001
+          maximum: 299903
+        diemHaiLong:
+          type: number
+          description: diemHaiLong of Satisfaction Score
+          example: 200
+          minimum: 0
+          maximum: 100
+    SatisfactionScoreCreateResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the create Satisfaction Score
+          type: string
+          example: 'OK'
+    TrainingProcessDeleteRequest:
+      type: object
+      required:
+        - trainingProcessId
+        - deleteBy
+      properties:
+        trainingProcessId:
+          type: string
+          pattern: '^(\d{1,19},)*\d{1,19}$'
+          description: List ID of Training Process
+          example: '200'
+        deleteBy:
+          type: string
+          description: Deleted By of Training Process
+          example: 'deleteBy'
+    TrainingProcessDeleteResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the delete Training Process
+          type: string
+          example: 'OK'
+    CertificateTypeResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            certificateType:
+              description: Certificate Type list
+              type: array
+              items:
+                $ref: '#/components/schemas/CertificateTypeDetailResponse'
+    CertificateTypeDetailResponse:
+      type: object
+      properties:
+        label:
+          type: string
+          description: Label of Certificate Type
+          example: 'label'
+        value:
+          type: number
+          description: Value of Certificate Type
+          example: 200
+    CertificateDeleteRequest:
+      type: object
+      required:
+        - certificateId
+        - deleteBy
+      properties:
+        certificateId:
+          type: string
+          pattern: '^(\d{1,19},)*\d{1,19}$'
+          description: List ID of Certificate
+          example: '200'
+        deleteBy:
+          type: string
+          description: Deleted By of Certificate
+          example: 'deleteBy'
+    CertificateDeleteResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the delete Certificate
+          type: string
+          example: 'OK'
+    CertificateCreateRequest:
+      type: object
+      required:
+        - lecturerId
+        - certificateCreate
+        - createBy
+      properties:
+        lecturerId:
+          type: number
+          description: ID of Lecturer
+          example: 200
+        certificateCreate:
+          $ref: '#/components/schemas/CertificateCreate'
+        createBy:
+          type: string
+          description: Create By of Certificate
+          example: 'createBy'
+    CertificateCreate:
+      description: New Certificate
+      type: object
+      required:
+        - maLoai
+        - diem
+      properties:
+        maLoai:
+          type: number
+          description: Ma Loai of Certificate
+          example: 200
+        diem:
+          type: string
+          description: Diem of Certificate
+          example: 'diem'
+    CertificateCreateResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the create Certificate
+          type: string
+          example: 'OK'
+    SubjectGroupResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            subjectGroups:
+              description: Subject Group  list
+              type: array
+              items:
+                $ref: '#/components/schemas/SubjectGroup'
+            resultsTotalCount:
+              description: Number of Subject Group with condition
+              type: integer
+              format: int64
+              example: 1000
+    SubjectCreateRequest:
+      type: object
+      required:
+        - subjectCreate
+        - createBy
+      properties:
+        subjectCreate:
+          $ref: '#/components/schemas/SubjectCreate'
+        createBy:
+          type: string
+          description: Create By of Subject
+          example: 'createBy'
+    SubjectCreate:
+      description: New Subject
+      type: object
+      required:
+        - maMon
+        - hocKy
+        - diemHaiLong
+      properties:
+        maNhom:
+          type: string
+          description: Ma nhom of Subject
+          example: 'maNhom'
+        maLoai:
+          type: number
+          description: Ma loai of Subject
+          example: 200
+        maMon:
+          type: string
+          description: Ma mon of Subject
+          example: 'maMon'
+        tenMon:
+          type: string
+          description: Ten mon of Subject
+          example: 'tenMon'
+        soTiet:
+          type: number
+          description: So tiet of Subject
+          example: 200
+          minimum: 0
+          maximum: 360
+    SubjectCreateResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the create Subject
+          type: string
+          example: 'OK'
+    SubjectDeleteRequest:
+      type: object
+      required:
+        - subjectIds
+        - deleteBy
+      properties:
+        subjectIds:
+          type: string
+          description: List ID of Subject
+          example: '200'
+        deleteBy:
+          type: string
+          description: Deleted By of Subject
+          example: 'deleteBy'
+    SubjectDeleteResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the delete Subject
+          type: string
+          example: 'OK'
+    SubjectUpdateRequest:
+      type: object
+      required:
+        - subjectId
+        - subjectUpdate
+        - updateBy
+      properties:
+        subjectId:
+          type: string
+          description: ID of Subject
+          example: 'updateBy'
+        subjectUpdate:
+          $ref: '#/components/schemas/SubjectUpdate'
+        updateBy:
+          type: string
+          description: Update By of Subject
+          example: 'updateBy'
+    SubjectUpdate:
+      description: Update Subject
+      type: object
+      required:
+        - tenMon
+        - soTiet
+      properties:
+        tenMon:
+          type: string
+          description: soTiet of Subject
+          example: 'soTiet'
+        soTiet:
+          type: number
+          description: soTiet of Subject
+          example: 200
+          minimum: 0
+          maximum: 360
+    SubjectUpdateResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the update Subject
+          type: string
+          example: 'OK'
+    #    End here
+
+  responses:
+    webApiValidationError:
+      description: webApi input value validation failure
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/WebApiErrorResponse'
+            properties:
+              status:
+                example: 400
+    400:
+      description: Format check failed
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+            properties:
+              status:
+                example: 400
+              error:
+                example: Bad Request
+    401:
+      description: Restrict access
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+            properties:
+              status:
+                example: 401
+              error:
+                example: Unauthorized
+    403:
+      description: Access request denied
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+            properties:
+              status:
+                example: 403
+              error:
+                example: Forbidden
+    404:
+      description: Page not found
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+            properties:
+              status:
+                example: 404
+              error:
+                example: Not Found
+    500:
+      description: The server is having problems
+      content:
+        application/json:
+          schema:
+            allOf:
+              - $ref: '#/components/schemas/ErrorResponse'
+            properties:
+              status:
+                example: 500
+              error:
+                example: Internal Server Error
+  headers:
+    Content-Disposition:
+      schema:
+        type: string

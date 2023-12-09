@@ -1,0 +1,13 @@
+server:
+  port: 8080
+spring:
+  profiles:
+    active: local
+  datasource:
+    driverClassName: org.h2.Driver
+    url: jdbc:h2:tcp://localhost/~/project;MODE=Oracle
+    username: user
+    password: test111
+mybatis:
+  mapper-locations: classpath*:/com.tdtu.mbGenerator.generate.mybatis.mapper/*.xml
+  type-aliases-package: com.tdtu.mbGenerator.handler

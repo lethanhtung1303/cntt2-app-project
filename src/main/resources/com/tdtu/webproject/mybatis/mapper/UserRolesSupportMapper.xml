@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.tdtu.webproject.mybatis.mapper.UserRolesSupportMapper">
+    <resultMap id="BaseResultMap" type="com.tdtu.webproject.mybatis.result.UserRolesResult">
+        <id column="ID" jdbcType="NUMERIC" property="id"/>
+        <result column="IDCATEGORY" jdbcType="NUMERIC" property="idCategory"/>
+        <result column="NAMECATEGORYNAMEVN" jdbcType="VARCHAR" property="nameCategoryNameVN"/>
+        <result column="EMPLOYEEID" jdbcType="NUMERIC" property="employeeID"/>
+        <result column="ROLEVIEW" jdbcType="NUMERIC" property="roleView"/>
+        <result column="ROLEUPDATE" jdbcType="NUMERIC" property="roleUpdate"/>
+        <result column="ROLEDELETE" jdbcType="NUMERIC" property="roleDelete"/>
+    </resultMap>
+
+    <select id="loadRoleDetail" resultMap="BaseResultMap">
+        SELECT rc.ID AS ID,
+        rc.ID AS IDCATEGORY,
+        rc.CATEGORY_NAME_VN AS NAMECATEGORYNAMEVN,
+        ${employeeID} AS EMPLOYEEID,
+        COALESCE(r.ROLE_VIEW, 0) AS ROLEVIEW,
+        COALESCE(r.ROLE_UPDATE, 0) AS ROLEUPDATE,
+        COALESCE(r.ROLE_DELETE, 0) AS ROLEDELETE
+        FROM TDT_ROLE_CATEGORY rc
+        LEFT JOIN TDT_ROLE r ON
+        r.CATEGORY_ROLE = rc.ID
+        <if test="(employeeID != null and employeeID != '')">
+            AND r.EMPLOYEE_ID = ${employeeID}
+        </if>
+        LEFT JOIN TDT_giang_vien e ON
+        e.ID = r.EMPLOYEE_ID
+        WHERE r.IS_ACTIVE IS NULL
+        OR r.IS_ACTIVE != 0;
+    </select>
+</mapper>
