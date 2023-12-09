@@ -35,7 +35,7 @@ public class CertificateService {
         return CertificateCondition.builder()
                 .lecturerIds(Optional.ofNullable(lecturerIds).isPresent()
                         ? Arrays.stream(lecturerIds.split(","))
-                        .map(lecturerId -> NumberUtil.toBigDeimal(lecturerId).orElse(null))
+                        .map(lecturerId -> NumberUtil.toBigDecimal(lecturerId).orElse(null))
                         .collect(Collectors.toList())
                         : Collections.emptyList())
                 // Add conditions if needed
@@ -56,7 +56,7 @@ public class CertificateService {
         return CertificateCondition.builder()
                 .certificateIds(Optional.ofNullable(request.getCertificateId()).isPresent()
                         ? Arrays.stream(request.getCertificateId().split(","))
-                        .map(id -> NumberUtil.toBigDeimal(id).orElse(null))
+                        .map(id -> NumberUtil.toBigDecimal(id).orElse(null))
                         .collect(Collectors.toList())
                         : Collections.emptyList())
                 .updateBy(request.getDeleteBy())

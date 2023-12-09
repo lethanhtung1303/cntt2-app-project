@@ -4,6 +4,8 @@ import com.tdtu.mbGenerator.generate.mybatis.example.TdtGiangVienExample;
 import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtGiangVienMapper;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
 import com.tdtu.webproject.model.condition.LecturerCondition;
+import com.tdtu.webproject.mybatis.mapper.LecturerSupportMapper;
+import com.tdtu.webproject.mybatis.result.*;
 import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;
 import lombok.AllArgsConstructor;
@@ -19,6 +21,7 @@ import java.util.Optional;
 @ComponentScan
 public class LecturerRepositoryImp implements LecturerRepository {
     private final TdtGiangVienMapper lecturerMapper;
+    private final LecturerSupportMapper lecturerSupportMapper;
 
     @Override
     public Long countLecturer(LecturerCondition condition) {
@@ -72,5 +75,30 @@ public class LecturerRepositoryImp implements LecturerRepository {
     @Override
     public int create(TdtGiangVien record) {
         return lecturerMapper.insertSelective(record);
+    }
+
+    @Override
+    public List<LecturerTeachingResult> getLecturerTeaching() {
+        return lecturerSupportMapper.getLecturerTeaching();
+    }
+
+    @Override
+    public List<LecturerTrainingProcessResult> getLecturerTrainingProcess() {
+        return lecturerSupportMapper.getLecturerTrainingProcess();
+    }
+
+    @Override
+    public List<LecturerTrainingLanguageResult> getLecturerTrainingLanguage() {
+        return lecturerSupportMapper.getLecturerTrainingLanguage();
+    }
+
+    @Override
+    public List<LecturerCertificateResult> getLecturerCertificate() {
+        return lecturerSupportMapper.getLecturerCertificate();
+    }
+
+    @Override
+    public List<LecturerSatisfactionScoreResult> getLecturerSatisfactionScore(BigDecimal semester) {
+        return lecturerSupportMapper.getLecturerSatisfactionScore(semester);
     }
 }

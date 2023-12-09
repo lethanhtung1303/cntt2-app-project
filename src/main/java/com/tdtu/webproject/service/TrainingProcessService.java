@@ -41,7 +41,7 @@ public class TrainingProcessService {
         return TrainingProcessCondition.builder()
                 .lecturerIds(Optional.ofNullable(lecturerIds).isPresent()
                         ? Arrays.stream(lecturerIds.split(","))
-                        .map(lecturerId -> NumberUtil.toBigDeimal(lecturerId).orElse(null))
+                        .map(lecturerId -> NumberUtil.toBigDecimal(lecturerId).orElse(null))
                         .collect(Collectors.toList())
                         : Collections.emptyList())
                 // Add conditions if needed
@@ -83,7 +83,7 @@ public class TrainingProcessService {
 
     private List<TdtNgonNguDaoTao> buildTdtNgonNguDaoTao(BigDecimal trainingProcessId, String languageIds, String user) {
         List<BigDecimal> languageIdList = Arrays.stream(languageIds.split(","))
-                .map(languageId -> NumberUtil.toBigDeimal(languageId).orElse(null))
+                .map(languageId -> NumberUtil.toBigDecimal(languageId).orElse(null))
                 .toList();
 
         return ArrayUtil.isNotNullAndNotEmptyList(languageIdList)
@@ -168,7 +168,7 @@ public class TrainingProcessService {
         return TrainingProcessCondition.builder()
                 .processIds(Optional.ofNullable(request.getTrainingProcessId()).isPresent()
                         ? Arrays.stream(request.getTrainingProcessId().split(","))
-                        .map(lecturerId -> NumberUtil.toBigDeimal(lecturerId).orElse(null))
+                        .map(lecturerId -> NumberUtil.toBigDecimal(lecturerId).orElse(null))
                         .collect(Collectors.toList())
                         : Collections.emptyList())
                 .updateBy(request.getDeleteBy())

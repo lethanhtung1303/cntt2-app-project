@@ -590,6 +590,62 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SubjectUpdateResponse'
+  /v1/universityStandards:
+    get:
+      tags:
+        - LecturerStandard
+      summary: Api for get University Lecturer Standards
+      operationId: universityStandards
+      parameters:
+        - name: semester
+          required: true
+          in: query
+          schema:
+            type: number
+            description: Semester for get Lecturer Standards
+            example: 200
+            minimum: 190001
+            maximum: 299903
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Lecturer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UniversityStandardsResponse'
+  /v1/masterStandards:
+    get:
+      tags:
+        - LecturerStandard
+      summary: Api for get Master Lecturer Standards
+      operationId: masterStandards
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Lecturer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MasterStandardsResponse'
   #    End here
 
 components:
@@ -1471,7 +1527,7 @@ components:
           description: loaiTotNghiep of Training Process
           example: 200
           minimum: 1
-          maximum: 6
+          maximum: 7
         nguoiHuongDan:
           type: string
           description: nguoiHuongDan of Training Process
@@ -1852,6 +1908,94 @@ components:
           description: Message of the update Subject
           type: string
           example: 'OK'
+    UniversityStandardsResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            universityStandards:
+              description: University Lecturer Standards list
+              type: array
+              items:
+                $ref: '#/components/schemas/UniversityStandardDetailResponse'
+    UniversityStandardDetailResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          description: ID of Lecturer
+          example: 200
+        fullName:
+          type: string
+          description: Full Name of Lecturer
+          example: 'fullName'
+        images:
+          type: string
+          description: Images of Lecturer
+          example: 'images'
+        emailTdtu:
+          type: string
+          description: Email TDTU of Lecturer
+          example: 'emailTdtu'
+        isTeachingTheory:
+          type: boolean
+          description: Is Teaching Theory
+          example: true
+        isTeachingPractice:
+          type: boolean
+          description: Is Teaching Practice
+          example: true
+        isTeachingVietnamese:
+          type: boolean
+          description: Is Teaching Vietnamese
+          example: true
+        isTeachingEnglish:
+          type: boolean
+          description: Is Teaching English
+          example: true
+        isEnglishInternational:
+          type: boolean
+          description: Is English International
+          example: true
+    MasterStandardsResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            masterStandards:
+              description: Master Lecturer Standards list
+              type: array
+              items:
+                $ref: '#/components/schemas/MasterStandardDetailResponse'
+    MasterStandardDetailResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          description: ID of Lecturer
+          example: 200
+        fullName:
+          type: string
+          description: Full Name of Lecturer
+          example: 'fullName'
+        images:
+          type: string
+          description: Images of Lecturer
+          example: 'images'
+        emailTdtu:
+          type: string
+          description: Email TDTU of Lecturer
+          example: 'emailTdtu'
     #    End here
 
   responses:
