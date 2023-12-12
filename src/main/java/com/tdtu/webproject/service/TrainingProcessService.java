@@ -2,7 +2,6 @@ package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtNgonNguDaoTao;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
-import com.tdtu.webproject.constant.Const;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.model.condition.TrainingProcessCondition;
 import com.tdtu.webproject.repository.TrainingLanguageRepository;
@@ -22,6 +21,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.tdtu.webproject.constant.Const.FAIL;
+import static com.tdtu.webproject.constant.Const.SUCCESSFUL;
 
 @Service
 @AllArgsConstructor
@@ -73,7 +75,7 @@ public class TrainingProcessService {
 
             int totalResult = trainingLanguageList.stream().mapToInt(trainingLanguageRepository::create).sum();
             if (totalResult == trainingLanguageList.size()) {
-                return Const.SUCCESSFUL;
+                return SUCCESSFUL;
             } else {
                 throw new BusinessException("40004", "Training Language create FAIL!");
             }
@@ -132,12 +134,12 @@ public class TrainingProcessService {
             trainingLanguageRepository.deleteByTrainingId(processId);
             int totalResult = trainingLanguageList.stream().mapToInt(trainingLanguageRepository::create).sum();
             if (totalResult == trainingLanguageList.size()) {
-                return Const.SUCCESSFUL;
+                return SUCCESSFUL;
             } else {
                 throw new BusinessException("40004", "Training Language create FAIL!");
             }
         }
-        return Const.FAIL;
+        return FAIL;
     }
 
     private TdtQuaTrinhDaoTao buildTdtQuaTrinhDaoTaoForUpdate(TrainingProcessUpdate trainingProcess, String updateBy) {
@@ -160,8 +162,8 @@ public class TrainingProcessService {
             throw new BusinessException("40001", "The list of deleted Training Process is empty!");
         }
         return trainingProcessRepository.delete(condition) > 0
-                ? Const.SUCCESSFUL
-                : Const.FAIL;
+                ? SUCCESSFUL
+                : FAIL;
     }
 
     private TrainingProcessCondition buildTrainingProcessConditionForDelete(TrainingProcessDeleteRequest request) {
