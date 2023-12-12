@@ -101,4 +101,9 @@ public class LecturerRepositoryImp implements LecturerRepository {
     public List<LecturerSatisfactionScoreResult> getLecturerSatisfactionScore(BigDecimal semester) {
         return lecturerSupportMapper.getLecturerSatisfactionScore(semester);
     }
+
+    @Override
+    public List<NormsLectureHoursResult> getNormsLectureHours() {
+        return lecturerSupportMapper.getNormsLectureHours();
+    }
 }

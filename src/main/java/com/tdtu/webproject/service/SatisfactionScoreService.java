@@ -1,7 +1,6 @@
 package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtDiemHaiLong;
-import com.tdtu.webproject.constant.Const;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.model.condition.SatisfactionScoreCondition;
 import com.tdtu.webproject.repository.SatisfactionScoreRepository;
@@ -19,6 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.tdtu.webproject.constant.Const.FAIL;
+import static com.tdtu.webproject.constant.Const.SUCCESSFUL;
 
 @Service
 @AllArgsConstructor
@@ -47,8 +49,8 @@ public class SatisfactionScoreService {
             throw new BusinessException("40001", "The list of deleted Lecturers is empty!");
         }
         return satisfactionScoreRepository.delete(condition) > 0
-                ? Const.SUCCESSFUL
-                : Const.FAIL;
+                ? SUCCESSFUL
+                : FAIL;
     }
 
     private SatisfactionScoreCondition buildSatisfactionScoreConditionForDelete(SatisfactionScoreDeleteRequest request) {
@@ -69,8 +71,8 @@ public class SatisfactionScoreService {
             }
 
             return satisfactionScoreRepository.create(this.buildTdtGiangVienForCreate(lecturerId, satisfactionScoreCreate, createBy)) > 0
-                    ? Const.SUCCESSFUL
-                    : Const.FAIL;
+                    ? SUCCESSFUL
+                    : FAIL;
         }
         throw new BusinessException("40005", "Lecturer Id is null!");
     }

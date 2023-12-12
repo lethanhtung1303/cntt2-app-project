@@ -646,6 +646,40 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/MasterStandardsResponse'
+  /v1/normsLectureHours:
+    get:
+      tags:
+        - LectureHours
+      summary: Api for get Lecture Hours
+      operationId: normsLectureHours
+      parameters:
+        - name: semester
+          required: true
+          in: query
+          schema:
+            type: number
+            description: Semester for get Lecture Hours
+            example: 200
+            minimum: 190001
+            maximum: 299903
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Lecturer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/NormsLectureHoursResponse'
+
   #    End here
 
 components:
@@ -1996,6 +2030,83 @@ components:
           type: string
           description: Email TDTU of Lecturer
           example: 'emailTdtu'
+    NormsLectureHoursResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            normsLectureHours:
+              description: Norms Lecture Hours list
+              type: array
+              items:
+                $ref: '#/components/schemas/NormsLectureHoursDetailResponse'
+    NormsLectureHoursDetailResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          description: ID of Lecturer
+          example: 200
+        fullName:
+          type: string
+          description: Full Name of Lecturer
+          example: 'fullName'
+        images:
+          type: string
+          description: Images of Lecturer
+          example: 'images'
+        emailTdtu:
+          type: string
+          description: Email TDTU of Lecturer
+          example: 'emailTdtu'
+        classificationLecturersCode:
+          type: number
+          description: Classification Lecturers of Lecturer
+          example: 200
+        classificationLecturers:
+          type: string
+          description: Classification Lecturers of Lecturer
+          example: 'classificationLecturers'
+        lecturerLevelCode:
+          type: number
+          description: Lecturer Level of Lecturer
+          example: 200
+        lecturerLevel:
+          type: string
+          description: Lecturer Level of Lecturer
+          example: 'lecturerLevel'
+        displayOrder:
+          type: number
+          description: Display Order Level of Lecturer
+          example: 200
+        practicalLessons:
+          $ref: '#/components/schemas/NumberLessons'
+        conversionLesson:
+          $ref: '#/components/schemas/NumberLessons'
+        totalNumberLessons:
+          type: number
+          description: Total Number Lessons of Lecturer
+          example: 200
+        status:
+          type: number
+          description: Status of Lecturer
+          example: 200
+    NumberLessons:
+      type: object
+      properties:
+        numberTheory:
+          type: number
+          description: Number Theory of Lessons
+          example: 200
+        numberPractice:
+          type: number
+          description: Number Practice of Lessons
+          example: 200
     #    End here
 
   responses:

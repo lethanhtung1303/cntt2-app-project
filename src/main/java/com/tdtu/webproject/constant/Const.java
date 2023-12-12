@@ -9,6 +9,12 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 public class Const {
+    public static final int LECTURER_HOURS_WARNING = 0;
+    public static final int LECTURER_HOURS_LEVELOUT = 1;
+    public static final int LECTURER_HOURS_NORMAL = 2;
+    public static final int LECTURER_HOURS_NOTTEACHING = 3;
+    public static final double CONVERSION_COEFFICIENT_THEORY = 1;
+    public static final double CONVERSION_COEFFICIENT_PRACTICE = 0.85;
     public static final String SUCCESSFUL = "SUCCESSFUL";
     public static final String FAIL = "FAIL";
     public static final String UNAPPROVE = "UNAPPROVE";

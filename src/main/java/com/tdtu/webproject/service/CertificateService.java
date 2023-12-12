@@ -1,7 +1,6 @@
 package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtChungChi;
-import com.tdtu.webproject.constant.Const;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.model.condition.CertificateCondition;
 import com.tdtu.webproject.repository.CertificateRepository;
@@ -19,6 +18,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.tdtu.webproject.constant.Const.FAIL;
+import static com.tdtu.webproject.constant.Const.SUCCESSFUL;
 
 @Service
 @AllArgsConstructor
@@ -48,8 +50,8 @@ public class CertificateService {
             throw new BusinessException("40001", "The list of deleted Certificate is empty!");
         }
         return certificateRepository.delete(condition) > 0
-                ? Const.SUCCESSFUL
-                : Const.FAIL;
+                ? SUCCESSFUL
+                : FAIL;
     }
 
     private CertificateCondition buildCertificateConditionForDelete(CertificateDeleteRequest request) {
@@ -70,8 +72,8 @@ public class CertificateService {
             }
 
             return certificateRepository.create(this.buildTdtChungChiForCreate(lecturerId, certificateCreate, createBy)) > 0
-                    ? Const.SUCCESSFUL
-                    : Const.FAIL;
+                    ? SUCCESSFUL
+                    : FAIL;
         }
         throw new BusinessException("40005", "Lecturer Id is null!");
     }

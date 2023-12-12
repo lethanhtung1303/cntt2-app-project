@@ -3,7 +3,6 @@ package com.tdtu.webproject.service;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtLoaiMon;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtMonHoc;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtNhomMon;
-import com.tdtu.webproject.constant.Const;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.model.condition.SubjectCondition;
 import com.tdtu.webproject.model.condition.SubjectGroupCondition;
@@ -21,6 +20,9 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.tdtu.webproject.constant.Const.FAIL;
+import static com.tdtu.webproject.constant.Const.SUCCESSFUL;
 
 @Service
 @AllArgsConstructor
@@ -112,8 +114,8 @@ public class SubjectService {
             }
 
             return subjectRepository.create(this.buildTdtMonHocForCreate(subjectCreate, createBy)) > 0
-                    ? Const.SUCCESSFUL
-                    : Const.FAIL;
+                    ? SUCCESSFUL
+                    : FAIL;
         }
         throw new BusinessException("40002", "Subject code is null!");
     }
@@ -136,8 +138,8 @@ public class SubjectService {
             throw new BusinessException("40001", "The list of deleted Subject is empty!");
         }
         return subjectRepository.delete(condition) > 0
-                ? Const.SUCCESSFUL
-                : Const.FAIL;
+                ? SUCCESSFUL
+                : FAIL;
     }
 
     private SubjectCondition buildSubjectConditionForDelete(SubjectDeleteRequest request) {
@@ -156,10 +158,10 @@ public class SubjectService {
             }
 
             return subjectRepository.update(this.buildTdtMonHocForUpdate(subject, updateBy), subjectId) > 0
-                    ? Const.SUCCESSFUL
-                    : Const.FAIL;
+                    ? SUCCESSFUL
+                    : FAIL;
         }
-        return Const.FAIL;
+        return FAIL;
     }
 
     private TdtMonHoc buildTdtMonHocForUpdate(SubjectUpdate subject, String updateBy) {

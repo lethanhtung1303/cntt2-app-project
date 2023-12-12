@@ -1,7 +1,6 @@
 package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.*;
-import com.tdtu.webproject.constant.Const;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.model.condition.LecturerCondition;
 import com.tdtu.webproject.model.condition.LecturerRequest;
@@ -16,6 +15,9 @@ import org.springframework.stereotype.Service;
 import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
+
+import static com.tdtu.webproject.constant.Const.FAIL;
+import static com.tdtu.webproject.constant.Const.SUCCESSFUL;
 
 @Service
 @AllArgsConstructor
@@ -267,10 +269,10 @@ public class LecturerService {
                 throw new BusinessException("40002", "Invalid Lecturer Classification!");
             }
             return lecturerRepository.update(this.buildTdtGiangVienForUpdate(lecturer, updateBy), lecturerId) > 0
-                    ? Const.SUCCESSFUL
-                    : Const.FAIL;
+                    ? SUCCESSFUL
+                    : FAIL;
         }
-        return Const.FAIL;
+        return FAIL;
     }
 
     private TdtGiangVien buildTdtGiangVienForUpdate(LecturerUpdate lecturer, String updateBy) {
@@ -301,8 +303,8 @@ public class LecturerService {
             throw new BusinessException("40001", "The list of deleted Lecturers is empty!");
         }
         return lecturerRepository.delete(condition) > 0
-                ? Const.SUCCESSFUL
-                : Const.FAIL;
+                ? SUCCESSFUL
+                : FAIL;
     }
 
     public String createLecturer(LecturerCreate lecturer, String createBy) {
@@ -317,8 +319,8 @@ public class LecturerService {
             throw new BusinessException("40002", "Lecturer already exists in the system!");
         }
         return lecturerRepository.create(this.buildTdtGiangVienForCreate(lecturer, createBy)) > 0
-                ? Const.SUCCESSFUL
-                : Const.FAIL;
+                ? SUCCESSFUL
+                : FAIL;
     }
 
     private TdtGiangVien buildTdtGiangVienForCreate(LecturerCreate lecturer, String createBy) {

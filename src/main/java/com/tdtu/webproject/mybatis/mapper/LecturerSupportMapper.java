@@ -17,4 +17,6 @@ public interface LecturerSupportMapper {
     List<LecturerCertificateResult> getLecturerCertificate();
 
     List<LecturerSatisfactionScoreResult> getLecturerSatisfactionScore(BigDecimal semester);
+
+    List<NormsLectureHoursResult> getNormsLectureHours();
 }

@@ -46,6 +46,24 @@
         <result column="DIEM_HAI_LONG" jdbcType="NUMERIC" property="satisfactionScore"/>
     </resultMap>
 
+    <resultMap id="NormsLectureHoursResult"
+               type="com.tdtu.webproject.mybatis.result.NormsLectureHoursResult">
+        <id column="ID" jdbcType="NUMERIC" property="lecturerId"/>
+        <result column="FULL_NAME" jdbcType="VARCHAR" property="fullName"/>
+        <result column="IMAGES" jdbcType="VARCHAR" property="images"/>
+        <result column="EMAIL_TDTU" jdbcType="VARCHAR" property="emailTdtu"/>
+        <result column="MA_LOAI_GIANG_VIEN" jdbcType="NUMERIC" property="lecturerTypeCode"/>
+        <result column="PHAN_LOAI" jdbcType="VARCHAR" property="lecturerType"/>
+        <result column="TRINH_DO_ID" jdbcType="NUMERIC" property="levelCode"/>
+        <result column="TRINH_DO" jdbcType="VARCHAR" property="level"/>
+        <result column="DISPLAY_ORDER" jdbcType="NUMERIC" property="displayOrder"/>
+        <result column="HOC_KY" jdbcType="NUMERIC" property="semester"/>
+        <result column="LICH_SU_GIANG_DAY_ID" jdbcType="NUMERIC" property="historyTeachingId"/>
+        <result column="MA_MON" jdbcType="VARCHAR" property="subjectCode"/>
+        <result column="SO_TIET" jdbcType="NUMERIC" property="numberLessons"/>
+        <result column="MA_LOAI" jdbcType="NUMERIC" property="subjectTypeCode"/>
+    </resultMap>
+
     <select id="getLecturerTeaching" resultMap="LecturerTeachingResult">
         SELECT TLSGD.GIANG_VIEN_ID,
                TMH.MA_MON,
@@ -158,5 +176,54 @@
         </if>
         ORDER BY TGV.ID
         ;
+    </select>
+
+
+    <select id="getNormsLectureHours" resultMap="NormsLectureHoursResult">
+        SELECT TGV.ID,
+               CONCAT(TGV.FIRST_NAME, ' ', TGV.FULL_NAME) AS FULL_NAME,
+               TGV.IMAGES,
+               TGV.EMAIL_TDTU,
+               TLGV.MA_LOAI                               AS MA_LOAI_GIANG_VIEN,
+               TLGV.PHAN_LOAI,
+               TTD.ID                                     AS TRINH_DO_ID,
+               TTD.TRINH_DO,
+               TTD.DISPLAY_ORDER,
+               TLSGD.HOC_KY,
+               TLSGD.ID                                   AS LICH_SU_GIANG_DAY_ID,
+               TMH.MA_MON,
+               TMH.SO_TIET,
+               TMH.MA_LOAI
+        FROM TDT_GIANG_VIEN TGV
+                 LEFT JOIN TDT_LICH_SU_GIANG_DAY TLSGD
+                           ON
+                               TGV.ID = TLSGD.GIANG_VIEN_ID
+                 LEFT JOIN TDT_LOAI_GIANG_VIEN TLGV
+                           ON
+                               TGV.CLASSIFICATION_LECTURERS = TLGV.MA_LOAI
+                 LEFT JOIN TDT_QUA_TRINH_DAO_TAO TQTDT
+                           ON
+                               TGV.ID = TQTDT.GIANG_VIEN_ID
+                 LEFT JOIN TDT_TRINH_DO TTD
+                           ON
+                               TQTDT.TRINH_DO_ID = TTD.ID
+                 LEFT JOIN TDT_MON_HOC TMH
+                           ON
+                               TLSGD.MA_MON = TMH.MA_MON
+        WHERE TGV.IS_ACTIVE = '1'
+          AND TGV.DELETED_FLAG = '0'
+          AND (TLSGD.IS_ACTIVE = '1'
+            OR TLSGD.IS_ACTIVE IS NULL)
+          AND (TLGV.IS_ACTIVE = '1'
+            OR TLGV.IS_ACTIVE IS NULL)
+          AND (TQTDT.IS_ACTIVE = '1'
+            OR TQTDT.IS_ACTIVE IS NULL)
+          AND (TTD.IS_ACTIVE = '1'
+            OR TTD.IS_ACTIVE IS NULL)
+          AND (TMH.IS_ACTIVE = '1'
+            OR TMH.IS_ACTIVE IS NULL)
+        ORDER BY TGV.ID
+        ;
+
     </select>
 </mapper>
