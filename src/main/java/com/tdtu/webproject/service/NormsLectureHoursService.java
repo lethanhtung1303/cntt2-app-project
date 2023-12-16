@@ -52,39 +52,47 @@ public class NormsLectureHoursService {
         if (!ArrayUtil.isNotNullAndNotEmptyList(normsLectureHoursBySemester)) {
             return lecturer;
         }
-        lecturer.setPracticalLessons(this.buildPracticalLessons(normsLectureHoursBySemester));
-        lecturer.setConversionLesson(this.buildConversionLessons(lecturer.getPracticalLessons()));
+        lecturer.setLessonsStandardSys(this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_STANDARD_SYS));
+        lecturer.setLessonsCLCVietnamese(this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_CLC_VIETNAMESE));
+        lecturer.setLessonsCLCEnglish(this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_CLC_ENGLISH));
+        lecturer.setLessonsEnglishInternational(this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_ENGLISH_INTERNATIONAL));
+        lecturer.setLessonsMaster(this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_MASTER));
+        lecturer.setConversionLesson(this.buildConversionLessons(lecturer.getLessonsStandardSys(),
+                lecturer.getLessonsCLCVietnamese(),
+                lecturer.getLessonsCLCEnglish(),
+                lecturer.getLessonsEnglishInternational(),
+                lecturer.getLessonsMaster()));
         lecturer.setTotalNumberLessons(this.countTotalNumberLessons(lecturer.getConversionLesson()));
         lecturer.setStatus(this.checkStatusNormsLectureHours(lecturer.getTotalNumberLessons(), lecturer.getClassificationLecturersCode(), lecturer.getDisplayOrder()));
         return lecturer;
     }
 
     private BigDecimal checkStatusNormsLectureHours(BigDecimal totalNumberLessons, BigDecimal lecturerTypeCode, BigDecimal displayOrder) {
-        if (lecturerTypeCode.compareTo(BigDecimal.ONE) == 0) {
-            if (displayOrder.compareTo(BigDecimal.valueOf(4)) == 0) {
-                if (totalNumberLessons.compareTo(BigDecimal.valueOf(207)) < 0) {
+        if (lecturerTypeCode.compareTo(BigDecimal.valueOf(FACULTY_LECTURER)) == 0) {
+            if (displayOrder.compareTo(BigDecimal.valueOf(LEVEL_MASTER)) == 0) {
+                if (totalNumberLessons.compareTo(BigDecimal.valueOf(NORMAL_NUMBER_LESSONS_MASTER)) < 0) {
                     return LectureHoursStatus.getValueByCode(LECTURER_HOURS_NORMAL);
-                } else if (totalNumberLessons.compareTo(BigDecimal.valueOf(350)) < 0) {
+                } else if (totalNumberLessons.compareTo(BigDecimal.valueOf(WARNING_NUMBER_LESSONS_MASTER)) < 0) {
                     return LectureHoursStatus.getValueByCode(LECTURER_HOURS_WARNING);
                 }
-            } else if (displayOrder.compareTo(BigDecimal.valueOf(3)) <= 0) {
-                if (totalNumberLessons.compareTo(BigDecimal.valueOf(243)) < 0) {
+            } else if (displayOrder.compareTo(BigDecimal.valueOf(LEVEL_DOCTORAL)) <= 0) {
+                if (totalNumberLessons.compareTo(BigDecimal.valueOf(NORMAL_NUMBER_LESSONS_DOCTORAL)) < 0) {
                     return LectureHoursStatus.getValueByCode(LECTURER_HOURS_NORMAL);
-                } else if (totalNumberLessons.compareTo(BigDecimal.valueOf(350)) < 0) {
+                } else if (totalNumberLessons.compareTo(BigDecimal.valueOf(WARNING_NUMBER_LESSONS_DOCTORAL)) < 0) {
                     return LectureHoursStatus.getValueByCode(LECTURER_HOURS_WARNING);
                 }
             }
-        } else if (lecturerTypeCode.compareTo(BigDecimal.ZERO) == 0) {
-            if (displayOrder.compareTo(BigDecimal.valueOf(4)) == 0) {
-                if (totalNumberLessons.compareTo(BigDecimal.valueOf(310)) < 0) {
+        } else if (lecturerTypeCode.compareTo(BigDecimal.valueOf(VISITING_LECTURER)) == 0) {
+            if (displayOrder.compareTo(BigDecimal.valueOf(LEVEL_MASTER)) == 0) {
+                if (totalNumberLessons.compareTo(BigDecimal.valueOf(NORMAL_NUMBER_LESSONS_MASTER * 1.5)) < 0) {
                     return LectureHoursStatus.getValueByCode(LECTURER_HOURS_NORMAL);
-                } else if (totalNumberLessons.compareTo(BigDecimal.valueOf(525)) < 0) {
+                } else if (totalNumberLessons.compareTo(BigDecimal.valueOf(WARNING_NUMBER_LESSONS_MASTER * 1.5)) < 0) {
                     return LectureHoursStatus.getValueByCode(LECTURER_HOURS_WARNING);
                 }
-            } else if (displayOrder.compareTo(BigDecimal.valueOf(3)) <= 0) {
-                if (totalNumberLessons.compareTo(BigDecimal.valueOf(364)) < 0) {
+            } else if (displayOrder.compareTo(BigDecimal.valueOf(LEVEL_DOCTORAL)) <= 0) {
+                if (totalNumberLessons.compareTo(BigDecimal.valueOf(NORMAL_NUMBER_LESSONS_DOCTORAL * 1.5)) < 0) {
                     return LectureHoursStatus.getValueByCode(LECTURER_HOURS_NORMAL);
-                } else if (totalNumberLessons.compareTo(BigDecimal.valueOf(525)) < 0) {
+                } else if (totalNumberLessons.compareTo(BigDecimal.valueOf(WARNING_NUMBER_LESSONS_DOCTORAL * 1.5)) < 0) {
                     return LectureHoursStatus.getValueByCode(LECTURER_HOURS_WARNING);
                 }
             }
@@ -97,21 +105,45 @@ public class NormsLectureHoursService {
         return conversionLesson.getNumberTheory().add(conversionLesson.getNumberPractice());
     }
 
-    private NumberLessons buildConversionLessons(NumberLessons practicalLessons) {
+    private NumberLessons buildConversionLessons(NumberLessons lessonsStandardSys,
+                                                 NumberLessons lessonsCLCVietnamese,
+                                                 NumberLessons lessonsCLCEnglish,
+                                                 NumberLessons lessonsEnglishInternational,
+                                                 NumberLessons lessonsMaster) {
+        BigDecimal numberTheory = BigDecimal.ZERO;
+        BigDecimal numberPractice = BigDecimal.ZERO;
+
+        numberTheory = numberTheory.add(lessonsStandardSys.getNumberTheory().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_STANDARD_SYS)))
+                .add(lessonsCLCVietnamese.getNumberTheory().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_VIETNAMESE)))
+                .add(lessonsCLCEnglish.getNumberTheory().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_ENGLISH)))
+                .add(lessonsEnglishInternational.getNumberTheory().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_ENGLISH_INTERNATIONAL)))
+                .add(lessonsMaster.getNumberTheory().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_MASTER)));
+
+        numberPractice = numberPractice.add(lessonsStandardSys.getNumberPractice().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_STANDARD_SYS)))
+                .add(lessonsCLCVietnamese.getNumberPractice().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_VIETNAMESE)))
+                .add(lessonsCLCEnglish.getNumberPractice().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_ENGLISH)))
+                .add(lessonsEnglishInternational.getNumberPractice().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_ENGLISH_INTERNATIONAL)))
+                .add(lessonsMaster.getNumberPractice().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_MASTER)));
+
+        numberTheory = numberTheory.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY));
+        numberPractice = numberPractice.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE));
+
         return NumberLessons.builder()
-                .numberTheory(practicalLessons.getNumberTheory().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY)))
-                .numberPractice(practicalLessons.getNumberPractice().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE)))
+                .numberTheory(numberTheory)
+                .numberPractice(numberPractice)
                 .build();
     }
 
-    private NumberLessons buildPracticalLessons(List<NormsLectureHoursResult> normsLectureHoursBySemester) {
+    private NumberLessons buildNumberLessons(List<NormsLectureHoursResult> normsLectureHoursBySemester, int trainingSystem) {
         BigDecimal totalTheory = normsLectureHoursBySemester.stream()
-                .filter(result -> result.getSubjectTypeCode().compareTo(BigDecimal.ZERO) == 0)
+                .filter(result -> result.getTrainingSystem().compareTo(BigDecimal.valueOf(trainingSystem)) == 0
+                        && result.getSubjectTypeCode().compareTo(BigDecimal.valueOf(THEORY_CODE)) == 0)
                 .map(NormsLectureHoursResult::getNumberLessons)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
         BigDecimal totalPractice = normsLectureHoursBySemester.stream()
-                .filter(result -> result.getSubjectTypeCode().compareTo(BigDecimal.ONE) == 0)
+                .filter(result -> result.getTrainingSystem().compareTo(BigDecimal.valueOf(trainingSystem)) == 0
+                        && result.getSubjectTypeCode().compareTo(BigDecimal.valueOf(PRACTICE_CODE)) == 0)
                 .map(NormsLectureHoursResult::getNumberLessons)
                 .reduce(BigDecimal.ZERO, BigDecimal::add);
 
@@ -144,7 +176,23 @@ public class NormsLectureHoursService {
                 .lecturerLevelCode(normsLectureHours.getLevelCode())
                 .lecturerLevel(normsLectureHours.getLevel())
                 .displayOrder(normsLectureHours.getDisplayOrder())
-                .practicalLessons(NumberLessons.builder()
+                .lessonsStandardSys(NumberLessons.builder()
+                        .numberTheory(BigDecimal.ZERO)
+                        .numberPractice(BigDecimal.ZERO)
+                        .build())
+                .lessonsCLCVietnamese(NumberLessons.builder()
+                        .numberTheory(BigDecimal.ZERO)
+                        .numberPractice(BigDecimal.ZERO)
+                        .build())
+                .lessonsCLCEnglish(NumberLessons.builder()
+                        .numberTheory(BigDecimal.ZERO)
+                        .numberPractice(BigDecimal.ZERO)
+                        .build())
+                .lessonsEnglishInternational(NumberLessons.builder()
+                        .numberTheory(BigDecimal.ZERO)
+                        .numberPractice(BigDecimal.ZERO)
+                        .build())
+                .lessonsMaster(NumberLessons.builder()
                         .numberTheory(BigDecimal.ZERO)
                         .numberPractice(BigDecimal.ZERO)
                         .build())

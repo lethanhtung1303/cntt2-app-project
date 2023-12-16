@@ -2084,7 +2084,15 @@ components:
           type: number
           description: Display Order Level of Lecturer
           example: 200
-        practicalLessons:
+        lessonsStandardSys:
+          $ref: '#/components/schemas/NumberLessons'
+        lessonsCLCVietnamese:
+          $ref: '#/components/schemas/NumberLessons'
+        lessonsCLCEnglish:
+          $ref: '#/components/schemas/NumberLessons'
+        lessonsEnglishInternational:
+          $ref: '#/components/schemas/NumberLessons'
+        lessonsMaster:
           $ref: '#/components/schemas/NumberLessons'
         conversionLesson:
           $ref: '#/components/schemas/NumberLessons'

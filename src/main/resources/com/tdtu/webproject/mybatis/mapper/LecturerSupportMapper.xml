@@ -62,6 +62,7 @@
         <result column="MA_MON" jdbcType="VARCHAR" property="subjectCode"/>
         <result column="SO_TIET" jdbcType="NUMERIC" property="numberLessons"/>
         <result column="MA_LOAI" jdbcType="NUMERIC" property="subjectTypeCode"/>
+        <result column="IDENTIFICATION" jdbcType="NUMERIC" property="trainingSystem"/>
     </resultMap>
 
     <select id="getLecturerTeaching" resultMap="LecturerTeachingResult">
@@ -193,7 +194,8 @@
                TLSGD.ID                                   AS LICH_SU_GIANG_DAY_ID,
                TMH.MA_MON,
                TMH.SO_TIET,
-               TMH.MA_LOAI
+               TMH.MA_LOAI,
+               THDT.IDENTIFICATION
         FROM TDT_GIANG_VIEN TGV
                  LEFT JOIN TDT_LICH_SU_GIANG_DAY TLSGD
                            ON
@@ -210,6 +212,9 @@
                  LEFT JOIN TDT_MON_HOC TMH
                            ON
                                TLSGD.MA_MON = TMH.MA_MON
+                 LEFT JOIN TDT_HE_DAO_TAO THDT
+                           ON
+                               THDT.MA_HE = TMH.MA_HE
         WHERE TGV.IS_ACTIVE = '1'
           AND TGV.DELETED_FLAG = '0'
           AND (TLSGD.IS_ACTIVE = '1'
@@ -222,8 +227,9 @@
             OR TTD.IS_ACTIVE IS NULL)
           AND (TMH.IS_ACTIVE = '1'
             OR TMH.IS_ACTIVE IS NULL)
+          AND (THDT.IS_ACTIVE = '1'
+            OR THDT.IS_ACTIVE IS NULL)
         ORDER BY TGV.ID
         ;
-
     </select>
 </mapper>
