@@ -2,6 +2,7 @@ package com.tdtu.webproject.repository;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
 import com.tdtu.webproject.model.condition.LecturerCondition;
+import com.tdtu.webproject.model.condition.LecturerTeachingHistoryCondition;
 import com.tdtu.webproject.mybatis.result.*;
 
 import java.math.BigDecimal;
@@ -29,4 +30,6 @@ public interface LecturerRepository {
     List<LecturerSatisfactionScoreResult> getLecturerSatisfactionScore(BigDecimal semester);
 
     List<NormsLectureHoursResult> getNormsLectureHours();
+
+    List<LecturerTeachingHistoryResult> getLecturerTeachingHistory(LecturerTeachingHistoryCondition condition);
 }

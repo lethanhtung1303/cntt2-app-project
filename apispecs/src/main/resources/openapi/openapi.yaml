@@ -679,7 +679,64 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/NormsLectureHoursResponse'
-
+  /v1/getTeachingHistory:
+    post:
+      tags:
+        - LecturerHistory
+      summary: Api for get Teaching History of Lecturer
+      operationId: getTeachingHistory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeachingHistoryRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Teaching History of Lecturer
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeachingHistoryResponse'
+  /v1/subjectTrainingSys:
+    get:
+      tags:
+        - Subject
+      summary: Api for get Subject Training System
+      operationId: subjectTrainingSys
+      parameters:
+        - name: trainingSysIds
+          in: query
+          schema:
+            type: string
+            description: trainingSysIds
+            example: '200'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Subject Training System
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SubjectTrainingSysResponse'
   #    End here
 
 components:
@@ -1009,6 +1066,10 @@ components:
           type: string
           description: Phan Loai of Subject
           example: 'phanLoai'
+        phanHe:
+          type: string
+          description: Phan He of Subject
+          example: 'phanHe'
         subjectGroup:
           $ref: '#/components/schemas/SubjectGroup'
         tenMon:
@@ -1836,6 +1897,7 @@ components:
       type: object
       required:
         - maMon
+        - maHe
         - hocKy
         - diemHaiLong
       properties:
@@ -1843,6 +1905,10 @@ components:
           type: string
           description: Ma nhom of Subject
           example: 'maNhom'
+        maHe:
+          type: number
+          description: Ma he of Subject
+          example: 200
         maLoai:
           type: number
           description: Ma loai of Subject
@@ -2115,6 +2181,110 @@ components:
           type: number
           description: Number Practice of Lessons
           example: 200
+    TeachingHistoryRequest:
+      type: object
+      required:
+        - lecturerId
+        - semester
+      properties:
+        lecturerId:
+          type: number
+          description: lecturerId for get Teaching History
+          example: 200
+        semester:
+          type: number
+          description: semester for get Teaching History
+          example: 200
+    TeachingHistoryResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            teachingHistory:
+              description: Teaching History list
+              type: array
+              items:
+                $ref: '#/components/schemas/TeachingHistoryDetailResponse'
+    TeachingHistoryDetailResponse:
+      type: object
+      properties:
+        subjectCode:
+          type: string
+          description: Subject Code of Teaching History
+          example: 'subjectCode'
+        subjectTitle:
+          type: string
+          description: Subject Title of Teaching History
+          example: 'subjectTitle'
+        numberLessons:
+          type: number
+          description: Number Lessons of Teaching History
+          example: 200
+        subjectGroupCode:
+          type: string
+          description: Subject Group Code of Teaching History
+          example: 'subjectGroupCode'
+        subjectGroupName:
+          type: string
+          description: Subject Group Name of Teaching History
+          example: 'subjectGroupName'
+        subjectTypeCode:
+          type: number
+          description: Subject Type Code of Teaching History
+          example: 200
+        nameTypeSubject:
+          type: string
+          description: Name Type Subject of Teaching History
+          example: 'nameTypeSubject'
+        trainingSysCode:
+          type: number
+          description: Training Sys Code of Teaching History
+          example: 200
+        nameTrainingSys:
+          type: string
+          description: Name Training Sys of Teaching History
+          example: 'nameTrainingSys'
+        identification:
+          type: number
+          description: Identification of Training Sys
+          example: 200
+    SubjectTrainingSysResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            trainingSys:
+              description: Subject Training Sys list
+              type: array
+              items:
+                $ref: '#/components/schemas/TrainingSys'
+            resultsTotalCount:
+              description: Number of Subject Training Sys with condition
+              type: integer
+              format: int64
+              example: 1000
+    TrainingSys:
+      description: Training Sys
+      type: object
+      properties:
+        maHe:
+          type: number
+          description: maHe of Training Sys
+          example: 200
+        phanHe:
+          type: string
+          description: phanHe of Training Sys
+          example: 'phanHe'
     #    End here
 
   responses:

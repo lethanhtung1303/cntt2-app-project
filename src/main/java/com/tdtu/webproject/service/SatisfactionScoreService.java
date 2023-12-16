@@ -66,7 +66,7 @@ public class SatisfactionScoreService {
 
     public String createSatisfactionScore(BigDecimal lecturerId, SatisfactionScoreCreate satisfactionScoreCreate, String createBy) {
         if (Optional.ofNullable(lecturerId).isPresent()) {
-            if (!lecturerManageService.checkExistLecturer(lecturerId)) {
+            if (lecturerManageService.checkNotExistLecturer(lecturerId)) {
                 throw new BusinessException("40001", "Not found Lecturer with ID: " + lecturerId);
             }
 
