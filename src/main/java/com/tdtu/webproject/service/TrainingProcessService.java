@@ -52,7 +52,7 @@ public class TrainingProcessService {
 
     public String createTrainingProcess(BigDecimal lecturerId, TrainingProcessCreate createRequest, String createBy) {
         if (Optional.ofNullable(lecturerId).isPresent()) {
-            if (!lecturerManageService.checkExistLecturer(lecturerId)) {
+            if (lecturerManageService.checkNotExistLecturer(lecturerId)) {
                 throw new BusinessException("40001", "Not found Lecturer with ID: " + lecturerId);
             }
 

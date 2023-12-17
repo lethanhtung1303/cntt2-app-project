@@ -67,7 +67,7 @@ public class CertificateService {
 
     public String createCertificate(BigDecimal lecturerId, CertificateCreate certificateCreate, String createBy) {
         if (Optional.ofNullable(lecturerId).isPresent()) {
-            if (!lecturerManageService.checkExistLecturer(lecturerId)) {
+            if (lecturerManageService.checkNotExistLecturer(lecturerId)) {
                 throw new BusinessException("40001", "Not found Lecturer with ID: " + lecturerId);
             }
 

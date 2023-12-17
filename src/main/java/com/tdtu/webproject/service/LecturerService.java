@@ -262,7 +262,7 @@ public class LecturerService {
 
     public String updateLecturer(BigDecimal lecturerId, LecturerUpdate lecturer, String updateBy) {
         if (Optional.ofNullable(lecturerId).isPresent()) {
-            if (!lecturerManageService.checkExistLecturer(lecturerId)) {
+            if (lecturerManageService.checkNotExistLecturer(lecturerId)) {
                 throw new BusinessException("40001", "Not found Lecturer with ID: " + lecturerId);
             }
             if (!classificationManageService.checkExistClassification(lecturer.getClassification())) {

@@ -22,4 +22,5 @@ public class NormsLectureHoursResult {
     private String subjectCode;
     private BigDecimal numberLessons;
     private BigDecimal subjectTypeCode;
+    private BigDecimal trainingSystem;
 }

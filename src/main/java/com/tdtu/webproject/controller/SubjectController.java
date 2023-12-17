@@ -51,6 +51,20 @@ public class SubjectController implements SubjectApi {
     }
 
     @Override
+    public ResponseEntity<SubjectTrainingSysResponse> subjectTrainingSys(
+            @ApiParam(value = "")
+            @Validated
+            @RequestParam(value = "trainingSysIds", required = false) String trainingSysIds) {
+        return ResponseEntity.ok(SubjectTrainingSysResponse.builder()
+                .status(HttpStatus.OK.value())
+                .results(SubjectTrainingSysResponseResults.builder()
+                        .resultsTotalCount(subjectService.countSubjectTrainingSys(trainingSysIds))
+                        .trainingSys(subjectService.findSubjectTrainingSys(trainingSysIds))
+                        .build())
+                .build());
+    }
+
+    @Override
     public ResponseEntity<SubjectCreateResponse> createSubject(
             @ApiParam(value = "")
             @Valid

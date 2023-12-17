@@ -42,12 +42,12 @@ public class LecturerManageService {
         return lecturerRepository.findLecturer(LecturerCondition.builder().build());
     }
 
-    public boolean checkExistLecturer(BigDecimal lecturerId) {
+    public boolean checkNotExistLecturer(BigDecimal lecturerId) {
         List<TdtGiangVien> lecturerList = lecturerRepository
                 .findLecturer(
                         LecturerCondition.builder()
                                 .lecturerIds(List.of(lecturerId))
                                 .build());
-        return ArrayUtil.isNotNullAndNotEmptyList(lecturerList);
+        return !ArrayUtil.isNotNullAndNotEmptyList(lecturerList);
     }
 }

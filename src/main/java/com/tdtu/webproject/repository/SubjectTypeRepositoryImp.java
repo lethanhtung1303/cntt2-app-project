@@ -34,10 +34,10 @@ public class SubjectTypeRepositoryImp implements SubjectTypeRepository {
     }
 
     @Override
-    public TdtLoaiMon getSubjectTypeById(BigDecimal TypeId) {
+    public TdtLoaiMon getSubjectTypeById(BigDecimal typeId) {
         TdtLoaiMonExample example = new TdtLoaiMonExample();
         TdtLoaiMonExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(TypeId).ifPresent(criteria::andMaLoaiEqualTo);
+        Optional.ofNullable(typeId).ifPresent(criteria::andMaLoaiEqualTo);
         criteria.andIsActiveEqualTo(true);
         return subjectTypeMapper.selectByExample(example).stream()
                 .findFirst()
