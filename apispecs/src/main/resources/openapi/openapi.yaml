@@ -737,6 +737,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SubjectTrainingSysResponse'
+  /v1/extraHoursContractual:
+    get:
+      tags:
+        - ExtraHours
+      summary: Api for get Extra Hours of Contractual
+      operationId: extraHoursContractual
+      parameters:
+        - name: semester
+          required: true
+          in: query
+          schema:
+            type: number
+            description: Semester for get Extra Hours of Contractual
+            example: 200
+            minimum: 190001
+            maximum: 299903
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Extra Hours of Contractual
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtraLectureHoursResponse'
   #    End here
 
 components:
@@ -2285,6 +2318,97 @@ components:
           type: string
           description: phanHe of Training Sys
           example: 'phanHe'
+    ExtraLectureHoursResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            extraLectureHours:
+              description: List Extra Hours of Contractual
+              type: array
+              items:
+                $ref: '#/components/schemas/ExtraLectureHoursDetailResponse'
+    ExtraLectureHoursDetailResponse:
+      type: object
+      properties:
+        id:
+          type: number
+          description: ID of Lecturer
+          example: 200
+        fullName:
+          type: string
+          description: Full Name of Lecturer
+          example: 'fullName'
+        images:
+          type: string
+          description: Images of Lecturer
+          example: 'images'
+        emailTdtu:
+          type: string
+          description: Email TDTU of Lecturer
+          example: 'emailTdtu'
+        classificationLecturersCode:
+          type: number
+          description: Classification Lecturers of Lecturer
+          example: 200
+        classificationLecturers:
+          type: string
+          description: Classification Lecturers of Lecturer
+          example: 'classificationLecturers'
+        lecturerLevelCode:
+          type: number
+          description: Lecturer Level of Lecturer
+          example: 200
+        lecturerLevel:
+          type: string
+          description: Lecturer Level of Lecturer
+          example: 'lecturerLevel'
+        displayOrder:
+          type: number
+          description: Display Order Level of Lecturer
+          example: 200
+        standardLectureHours:
+          type: number
+          description: Standard Lecture Hours
+          example: 200
+        totalLectureHours:
+          type: number
+          description: Total Lecture Hours
+          example: 200
+        extraHoursStandardSys:
+          type: number
+          description: Extra Hours Standard Sys
+          example: 200
+        extraHoursCLCVietnamese:
+          $ref: '#/components/schemas/ExtraHours'
+        extraHoursCLCEnglish:
+          $ref: '#/components/schemas/ExtraHours'
+        extraHoursEnglishInternational:
+          $ref: '#/components/schemas/ExtraHours'
+        extraHoursMaster:
+          type: number
+          description: Extra Hours Master
+          example: 200
+        totalPayment:
+          type: number
+          description: Total Payment
+          example: 200
+    ExtraHours:
+      type: object
+      properties:
+        basicSubjects:
+          type: number
+          description: Basic Subjects
+          example: 200
+        majoringSubjects:
+          type: number
+          description: Majoring Subjects
+          example: 200
     #    End here
 
   responses:

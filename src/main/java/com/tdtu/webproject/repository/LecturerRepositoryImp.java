@@ -5,6 +5,7 @@ import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtGiangVienMapper;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
 import com.tdtu.webproject.model.condition.LecturerCondition;
 import com.tdtu.webproject.model.condition.LecturerTeachingHistoryCondition;
+import com.tdtu.webproject.model.condition.NormsLectureHoursCondition;
 import com.tdtu.webproject.mybatis.mapper.LecturerSupportMapper;
 import com.tdtu.webproject.mybatis.result.*;
 import com.tdtu.webproject.utils.ArrayUtil;
@@ -104,8 +105,8 @@ public class LecturerRepositoryImp implements LecturerRepository {
     }
 
     @Override
-    public List<NormsLectureHoursResult> getNormsLectureHours() {
-        return lecturerSupportMapper.getNormsLectureHours();
+    public List<NormsLectureHoursResult> getNormsLectureHours(NormsLectureHoursCondition condition) {
+        return lecturerSupportMapper.getNormsLectureHours(condition);
     }
 
     @Override

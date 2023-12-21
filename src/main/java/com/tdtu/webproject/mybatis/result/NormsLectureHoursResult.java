@@ -4,6 +4,7 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
 
 @Data
 @Builder
@@ -23,4 +24,6 @@ public class NormsLectureHoursResult {
     private BigDecimal numberLessons;
     private BigDecimal subjectTypeCode;
     private BigDecimal trainingSystem;
+    private String subjectGroupCode;
+    private LocalDateTime createDatetime;
 }
