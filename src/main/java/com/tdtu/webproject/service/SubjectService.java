@@ -59,11 +59,9 @@ public class SubjectService {
     private Subject buildSubject(TdtMonHoc subject) {
         TdtNhomMon subjectGroup = subjectGroupRepository.getSubjectGroupById(subject.getMaNhom());
         TdtLoaiMon subjectType = subjectTypeRepository.getSubjectTypeById(subject.getMaLoai());
-        TdtHeDaoTao subjectTrainingSys = subjectTrainingSysRepository.getSubjectTrainingSysById(subject.getMaHe());
         return Subject.builder()
                 .maMon(subject.getMaMon())
                 .phanLoai(subjectType.getPhanLoai())
-                .phanHe(subjectTrainingSys.getPhanHe())
                 .subjectGroup(SubjectGroup.builder()
                         .maNhom(subjectGroup.getMaNhom())
                         .tenNhom(subjectGroup.getTenNhom())
@@ -162,7 +160,6 @@ public class SubjectService {
     private TdtMonHoc buildTdtMonHocForCreate(SubjectCreate subjectCreate, String createBy) {
         return TdtMonHoc.builder()
                 .maMon(subjectCreate.getMaMon())
-                .maHe(subjectCreate.getMaHe())
                 .maNhom(subjectCreate.getMaNhom())
                 .tenMon(subjectCreate.getTenMon())
                 .soTiet(subjectCreate.getSoTiet())

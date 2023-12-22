@@ -1099,10 +1099,6 @@ components:
           type: string
           description: Phan Loai of Subject
           example: 'phanLoai'
-        phanHe:
-          type: string
-          description: Phan He of Subject
-          example: 'phanHe'
         subjectGroup:
           $ref: '#/components/schemas/SubjectGroup'
         tenMon:
@@ -1930,7 +1926,6 @@ components:
       type: object
       required:
         - maMon
-        - maHe
         - hocKy
         - diemHaiLong
       properties:
@@ -1938,10 +1933,6 @@ components:
           type: string
           description: Ma nhom of Subject
           example: 'maNhom'
-        maHe:
-          type: number
-          description: Ma he of Subject
-          example: 200
         maLoai:
           type: number
           description: Ma loai of Subject
@@ -2286,6 +2277,10 @@ components:
           type: number
           description: Identification of Training Sys
           example: 200
+        createDatetime:
+          description: Date time create user
+          type: string
+          example: '2020/04/01'
     SubjectTrainingSysResponse:
       type: object
       properties:

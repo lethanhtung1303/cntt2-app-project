@@ -4,6 +4,7 @@ import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.model.condition.LecturerTeachingHistoryCondition;
 import com.tdtu.webproject.mybatis.result.LecturerTeachingHistoryResult;
 import com.tdtu.webproject.repository.LecturerRepository;
+import com.tdtu.webproject.utils.DateUtil;
 import generater.openapi.model.TeachingHistoryDetailResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -56,6 +57,9 @@ public class LecturerTeachingHistoryService {
                 .trainingSysCode(result.getTrainingSysCode())
                 .nameTrainingSys(result.getNameTrainingSys())
                 .identification(result.getIdentification())
+                .createDatetime(Optional.ofNullable(result.getCreateDatetime()).isPresent()
+                        ? DateUtil.getValueFromLocalDateTime(result.getCreateDatetime(), DateUtil.YYYYMMDD_FORMAT_HYPHEN)
+                        : null)
                 .build();
     }
 }
