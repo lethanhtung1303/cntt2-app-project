@@ -1,8 +1,8 @@
 package com.tdtu.webproject.service;
 
 import com.tdtu.webproject.emun.LectureHoursStatus;
+import com.tdtu.webproject.model.condition.NormsLectureHoursCondition;
 import com.tdtu.webproject.mybatis.result.NormsLectureHoursResult;
-import com.tdtu.webproject.repository.LecturerRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
 import generater.openapi.model.NormsLectureHoursDetailResponse;
 import generater.openapi.model.NumberLessons;
@@ -21,22 +21,13 @@ import static com.tdtu.webproject.constant.Const.*;
 @Service
 @AllArgsConstructor
 public class NormsLectureHoursService {
-    private final LecturerRepository lecturerRepository;
+    private final LecturerManageService lecturerManageService;
 
     public List<NormsLectureHoursDetailResponse> getNormsLectureHours(BigDecimal semester) {
-        List<NormsLectureHoursResult> normsLectureHoursList = lecturerRepository.getNormsLectureHours();
+        List<NormsLectureHoursResult> normsLectureHoursList = lecturerManageService.getAllNormsLectureHoursResult(NormsLectureHoursCondition.builder().build());
         List<NormsLectureHoursDetailResponse> normsLectureHoursRawData = this.buildNormsLectureHoursDetailResponse(normsLectureHoursList);
 
-        List<NormsLectureHoursResult> normsLectureHoursBySemester = normsLectureHoursList.stream()
-                .filter(result -> result.getSemester() != null && result.getSemester().compareTo(semester) == 0)
-                .collect(Collectors.toMap(NormsLectureHoursResult::getHistoryTeachingId,
-                        Function.identity(),
-                        BinaryOperator.minBy(Comparator.comparing(NormsLectureHoursResult::getDisplayOrder))))
-                .values().stream()
-                .toList();
-
-        Map<BigDecimal, List<NormsLectureHoursResult>> normsLectureHoursBySemesterMap = normsLectureHoursBySemester.stream()
-                .collect(Collectors.groupingBy(NormsLectureHoursResult::getLecturerId, Collectors.toList()));
+        Map<BigDecimal, List<NormsLectureHoursResult>> normsLectureHoursBySemesterMap = lecturerManageService.getNormsLectureHoursBySemesterMap(normsLectureHoursList, semester);
 
         return Optional.ofNullable(normsLectureHoursRawData).isPresent()
                 ? normsLectureHoursRawData.stream()
@@ -68,7 +59,7 @@ public class NormsLectureHoursService {
     }
 
     private BigDecimal checkStatusNormsLectureHours(BigDecimal totalNumberLessons, BigDecimal lecturerTypeCode, BigDecimal displayOrder) {
-        if (lecturerTypeCode.compareTo(BigDecimal.valueOf(FACULTY_LECTURER)) == 0) {
+        if (lecturerTypeCode.compareTo(BigDecimal.valueOf(CONTRACTUAL_LECTURER)) == 0) {
             if (displayOrder.compareTo(BigDecimal.valueOf(LEVEL_MASTER)) == 0) {
                 if (totalNumberLessons.compareTo(BigDecimal.valueOf(NORMAL_NUMBER_LESSONS_MASTER)) < 0) {
                     return LectureHoursStatus.getValueByCode(LECTURER_HOURS_NORMAL);

@@ -5,13 +5,19 @@ import com.tdtu.mbGenerator.generate.mybatis.model.TdtDiemHaiLong;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
 import com.tdtu.webproject.model.condition.LecturerCondition;
+import com.tdtu.webproject.model.condition.NormsLectureHoursCondition;
+import com.tdtu.webproject.mybatis.result.NormsLectureHoursResult;
 import com.tdtu.webproject.repository.LecturerRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.Comparator;
 import java.util.List;
+import java.util.Map;
+import java.util.function.BinaryOperator;
+import java.util.function.Function;
 import java.util.stream.Collectors;
 
 @Service
@@ -40,6 +46,23 @@ public class LecturerManageService {
 
     public List<TdtGiangVien> getAllLecturer() {
         return lecturerRepository.findLecturer(LecturerCondition.builder().build());
+    }
+
+    public List<NormsLectureHoursResult> getAllNormsLectureHoursResult(NormsLectureHoursCondition condition) {
+        return lecturerRepository.getNormsLectureHours(condition);
+    }
+
+    public Map<BigDecimal, List<NormsLectureHoursResult>> getNormsLectureHoursBySemesterMap(List<NormsLectureHoursResult> normsLectureHoursList, BigDecimal semester) {
+        List<NormsLectureHoursResult> normsLectureHoursBySemester = normsLectureHoursList.stream()
+                .filter(result -> result.getSemester() != null && result.getSemester().compareTo(semester) == 0)
+                .collect(Collectors.toMap(NormsLectureHoursResult::getHistoryTeachingId,
+                        Function.identity(),
+                        BinaryOperator.minBy(Comparator.comparing(NormsLectureHoursResult::getDisplayOrder))))
+                .values().stream()
+                .toList();
+
+        return normsLectureHoursBySemester.stream()
+                .collect(Collectors.groupingBy(NormsLectureHoursResult::getLecturerId, Collectors.toList()));
     }
 
     public boolean checkNotExistLecturer(BigDecimal lecturerId) {

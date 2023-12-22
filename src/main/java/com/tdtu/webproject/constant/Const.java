@@ -9,7 +9,7 @@ import lombok.NoArgsConstructor;
 import java.math.BigDecimal;
 
 public class Const {
-    public static final int FACULTY_LECTURER = 1;
+    public static final int CONTRACTUAL_LECTURER = 1;
     public static final int VISITING_LECTURER = 0;
     public static final int LEVEL_MASTER = 4;
     public static final int LEVEL_DOCTORAL = 3;
@@ -23,6 +23,7 @@ public class Const {
     public static final int LECTURER_HOURS_NOTTEACHING = 3;
     public static final double THEORY_CODE = 0;
     public static final double PRACTICE_CODE = 1;
+    public static final String BASIC_SUBJECTS = "0";
     public static final int LESSONS_STANDARD_SYS = 1000;
     public static final int LESSONS_CLC_VIETNAMESE = 2100;
     public static final int LESSONS_CLC_ENGLISH = 2200;
@@ -35,6 +36,14 @@ public class Const {
     public static final double CONVERSION_COEFFICIENT_MASTER = 1.3;
     public static final double CONVERSION_COEFFICIENT_THEORY = 1;
     public static final double CONVERSION_COEFFICIENT_PRACTICE = 0.85;
+    public static final int STANDARD_SYS_RATE = 88000;
+    public static final int CLC_VIETNAMESE_BASIC_RATE = 160000;
+    public static final int CLC_VIETNAMESE_MAJORING_RATE = 180000;
+    public static final int CLC_ENGLISH_BASIC_RATE = 180000;
+    public static final int CLC_ENGLISH_MAJORING_RATE = 200000;
+    public static final int ENGLISH_INTL_BASIC_RATE = 180000;
+    public static final int ENGLISH_INTL_MAJORING_RATE = 200000;
+    public static final int MASTER_RATE = 232000;
     public static final String SUCCESSFUL = "SUCCESSFUL";
     public static final String FAIL = "FAIL";
     public static final String UNAPPROVE = "UNAPPROVE";

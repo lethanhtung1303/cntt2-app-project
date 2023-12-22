@@ -1,6 +1,7 @@
 package com.tdtu.webproject.mybatis.mapper;
 
 import com.tdtu.webproject.model.condition.LecturerTeachingHistoryCondition;
+import com.tdtu.webproject.model.condition.NormsLectureHoursCondition;
 import com.tdtu.webproject.mybatis.result.*;
 import org.apache.ibatis.annotations.Mapper;
 
@@ -19,7 +20,7 @@ public interface LecturerSupportMapper {
 
     List<LecturerSatisfactionScoreResult> getLecturerSatisfactionScore(BigDecimal semester);
 
-    List<NormsLectureHoursResult> getNormsLectureHours();
+    List<NormsLectureHoursResult> getNormsLectureHours(NormsLectureHoursCondition condition);
 
     List<LecturerTeachingHistoryResult> getLecturerTeachingHistory(LecturerTeachingHistoryCondition condition);
 }
