@@ -1,7 +1,7 @@
 package com.tdtu.webproject.repository;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtDiemHaiLong;
-import com.tdtu.webproject.model.condition.SatisfactionScoreCondition;
+import com.tdtu.webproject.mybatis.condition.SatisfactionScoreCondition;
 
 import java.util.List;
 

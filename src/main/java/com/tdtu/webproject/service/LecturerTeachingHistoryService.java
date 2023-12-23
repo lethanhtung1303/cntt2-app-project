@@ -1,7 +1,7 @@
 package com.tdtu.webproject.service;
 
 import com.tdtu.webproject.exception.BusinessException;
-import com.tdtu.webproject.model.condition.LecturerTeachingHistoryCondition;
+import com.tdtu.webproject.mybatis.condition.LecturerTeachingHistoryCondition;
 import com.tdtu.webproject.mybatis.result.LecturerTeachingHistoryResult;
 import com.tdtu.webproject.repository.LecturerRepository;
 import com.tdtu.webproject.utils.DateUtil;

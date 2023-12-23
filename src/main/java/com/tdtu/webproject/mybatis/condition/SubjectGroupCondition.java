@@ -1,4 +1,4 @@
-package com.tdtu.webproject.model.condition;
+package com.tdtu.webproject.mybatis.condition;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

@@ -3,7 +3,7 @@ package com.tdtu.webproject.repository;
 import com.tdtu.mbGenerator.generate.mybatis.example.TdtHeDaoTaoExample;
 import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtHeDaoTaoMapper;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtHeDaoTao;
-import com.tdtu.webproject.model.condition.SubjectTrainingSysCondition;
+import com.tdtu.webproject.mybatis.condition.SubjectTrainingSysCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;

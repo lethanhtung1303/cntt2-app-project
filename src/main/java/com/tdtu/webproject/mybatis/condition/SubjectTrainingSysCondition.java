@@ -1,4 +1,4 @@
-package com.tdtu.webproject.model.condition;
+package com.tdtu.webproject.mybatis.condition;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,6 +10,6 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-public class TrainingLanguageCondition {
-    private List<BigDecimal> trainingProcessIds;
+public class SubjectTrainingSysCondition {
+    private List<BigDecimal> trainingSysIds;
 }

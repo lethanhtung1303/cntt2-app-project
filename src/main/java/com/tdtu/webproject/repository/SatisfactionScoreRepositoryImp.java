@@ -3,7 +3,7 @@ package com.tdtu.webproject.repository;
 import com.tdtu.mbGenerator.generate.mybatis.example.TdtDiemHaiLongExample;
 import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtDiemHaiLongMapper;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtDiemHaiLong;
-import com.tdtu.webproject.model.condition.SatisfactionScoreCondition;
+import com.tdtu.webproject.mybatis.condition.SatisfactionScoreCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;
 import lombok.AllArgsConstructor;

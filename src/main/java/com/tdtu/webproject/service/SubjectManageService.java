@@ -1,7 +1,7 @@
 package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtMonHoc;
-import com.tdtu.webproject.model.condition.SubjectCondition;
+import com.tdtu.webproject.mybatis.condition.SubjectCondition;
 import com.tdtu.webproject.repository.SubjectRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;

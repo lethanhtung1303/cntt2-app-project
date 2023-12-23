@@ -1,7 +1,7 @@
 package com.tdtu.webproject.service;
 
 import com.tdtu.webproject.emun.LectureHoursStatus;
-import com.tdtu.webproject.model.condition.NormsLectureHoursCondition;
+import com.tdtu.webproject.mybatis.condition.NormsLectureHoursCondition;
 import com.tdtu.webproject.mybatis.result.NormsLectureHoursResult;
 import com.tdtu.webproject.utils.ArrayUtil;
 import generater.openapi.model.NormsLectureHoursDetailResponse;

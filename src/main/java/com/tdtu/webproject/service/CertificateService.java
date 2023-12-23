@@ -2,7 +2,7 @@ package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtChungChi;
 import com.tdtu.webproject.exception.BusinessException;
-import com.tdtu.webproject.model.condition.CertificateCondition;
+import com.tdtu.webproject.mybatis.condition.CertificateCondition;
 import com.tdtu.webproject.repository.CertificateRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;

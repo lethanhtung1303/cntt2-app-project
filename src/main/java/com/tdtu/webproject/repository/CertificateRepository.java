@@ -1,7 +1,7 @@
 package com.tdtu.webproject.repository;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtChungChi;
-import com.tdtu.webproject.model.condition.CertificateCondition;
+import com.tdtu.webproject.mybatis.condition.CertificateCondition;
 
 import java.util.List;
 

@@ -2,8 +2,8 @@ package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.*;
 import com.tdtu.webproject.exception.BusinessException;
-import com.tdtu.webproject.model.condition.LecturerCondition;
-import com.tdtu.webproject.model.condition.LecturerRequest;
+import com.tdtu.webproject.mybatis.condition.LecturerCondition;
+import com.tdtu.webproject.mybatis.condition.LecturerRequest;
 import com.tdtu.webproject.repository.LecturerRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;

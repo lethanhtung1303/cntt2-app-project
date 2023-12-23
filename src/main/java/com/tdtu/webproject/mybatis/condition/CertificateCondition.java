@@ -1,4 +1,4 @@
-package com.tdtu.webproject.model.condition;
+package com.tdtu.webproject.mybatis.condition;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -10,8 +10,8 @@ import java.util.List;
 @Data
 @Builder
 @AllArgsConstructor
-public class LecturerCondition {
+public class CertificateCondition {
     private List<BigDecimal> lecturerIds;
-    private String deleteBy;
-    private String emailTdtu;
+    private List<BigDecimal> certificateIds;
+    private String updateBy;
 }
