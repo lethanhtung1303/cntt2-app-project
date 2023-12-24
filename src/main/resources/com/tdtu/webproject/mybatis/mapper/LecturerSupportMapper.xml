@@ -79,6 +79,7 @@
         <result column="MA_HE" jdbcType="NUMERIC" property="trainingSysCode"/>
         <result column="PHAN_HE" jdbcType="VARCHAR" property="nameTrainingSys"/>
         <result column="IDENTIFICATION" jdbcType="NUMERIC" property="identification"/>
+        <result column="CREATE_DATETIME" jdbcType="TIMESTAMP" property="createDatetime"/>
     </resultMap>
 
     <select id="getLecturerTeaching" resultMap="LecturerTeachingResult">
@@ -232,7 +233,7 @@
         TLSGD.MA_MON = TMH.MA_MON
         LEFT JOIN TDT_HE_DAO_TAO THDT
         ON
-        THDT.MA_HE = TMH.MA_HE
+        THDT.MA_HE = TLSGD.MA_HE
         LEFT JOIN TDT_NHOM_MON TNM
         ON
         TNM.MA_NHOM = TMH.MA_NHOM
@@ -269,7 +270,8 @@
         TLM.PHAN_LOAI,
         THDT.MA_HE,
         THDT.PHAN_HE,
-        THDT.IDENTIFICATION
+        THDT.IDENTIFICATION,
+        TLSGD.CREATED_AT AS CREATE_DATETIME
         FROM TDT_LICH_SU_GIANG_DAY TLSGD
         LEFT JOIN TDT_MON_HOC TMH
         ON
@@ -280,9 +282,9 @@
         LEFT JOIN TDT_LOAI_MON TLM
         ON
         TMH.MA_LOAI = TLM.MA_LOAI
-        LEFT JOIN TDT_HE_DAO_TAO thdt
+        LEFT JOIN TDT_HE_DAO_TAO THDT
         ON
-        TMH.MA_HE = THDT.MA_HE
+        TLSGD.MA_HE = THDT.MA_HE
         WHERE TLSGD.IS_ACTIVE = '1'
         AND TMH.IS_ACTIVE = '1'
         AND TNM.IS_ACTIVE = '1'

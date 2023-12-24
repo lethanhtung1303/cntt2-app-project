@@ -3,7 +3,7 @@ package com.tdtu.webproject.repository;
 import com.tdtu.mbGenerator.generate.mybatis.example.TdtMonHocExample;
 import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtMonHocMapper;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtMonHoc;
-import com.tdtu.webproject.model.condition.SubjectCondition;
+import com.tdtu.webproject.mybatis.condition.SubjectCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;
 import lombok.AllArgsConstructor;

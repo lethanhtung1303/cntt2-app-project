@@ -3,7 +3,7 @@ package com.tdtu.webproject.repository;
 import com.tdtu.mbGenerator.generate.mybatis.example.TdtNgonNguDaoTaoExample;
 import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtNgonNguDaoTaoMapper;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtNgonNguDaoTao;
-import com.tdtu.webproject.model.condition.TrainingLanguageCondition;
+import com.tdtu.webproject.mybatis.condition.TrainingLanguageCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;

@@ -1,7 +1,7 @@
 package com.tdtu.webproject.repository;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtNhomMon;
-import com.tdtu.webproject.model.condition.SubjectGroupCondition;
+import com.tdtu.webproject.mybatis.condition.SubjectGroupCondition;
 
 import java.util.List;
 

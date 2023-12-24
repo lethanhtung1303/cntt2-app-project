@@ -1,7 +1,7 @@
 package com.tdtu.webproject.mybatis.mapper;
 
-import com.tdtu.webproject.model.condition.LecturerTeachingHistoryCondition;
-import com.tdtu.webproject.model.condition.NormsLectureHoursCondition;
+import com.tdtu.webproject.mybatis.condition.LecturerTeachingHistoryCondition;
+import com.tdtu.webproject.mybatis.condition.NormsLectureHoursCondition;
 import com.tdtu.webproject.mybatis.result.*;
 import org.apache.ibatis.annotations.Mapper;
 

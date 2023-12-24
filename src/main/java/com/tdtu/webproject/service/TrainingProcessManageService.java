@@ -2,8 +2,8 @@ package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtNgonNguDaoTao;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
-import com.tdtu.webproject.model.condition.TrainingLanguageCondition;
-import com.tdtu.webproject.model.condition.TrainingProcessCondition;
+import com.tdtu.webproject.mybatis.condition.TrainingLanguageCondition;
+import com.tdtu.webproject.mybatis.condition.TrainingProcessCondition;
 import com.tdtu.webproject.repository.TrainingLanguageRepository;
 import com.tdtu.webproject.repository.TrainingProcessRepository;
 import com.tdtu.webproject.utils.ArrayUtil;

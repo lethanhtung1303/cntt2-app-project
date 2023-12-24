@@ -1,7 +1,7 @@
 package com.tdtu.webproject.repository;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtHeDaoTao;
-import com.tdtu.webproject.model.condition.SubjectTrainingSysCondition;
+import com.tdtu.webproject.mybatis.condition.SubjectTrainingSysCondition;
 
 import java.math.BigDecimal;
 import java.util.List;
