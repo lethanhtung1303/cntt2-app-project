@@ -58,7 +58,20 @@ public class SatisfactionScoreRepositoryImp implements SatisfactionScoreReposito
     }
 
     @Override
-    public int create(TdtDiemHaiLong record) {
+    public int create(TdtDiemHaiLong record, String createBy) {
+        TdtDiemHaiLongExample example = new TdtDiemHaiLongExample();
+        TdtDiemHaiLongExample.Criteria criteria = example.createCriteria();
+        criteria.andGiangVienIdEqualTo(record.getGiangVienId());
+        criteria.andMaMonEqualTo(record.getMaMon());
+        criteria.andHocKyEqualTo(record.getHocKy());
+        criteria.andIsActiveEqualTo(true);
+        if (satisfactionScoreMapper.countByExample(example) > 0) {
+            record.setUpdateBy(createBy);
+            record.setUpdatedAt(DateUtil.getTimeNow());
+            return satisfactionScoreMapper.updateByExampleSelective(record, example);
+        }
+        record.setCreatedBy(createBy);
+        record.setCreatedAt(DateUtil.getTimeNow());
         return satisfactionScoreMapper.insertSelective(record);
     }
 }

@@ -37,4 +37,18 @@ public class ExtraLectureHoursController implements ExtraHoursApi {
                         .build())
                 .build());
     }
+
+    @Override
+    public ResponseEntity<ExtraLectureHoursResponse> extraHoursVisiting(
+            @NotNull @DecimalMin("190001") @DecimalMax("299903")
+            @ApiParam(value = "", required = true)
+            @Validated
+            @RequestParam(value = "semester", required = true) BigDecimal semester) {
+        return ResponseEntity.ok(ExtraLectureHoursResponse.builder()
+                .status(HttpStatus.OK.value())
+                .results(ExtraLectureHoursResponseResults.builder()
+                        .extraLectureHours(extraLectureHoursService.getExtraHoursVisiting(semester))
+                        .build())
+                .build());
+    }
 }

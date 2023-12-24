@@ -21,19 +21,20 @@ import static com.tdtu.webproject.constant.Const.*;
 @AllArgsConstructor
 public class ExtraLectureHoursService {
     private final LecturerManageService lecturerManageService;
+    private final NormsLectureHoursManageService normsLectureHoursManageService;
 
-    public List<ExtraLectureHoursDetailResponse> getExtraHoursContractual(BigDecimal semester) {
+    public List<ExtraLectureHoursDetailResponse> getExtraHoursVisiting(BigDecimal semester) {
         NormsLectureHoursCondition condition = NormsLectureHoursCondition.builder()
-                .isContractual(BigDecimal.valueOf(CONTRACTUAL_LECTURER))
+                .isContractual(BigDecimal.valueOf(VISITING_LECTURER))
                 .build();
         List<NormsLectureHoursResult> extraLectureHoursList = lecturerManageService.getAllNormsLectureHoursResult(condition);
-        List<ExtraLectureHoursDetailResponse> extraLectureHoursListRawData = this.buildExtraLectureHoursDetailResponse(extraLectureHoursList);
+
+        List<ExtraLectureHoursDetailResponse> extraLectureHoursListRawData = this.buildExtraLectureHoursDetailResponse(extraLectureHoursList, VISITING_LECTURER);
 
         Map<BigDecimal, List<NormsLectureHoursResult>> extraLectureHoursBySemesterMap = lecturerManageService.getNormsLectureHoursBySemesterMap(extraLectureHoursList, semester);
-
         return Optional.ofNullable(extraLectureHoursListRawData).isPresent()
                 ? extraLectureHoursListRawData.stream()
-                .map(lecturer -> this.buildResponse(lecturer, extraLectureHoursBySemesterMap.getOrDefault(lecturer.getId(), Collections.emptyList())))
+                .map(lecturer -> this.buildVisitingResponse(lecturer, extraLectureHoursBySemesterMap.getOrDefault(lecturer.getId(), Collections.emptyList())))
                 .toList()
                 .stream()
                 .sorted(Comparator.comparing(ExtraLectureHoursDetailResponse::getId))
@@ -41,13 +42,54 @@ public class ExtraLectureHoursService {
                 : Collections.emptyList();
     }
 
-    private ExtraLectureHoursDetailResponse buildResponse(ExtraLectureHoursDetailResponse lecturer, List<NormsLectureHoursResult> normsLectureHoursBySemester) {
+    public List<ExtraLectureHoursDetailResponse> getExtraHoursContractual(BigDecimal semester) {
+        NormsLectureHoursCondition condition = NormsLectureHoursCondition.builder()
+                .isContractual(BigDecimal.valueOf(CONTRACTUAL_LECTURER))
+                .build();
+        List<NormsLectureHoursResult> extraLectureHoursList = lecturerManageService.getAllNormsLectureHoursResult(condition);
+        List<ExtraLectureHoursDetailResponse> extraLectureHoursListRawData = this.buildExtraLectureHoursDetailResponse(extraLectureHoursList, CONTRACTUAL_LECTURER);
+
+        Map<BigDecimal, List<NormsLectureHoursResult>> extraLectureHoursBySemesterMap = lecturerManageService.getNormsLectureHoursBySemesterMap(extraLectureHoursList, semester);
+
+        return Optional.ofNullable(extraLectureHoursListRawData).isPresent()
+                ? extraLectureHoursListRawData.stream()
+                .map(lecturer -> this.buildContractualResponse(lecturer, extraLectureHoursBySemesterMap.getOrDefault(lecturer.getId(), Collections.emptyList())))
+                .toList()
+                .stream()
+                .sorted(Comparator.comparing(ExtraLectureHoursDetailResponse::getId))
+                .collect(Collectors.toList())
+                : Collections.emptyList();
+    }
+
+    private ExtraLectureHoursDetailResponse buildVisitingResponse(ExtraLectureHoursDetailResponse lecturer, List<NormsLectureHoursResult> normsLectureHoursBySemester) {
+        if (!ArrayUtil.isNotNullAndNotEmptyList(normsLectureHoursBySemester)) {
+            return lecturer;
+        }
+        List<NormsLectureHoursResult> normsLectureHoursConversion = normsLectureHoursManageService.conversionNormsLectureHours(normsLectureHoursBySemester);
+
+        lecturer.setTotalLectureHours(this.setTotalLectureHours(normsLectureHoursConversion));
+
+        lecturer.setExtraHoursStandardSys(this.setNumberLessons(normsLectureHoursConversion, LESSONS_STANDARD_SYS));
+        lecturer.setExtraHoursCLCVietnamese(this.setExtraHours(normsLectureHoursConversion, LESSONS_CLC_VIETNAMESE));
+        lecturer.setExtraHoursCLCEnglish(this.setExtraHours(normsLectureHoursConversion, LESSONS_CLC_ENGLISH));
+        lecturer.setExtraHoursEnglishInternational(this.setExtraHours(normsLectureHoursConversion, LESSONS_ENGLISH_INTERNATIONAL));
+        lecturer.setExtraHoursMaster(this.setNumberLessons(normsLectureHoursConversion, LESSONS_MASTER));
+        lecturer.setTotalPayment(this.setTotalPaymentForVisiting(lecturer.getDisplayOrder(),
+                lecturer.getExtraHoursStandardSys(),
+                lecturer.getExtraHoursCLCVietnamese(),
+                lecturer.getExtraHoursCLCEnglish(),
+                lecturer.getExtraHoursEnglishInternational(),
+                lecturer.getExtraHoursMaster()));
+        return lecturer;
+    }
+
+    private ExtraLectureHoursDetailResponse buildContractualResponse(ExtraLectureHoursDetailResponse lecturer, List<NormsLectureHoursResult> normsLectureHoursBySemester) {
         lecturer.setStandardLectureHours(this.setStandardLectureHours(lecturer.getDisplayOrder()));
 
         if (!ArrayUtil.isNotNullAndNotEmptyList(normsLectureHoursBySemester)) {
             return lecturer;
         }
-        List<NormsLectureHoursResult> normsLectureHoursConversion = this.conversionNormsLectureHours(normsLectureHoursBySemester);
+        List<NormsLectureHoursResult> normsLectureHoursConversion = normsLectureHoursManageService.conversionNormsLectureHours(normsLectureHoursBySemester);
 
         lecturer.setTotalLectureHours(this.setTotalLectureHours(normsLectureHoursConversion));
 
@@ -58,7 +100,7 @@ public class ExtraLectureHoursService {
         lecturer.setExtraHoursCLCEnglish(this.setExtraHours(extraHours, LESSONS_CLC_ENGLISH));
         lecturer.setExtraHoursEnglishInternational(this.setExtraHours(extraHours, LESSONS_ENGLISH_INTERNATIONAL));
         lecturer.setExtraHoursMaster(this.setNumberLessons(extraHours, LESSONS_MASTER));
-        lecturer.setTotalPayment(this.setTotalPayment(lecturer.getExtraHoursStandardSys(),
+        lecturer.setTotalPayment(this.setTotalPaymentForContractual(lecturer.getExtraHoursStandardSys(),
                 lecturer.getExtraHoursCLCVietnamese(),
                 lecturer.getExtraHoursCLCEnglish(),
                 lecturer.getExtraHoursEnglishInternational(),
@@ -66,11 +108,51 @@ public class ExtraLectureHoursService {
         return lecturer;
     }
 
-    private BigDecimal setTotalPayment(BigDecimal extraHoursStandardSys,
-                                       ExtraHours extraHoursCLCVietnamese,
-                                       ExtraHours extraHoursCLCEnglish,
-                                       ExtraHours extraHoursEnglishInternational,
-                                       BigDecimal extraHoursMaster) {
+    private BigDecimal setTotalPaymentForVisiting(BigDecimal displayOrder,
+                                                  BigDecimal extraHoursStandardSys,
+                                                  ExtraHours extraHoursCLCVietnamese,
+                                                  ExtraHours extraHoursCLCEnglish,
+                                                  ExtraHours extraHoursEnglishInternational,
+                                                  BigDecimal extraHoursMaster) {
+
+
+        // Tính tổng giá trị
+        BigDecimal totalPayment = BigDecimal.ZERO;
+
+        // extraHoursStandardSys
+        // Thạc sĩ: T = 120.000
+        // Tiến sĩ: T = 140.000
+        if (displayOrder.compareTo(BigDecimal.valueOf(LEVEL_MASTER)) == 0) {
+            totalPayment = totalPayment.add(extraHoursStandardSys.multiply(BigDecimal.valueOf(LEVEL_MASTER_RATE)));
+        } else if (displayOrder.compareTo(BigDecimal.valueOf(LEVEL_DOCTORAL)) <= 0) {
+            totalPayment = totalPayment.add(extraHoursStandardSys.multiply(BigDecimal.valueOf(LEVEL_DOCTORAL_RATE)));
+        } else {
+            totalPayment = totalPayment.add(BigDecimal.ZERO);
+        }
+
+        // extraHoursCLCVietnamese
+        totalPayment = totalPayment.add(extraHoursCLCVietnamese.getBasicSubjects().multiply(BigDecimal.valueOf(CLC_VIETNAMESE_BASIC_RATE)));
+        totalPayment = totalPayment.add(extraHoursCLCVietnamese.getMajoringSubjects().multiply(BigDecimal.valueOf(CLC_VIETNAMESE_MAJORING_RATE)));
+
+        // extraHoursCLCEnglish
+        totalPayment = totalPayment.add(extraHoursCLCEnglish.getBasicSubjects().multiply(BigDecimal.valueOf(CLC_ENGLISH_BASIC_RATE)));
+        totalPayment = totalPayment.add(extraHoursCLCEnglish.getMajoringSubjects().multiply(BigDecimal.valueOf(CLC_ENGLISH_MAJORING_RATE)));
+
+        // extraHoursEnglishInternational
+        totalPayment = totalPayment.add(extraHoursEnglishInternational.getBasicSubjects().multiply(BigDecimal.valueOf(ENGLISH_INTL_BASIC_RATE)));
+        totalPayment = totalPayment.add(extraHoursEnglishInternational.getMajoringSubjects().multiply(BigDecimal.valueOf(ENGLISH_INTL_MAJORING_RATE)));
+
+        // extraHoursMaster * 232000
+        totalPayment = totalPayment.add(extraHoursMaster.multiply(BigDecimal.valueOf(MASTER_RATE)));
+
+        return totalPayment;
+    }
+
+    private BigDecimal setTotalPaymentForContractual(BigDecimal extraHoursStandardSys,
+                                                     ExtraHours extraHoursCLCVietnamese,
+                                                     ExtraHours extraHoursCLCEnglish,
+                                                     ExtraHours extraHoursEnglishInternational,
+                                                     BigDecimal extraHoursMaster) {
 
 
         // Tính tổng giá trị
@@ -149,41 +231,41 @@ public class ExtraLectureHoursService {
         return extraHoursList;
     }
 
-    private List<NormsLectureHoursResult> conversionNormsLectureHours(List<NormsLectureHoursResult> normsLectureHoursBySemester) {
-        return normsLectureHoursBySemester.stream()
-                .peek(result -> {
-                    BigDecimal numberLessons = result.getNumberLessons();
-                    BigDecimal trainingSystem = result.getTrainingSystem();
-                    BigDecimal subjectTypeCode = result.getSubjectTypeCode();
-
-                    if (subjectTypeCode.compareTo(BigDecimal.valueOf(THEORY_CODE)) == 0) {
-                        if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_STANDARD_SYS)) == 0) {
-                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_STANDARD_SYS)));
-                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_CLC_VIETNAMESE)) == 0) {
-                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_VIETNAMESE)));
-                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_CLC_ENGLISH)) == 0) {
-                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_ENGLISH)));
-                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_ENGLISH_INTERNATIONAL)) == 0) {
-                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_ENGLISH_INTERNATIONAL)));
-                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_MASTER)) == 0) {
-                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_MASTER)));
-                        }
-                    } else if (subjectTypeCode.compareTo(BigDecimal.valueOf(PRACTICE_CODE)) == 0) {
-                        if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_STANDARD_SYS)) == 0) {
-                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_STANDARD_SYS)));
-                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_CLC_VIETNAMESE)) == 0) {
-                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_VIETNAMESE)));
-                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_CLC_ENGLISH)) == 0) {
-                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_ENGLISH)));
-                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_ENGLISH_INTERNATIONAL)) == 0) {
-                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_ENGLISH_INTERNATIONAL)));
-                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_MASTER)) == 0) {
-                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_MASTER)));
-                        }
-                    }
-                })
-                .collect(Collectors.toList());
-    }
+//    private List<NormsLectureHoursResult> conversionNormsLectureHours(List<NormsLectureHoursResult> normsLectureHoursBySemester) {
+//        return normsLectureHoursBySemester.stream()
+//                .peek(result -> {
+//                    BigDecimal numberLessons = result.getNumberLessons();
+//                    BigDecimal trainingSystem = result.getTrainingSystem();
+//                    BigDecimal subjectTypeCode = result.getSubjectTypeCode();
+//
+//                    if (subjectTypeCode.compareTo(BigDecimal.valueOf(THEORY_CODE)) == 0) {
+//                        if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_STANDARD_SYS)) == 0) {
+//                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_STANDARD_SYS)));
+//                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_CLC_VIETNAMESE)) == 0) {
+//                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_VIETNAMESE)));
+//                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_CLC_ENGLISH)) == 0) {
+//                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_ENGLISH)));
+//                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_ENGLISH_INTERNATIONAL)) == 0) {
+//                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_ENGLISH_INTERNATIONAL)));
+//                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_MASTER)) == 0) {
+//                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_MASTER)));
+//                        }
+//                    } else if (subjectTypeCode.compareTo(BigDecimal.valueOf(PRACTICE_CODE)) == 0) {
+//                        if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_STANDARD_SYS)) == 0) {
+//                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_STANDARD_SYS)));
+//                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_CLC_VIETNAMESE)) == 0) {
+//                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_VIETNAMESE)));
+//                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_CLC_ENGLISH)) == 0) {
+//                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_ENGLISH)));
+//                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_ENGLISH_INTERNATIONAL)) == 0) {
+//                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_ENGLISH_INTERNATIONAL)));
+//                        } else if (trainingSystem.compareTo(BigDecimal.valueOf(LESSONS_MASTER)) == 0) {
+//                            result.setNumberLessons(numberLessons.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE)).multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_MASTER)));
+//                        }
+//                    }
+//                })
+//                .collect(Collectors.toList());
+//    }
 
     private BigDecimal setTotalLectureHours(List<NormsLectureHoursResult> normsLectureHours) {
         return normsLectureHours.stream()
@@ -201,9 +283,9 @@ public class ExtraLectureHoursService {
         }
     }
 
-    private List<ExtraLectureHoursDetailResponse> buildExtraLectureHoursDetailResponse(List<NormsLectureHoursResult> extraLectureHoursList) {
+    private List<ExtraLectureHoursDetailResponse> buildExtraLectureHoursDetailResponse(List<NormsLectureHoursResult> extraLectureHoursList, int lecturerType) {
         List<NormsLectureHoursResult> distinctExtraLectureHoursList = extraLectureHoursList.stream()
-                .filter(extraLectureHours -> extraLectureHours.getLecturerTypeCode().compareTo(BigDecimal.valueOf(CONTRACTUAL_LECTURER)) == 0)
+                .filter(extraLectureHours -> extraLectureHours.getLecturerTypeCode().compareTo(BigDecimal.valueOf(lecturerType)) == 0)
                 .collect(Collectors.toMap(NormsLectureHoursResult::getLecturerId,
                         Function.identity(),
                         BinaryOperator.minBy(Comparator.comparing(NormsLectureHoursResult::getDisplayOrder))))

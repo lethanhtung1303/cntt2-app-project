@@ -88,7 +88,7 @@ public class LecturerStandardService {
         lecturer.setIsTeachingPractice(this.checkTeachingPractice(trainingProcessList));
         lecturer.setIsTeachingVietnamese(this.checkHighQualityInspection(trainingProcessList, totalNumberLessons));
         lecturer.setIsTeachingEnglish(this.checkHighQualityInspection(trainingProcessList, totalNumberLessons)
-                && this.checkTeachingEnglish(trainingLanguage, certificate, satisfactionScore));
+                && this.checkTeachingEnglish(trainingProcessList, trainingLanguage, certificate, satisfactionScore));
         lecturer.setIsEnglishInternational(lecturer.getIsTeachingEnglish());
         return lecturer;
     }
@@ -139,15 +139,25 @@ public class LecturerStandardService {
                 );
     }
 
-    private boolean checkTeachingEnglish(List<LecturerTrainingLanguageResult> trainingLanguage,
+    private boolean checkTeachingEnglish(List<LecturerTrainingProcessResult> trainingProcessList,
+                                         List<LecturerTrainingLanguageResult> trainingLanguage,
                                          List<LecturerCertificateResult> certificate,
                                          List<LecturerSatisfactionScoreResult> satisfactionScore) {
-        return this.checkLanguage(trainingLanguage, certificate) && this.checkSatisfactionScore(satisfactionScore);
+        return this.checkLanguage(trainingProcessList, trainingLanguage, certificate) && this.checkSatisfactionScore(satisfactionScore);
     }
 
-    private boolean checkLanguage(List<LecturerTrainingLanguageResult> trainingLanguage, List<LecturerCertificateResult> certificate) {
-        boolean languageCodeCondition = ArrayUtil.isNotNullAndNotEmptyList(trainingLanguage) && trainingLanguage.stream()
-                .anyMatch(result -> result.getLanguageCode().equals(BigDecimal.valueOf(2)));
+    private boolean checkLanguage(List<LecturerTrainingProcessResult> trainingProcessList, List<LecturerTrainingLanguageResult> trainingLanguage, List<LecturerCertificateResult> certificate) {
+        boolean languageCodeCondition = ArrayUtil.isNotNullAndNotEmptyList(trainingProcessList)
+                && ArrayUtil.isNotNullAndNotEmptyList(trainingLanguage)
+                && trainingProcessList.stream()
+                .filter(trainingProcess -> trainingProcess.getDisplayOrder().compareTo(BigDecimal.valueOf(LEVEL_MASTER)) <= 0)
+                .anyMatch(trainingProcess ->
+                        trainingLanguage.stream()
+                                .anyMatch(languageResult ->
+                                        languageResult.getTrainingProcessId().compareTo(trainingProcess.getTrainingProcessId()) == 0
+                                                && languageResult.getLanguageCode().compareTo(BigDecimal.valueOf(LANGUAGE_CODE_ENGLISH)) == 0
+                                )
+                );
 
         boolean certificateCondition = ArrayUtil.isNotNullAndNotEmptyList(certificate) && certificate.stream()
                 .anyMatch(result -> {

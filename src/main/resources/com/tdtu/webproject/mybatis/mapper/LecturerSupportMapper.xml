@@ -11,7 +11,8 @@
 
     <resultMap id="LecturerTrainingProcessResult"
                type="com.tdtu.webproject.mybatis.result.LecturerTrainingProcessResult">
-        <id column="ID" jdbcType="NUMERIC" property="lecturerId"/>
+        <id column="TRAINING_PROCESS_ID" jdbcType="NUMERIC" property="trainingProcessId"/>
+        <result column="LECTURER_ID" jdbcType="NUMERIC" property="lecturerId"/>
         <result column="FULL_NAME" jdbcType="VARCHAR" property="fullName"/>
         <result column="IMAGES" jdbcType="VARCHAR" property="images"/>
         <result column="EMAIL_TDTU" jdbcType="VARCHAR" property="emailTdtu"/>
@@ -26,7 +27,8 @@
 
     <resultMap id="LecturerTrainingLanguageResult"
                type="com.tdtu.webproject.mybatis.result.LecturerTrainingLanguageResult">
-        <id column="ID" jdbcType="NUMERIC" property="lecturerId"/>
+        <id column="TRAINING_PROCESS_ID" jdbcType="NUMERIC" property="trainingProcessId"/>
+        <result column="LECTURER_ID" jdbcType="NUMERIC" property="lecturerId"/>
         <result column="NGON_NGU_ID" jdbcType="NUMERIC" property="languageCode"/>
         <result column="TEN_NGON_NGU" jdbcType="VARCHAR" property="languageName"/>
     </resultMap>
@@ -98,7 +100,8 @@
     </select>
 
     <select id="getLecturerTrainingProcess" resultMap="LecturerTrainingProcessResult">
-        SELECT TGV.ID,
+        SELECT TQTDT.ID                                   AS TRAINING_PROCESS_ID,
+               TGV.ID                                     AS LECTURER_ID,
                CONCAT(TGV.FIRST_NAME, ' ', TGV.FULL_NAME) AS FULL_NAME,
                TGV.IMAGES,
                TGV.EMAIL_TDTU,
@@ -129,8 +132,9 @@
     </select>
 
     <select id="getLecturerTrainingLanguage" resultMap="LecturerTrainingLanguageResult">
-        SELECT TGV.ID,
-               TNN.ID AS NGON_NGU_ID,
+        SELECT TQTDT.ID AS TRAINING_PROCESS_ID,
+               TGV.ID   AS LECTURER_ID,
+               TNN.ID   AS NGON_NGU_ID,
                TNN.TEN_NGON_NGU
         FROM TDT_QUA_TRINH_DAO_TAO TQTDT
                  LEFT JOIN TDT_GIANG_VIEN TGV

@@ -8,6 +8,7 @@ import java.math.BigDecimal;
 @Data
 @Builder
 public class LecturerTrainingProcessResult {
+    private BigDecimal trainingProcessId;
     private BigDecimal lecturerId;
     private String fullName;
     private String images;

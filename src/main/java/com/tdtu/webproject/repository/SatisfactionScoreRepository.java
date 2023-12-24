@@ -12,5 +12,5 @@ public interface SatisfactionScoreRepository {
 
     int delete(SatisfactionScoreCondition condition);
 
-    int create(TdtDiemHaiLong record);
+    int create(TdtDiemHaiLong record, String createBy);
 }

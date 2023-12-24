@@ -37,6 +37,8 @@ public class Const {
     public static final double CONVERSION_COEFFICIENT_THEORY = 1;
     public static final double CONVERSION_COEFFICIENT_PRACTICE = 0.85;
     public static final int STANDARD_SYS_RATE = 88000;
+    public static final int LEVEL_MASTER_RATE = 120000;
+    public static final int LEVEL_DOCTORAL_RATE = 140000;
     public static final int CLC_VIETNAMESE_BASIC_RATE = 160000;
     public static final int CLC_VIETNAMESE_MAJORING_RATE = 180000;
     public static final int CLC_ENGLISH_BASIC_RATE = 180000;
@@ -48,6 +50,7 @@ public class Const {
     public static final String FAIL = "FAIL";
     public static final String UNAPPROVE = "UNAPPROVE";
     public static final String APPROVE = "APPROVE";
+    public static final int LANGUAGE_CODE_ENGLISH = 2;
     public static final String STANDARD_IELTS = "6.5";
     public static final String STANDARD_TOEFL_IBT = "80";
     public static final String STANDARD_TOEIC = "700";
