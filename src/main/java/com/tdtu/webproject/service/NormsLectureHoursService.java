@@ -6,6 +6,7 @@ import com.tdtu.webproject.mybatis.result.NormsLectureHoursResult;
 import com.tdtu.webproject.utils.ArrayUtil;
 import generater.openapi.model.NormsLectureHoursDetailResponse;
 import generater.openapi.model.NumberLessons;
+import generater.openapi.model.NumberLessonsDetail;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,6 +23,7 @@ import static com.tdtu.webproject.constant.Const.*;
 @AllArgsConstructor
 public class NormsLectureHoursService {
     private final LecturerManageService lecturerManageService;
+    private final NormsLectureHoursManageService normsLectureHoursManageService;
 
     public List<NormsLectureHoursDetailResponse> getNormsLectureHours(BigDecimal semester) {
         List<NormsLectureHoursResult> normsLectureHoursList = lecturerManageService.getAllNormsLectureHoursResult(NormsLectureHoursCondition.builder().build());
@@ -43,16 +45,26 @@ public class NormsLectureHoursService {
         if (!ArrayUtil.isNotNullAndNotEmptyList(normsLectureHoursBySemester)) {
             return lecturer;
         }
-        lecturer.setLessonsStandardSys(this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_STANDARD_SYS));
-        lecturer.setLessonsCLCVietnamese(this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_CLC_VIETNAMESE));
-        lecturer.setLessonsCLCEnglish(this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_CLC_ENGLISH));
-        lecturer.setLessonsEnglishInternational(this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_ENGLISH_INTERNATIONAL));
-        lecturer.setLessonsMaster(this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_MASTER));
-        lecturer.setConversionLesson(this.buildConversionLessons(lecturer.getLessonsStandardSys(),
-                lecturer.getLessonsCLCVietnamese(),
-                lecturer.getLessonsCLCEnglish(),
-                lecturer.getLessonsEnglishInternational(),
-                lecturer.getLessonsMaster()));
+
+        lecturer.getLessonsStandardSys().setOriginalLesson((this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_STANDARD_SYS)));
+        lecturer.getLessonsCLCVietnamese().setOriginalLesson((this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_CLC_VIETNAMESE)));
+        lecturer.getLessonsCLCEnglish().setOriginalLesson((this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_CLC_ENGLISH)));
+        lecturer.getLessonsEnglishInternational().setOriginalLesson((this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_ENGLISH_INTERNATIONAL)));
+        lecturer.getLessonsMaster().setOriginalLesson((this.buildNumberLessons(normsLectureHoursBySemester, LESSONS_MASTER)));
+
+        List<NormsLectureHoursResult> normsLectureHoursConversion = normsLectureHoursManageService.conversionNormsLectureHours(normsLectureHoursBySemester);
+
+        lecturer.getLessonsStandardSys().setConversionLessons((this.buildNumberLessons(normsLectureHoursConversion, LESSONS_STANDARD_SYS)));
+        lecturer.getLessonsCLCVietnamese().setConversionLessons((this.buildNumberLessons(normsLectureHoursConversion, LESSONS_CLC_VIETNAMESE)));
+        lecturer.getLessonsCLCEnglish().setConversionLessons((this.buildNumberLessons(normsLectureHoursConversion, LESSONS_CLC_ENGLISH)));
+        lecturer.getLessonsEnglishInternational().setConversionLessons((this.buildNumberLessons(normsLectureHoursConversion, LESSONS_ENGLISH_INTERNATIONAL)));
+        lecturer.getLessonsMaster().setConversionLessons((this.buildNumberLessons(normsLectureHoursConversion, LESSONS_MASTER)));
+
+        lecturer.setConversionLesson(this.buildConversionLessons(lecturer.getLessonsStandardSys().getConversionLessons(),
+                lecturer.getLessonsCLCVietnamese().getConversionLessons(),
+                lecturer.getLessonsCLCEnglish().getConversionLessons(),
+                lecturer.getLessonsEnglishInternational().getConversionLessons(),
+                lecturer.getLessonsMaster().getConversionLessons()));
         lecturer.setTotalNumberLessons(this.countTotalNumberLessons(lecturer.getConversionLesson()));
         lecturer.setStatus(this.checkStatusNormsLectureHours(lecturer.getTotalNumberLessons(), lecturer.getClassificationLecturersCode(), lecturer.getDisplayOrder()));
         return lecturer;
@@ -104,20 +116,17 @@ public class NormsLectureHoursService {
         BigDecimal numberTheory = BigDecimal.ZERO;
         BigDecimal numberPractice = BigDecimal.ZERO;
 
-        numberTheory = numberTheory.add(lessonsStandardSys.getNumberTheory().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_STANDARD_SYS)))
-                .add(lessonsCLCVietnamese.getNumberTheory().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_VIETNAMESE)))
-                .add(lessonsCLCEnglish.getNumberTheory().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_ENGLISH)))
-                .add(lessonsEnglishInternational.getNumberTheory().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_ENGLISH_INTERNATIONAL)))
-                .add(lessonsMaster.getNumberTheory().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_MASTER)));
+        numberTheory = numberTheory.add(lessonsStandardSys.getNumberTheory())
+                .add(lessonsCLCVietnamese.getNumberTheory())
+                .add(lessonsCLCEnglish.getNumberTheory())
+                .add(lessonsEnglishInternational.getNumberTheory())
+                .add(lessonsMaster.getNumberTheory());
 
-        numberPractice = numberPractice.add(lessonsStandardSys.getNumberPractice().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_STANDARD_SYS)))
-                .add(lessonsCLCVietnamese.getNumberPractice().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_VIETNAMESE)))
-                .add(lessonsCLCEnglish.getNumberPractice().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_CLC_ENGLISH)))
-                .add(lessonsEnglishInternational.getNumberPractice().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_ENGLISH_INTERNATIONAL)))
-                .add(lessonsMaster.getNumberPractice().multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_MASTER)));
-
-        numberTheory = numberTheory.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_THEORY));
-        numberPractice = numberPractice.multiply(BigDecimal.valueOf(CONVERSION_COEFFICIENT_PRACTICE));
+        numberPractice = numberPractice.add(lessonsStandardSys.getNumberPractice())
+                .add(lessonsCLCVietnamese.getNumberPractice())
+                .add(lessonsCLCEnglish.getNumberPractice())
+                .add(lessonsEnglishInternational.getNumberPractice())
+                .add(lessonsMaster.getNumberPractice());
 
         return NumberLessons.builder()
                 .numberTheory(numberTheory)
@@ -167,25 +176,55 @@ public class NormsLectureHoursService {
                 .lecturerLevelCode(normsLectureHours.getLevelCode())
                 .lecturerLevel(normsLectureHours.getLevel())
                 .displayOrder(normsLectureHours.getDisplayOrder())
-                .lessonsStandardSys(NumberLessons.builder()
-                        .numberTheory(BigDecimal.ZERO)
-                        .numberPractice(BigDecimal.ZERO)
+                .lessonsStandardSys(NumberLessonsDetail.builder()
+                        .originalLesson(NumberLessons.builder()
+                                .numberTheory(BigDecimal.ZERO)
+                                .numberPractice(BigDecimal.ZERO)
+                                .build())
+                        .conversionLessons(NumberLessons.builder()
+                                .numberTheory(BigDecimal.ZERO)
+                                .numberPractice(BigDecimal.ZERO)
+                                .build())
                         .build())
-                .lessonsCLCVietnamese(NumberLessons.builder()
-                        .numberTheory(BigDecimal.ZERO)
-                        .numberPractice(BigDecimal.ZERO)
+                .lessonsCLCVietnamese(NumberLessonsDetail.builder()
+                        .originalLesson(NumberLessons.builder()
+                                .numberTheory(BigDecimal.ZERO)
+                                .numberPractice(BigDecimal.ZERO)
+                                .build())
+                        .conversionLessons(NumberLessons.builder()
+                                .numberTheory(BigDecimal.ZERO)
+                                .numberPractice(BigDecimal.ZERO)
+                                .build())
                         .build())
-                .lessonsCLCEnglish(NumberLessons.builder()
-                        .numberTheory(BigDecimal.ZERO)
-                        .numberPractice(BigDecimal.ZERO)
+                .lessonsCLCEnglish(NumberLessonsDetail.builder()
+                        .originalLesson(NumberLessons.builder()
+                                .numberTheory(BigDecimal.ZERO)
+                                .numberPractice(BigDecimal.ZERO)
+                                .build())
+                        .conversionLessons(NumberLessons.builder()
+                                .numberTheory(BigDecimal.ZERO)
+                                .numberPractice(BigDecimal.ZERO)
+                                .build())
                         .build())
-                .lessonsEnglishInternational(NumberLessons.builder()
-                        .numberTheory(BigDecimal.ZERO)
-                        .numberPractice(BigDecimal.ZERO)
+                .lessonsEnglishInternational(NumberLessonsDetail.builder()
+                        .originalLesson(NumberLessons.builder()
+                                .numberTheory(BigDecimal.ZERO)
+                                .numberPractice(BigDecimal.ZERO)
+                                .build())
+                        .conversionLessons(NumberLessons.builder()
+                                .numberTheory(BigDecimal.ZERO)
+                                .numberPractice(BigDecimal.ZERO)
+                                .build())
                         .build())
-                .lessonsMaster(NumberLessons.builder()
-                        .numberTheory(BigDecimal.ZERO)
-                        .numberPractice(BigDecimal.ZERO)
+                .lessonsMaster(NumberLessonsDetail.builder()
+                        .originalLesson(NumberLessons.builder()
+                                .numberTheory(BigDecimal.ZERO)
+                                .numberPractice(BigDecimal.ZERO)
+                                .build())
+                        .conversionLessons(NumberLessons.builder()
+                                .numberTheory(BigDecimal.ZERO)
+                                .numberPractice(BigDecimal.ZERO)
+                                .build())
                         .build())
                 .conversionLesson(NumberLessons.builder()
                         .numberTheory(BigDecimal.ZERO)

@@ -770,6 +770,39 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExtraLectureHoursResponse'
+  /v1/extraHoursVisiting:
+    get:
+      tags:
+        - ExtraHours
+      summary: Api for get Extra Hours of Visiting
+      operationId: extraHoursVisiting
+      parameters:
+        - name: semester
+          required: true
+          in: query
+          schema:
+            type: number
+            description: Semester for get Extra Hours of Visiting
+            example: 200
+            minimum: 190001
+            maximum: 299903
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Extra Hours of Visiting
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExtraLectureHoursResponse'
   #    End here
 
 components:
@@ -2175,15 +2208,15 @@ components:
           description: Display Order Level of Lecturer
           example: 200
         lessonsStandardSys:
-          $ref: '#/components/schemas/NumberLessons'
+          $ref: '#/components/schemas/NumberLessonsDetail'
         lessonsCLCVietnamese:
-          $ref: '#/components/schemas/NumberLessons'
+          $ref: '#/components/schemas/NumberLessonsDetail'
         lessonsCLCEnglish:
-          $ref: '#/components/schemas/NumberLessons'
+          $ref: '#/components/schemas/NumberLessonsDetail'
         lessonsEnglishInternational:
-          $ref: '#/components/schemas/NumberLessons'
+          $ref: '#/components/schemas/NumberLessonsDetail'
         lessonsMaster:
-          $ref: '#/components/schemas/NumberLessons'
+          $ref: '#/components/schemas/NumberLessonsDetail'
         conversionLesson:
           $ref: '#/components/schemas/NumberLessons'
         totalNumberLessons:
@@ -2194,6 +2227,13 @@ components:
           type: number
           description: Status of Lecturer
           example: 200
+    NumberLessonsDetail:
+      type: object
+      properties:
+        originalLesson:
+          $ref: '#/components/schemas/NumberLessons'
+        conversionLessons:
+          $ref: '#/components/schemas/NumberLessons'
     NumberLessons:
       type: object
       properties:

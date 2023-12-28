@@ -5,7 +5,6 @@ import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.condition.SatisfactionScoreCondition;
 import com.tdtu.webproject.repository.SatisfactionScoreRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
-import com.tdtu.webproject.utils.DateUtil;
 import com.tdtu.webproject.utils.NumberUtil;
 import generater.openapi.model.SatisfactionScoreCreate;
 import generater.openapi.model.SatisfactionScoreDeleteRequest;
@@ -70,21 +69,19 @@ public class SatisfactionScoreService {
                 throw new BusinessException("40001", "Not found Lecturer with ID: " + lecturerId);
             }
 
-            return satisfactionScoreRepository.create(this.buildTdtGiangVienForCreate(lecturerId, satisfactionScoreCreate, createBy)) > 0
+            return satisfactionScoreRepository.create(this.buildTdtDiemHaiLongForCreate(lecturerId, satisfactionScoreCreate), createBy) > 0
                     ? SUCCESSFUL
                     : FAIL;
         }
         throw new BusinessException("40005", "Lecturer Id is null!");
     }
 
-    private TdtDiemHaiLong buildTdtGiangVienForCreate(BigDecimal lecturerId, SatisfactionScoreCreate satisfactionScoreCreate, String createBy) {
+    private TdtDiemHaiLong buildTdtDiemHaiLongForCreate(BigDecimal lecturerId, SatisfactionScoreCreate satisfactionScoreCreate) {
         return TdtDiemHaiLong.builder()
                 .giangVienId(lecturerId)
                 .maMon(satisfactionScoreCreate.getMaMon())
                 .hocKy(satisfactionScoreCreate.getHocKy())
                 .diemHaiLong(satisfactionScoreCreate.getDiemHaiLong())
-                .createdAt(DateUtil.getTimeNow())
-                .createdBy(createBy)
                 .build();
     }
 }
