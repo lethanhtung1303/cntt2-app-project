@@ -803,6 +803,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/ExtraLectureHoursResponse'
+  /v1/teachingAssignment:
+    post:
+      tags:
+        - Assignment
+      summary: Api for Teaching Assignment
+      operationId: teachingAssignment
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssignmentRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Create Teaching Assignment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssignmentResponse'
   #    End here
 
 components:
@@ -2277,6 +2305,10 @@ components:
     TeachingHistoryDetailResponse:
       type: object
       properties:
+        historyId:
+          type: number
+          description: Id of Teaching History
+          example: 200
         subjectCode:
           type: string
           description: Subject Code of Teaching History
@@ -2444,6 +2476,54 @@ components:
           type: number
           description: Majoring Subjects
           example: 200
+    AssignmentRequest:
+      type: object
+      required:
+        - assignment
+        - createBy
+      properties:
+        assignment:
+          $ref: '#/components/schemas/Assignment'
+        createBy:
+          type: string
+          description: Create By of Assignment
+          example: 'createBy'
+    Assignment:
+      description: New Assignment
+      type: object
+      required:
+        - giangVienId
+        - hocKy
+        - maMon
+        - maHe
+      properties:
+        giangVienId:
+          type: number
+          description: Giang Vien of Assignment
+          example: 200
+        hocKy:
+          type: number
+          description: Hoc Ky of Assignment
+          example: 200
+        maMon:
+          type: string
+          description: Ma mon of Assignment
+          example: 'maMon'
+        maHe:
+          type: number
+          description: Ma He of Assignment
+          example: 200
+    AssignmentResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the create Assignment
+          type: string
+          example: 'OK'
     #    End here
 
   responses:

@@ -71,7 +71,8 @@
 
     <resultMap id="LecturerTeachingHistoryResult"
                type="com.tdtu.webproject.mybatis.result.LecturerTeachingHistoryResult">
-        <id column="MA_MON" jdbcType="VARCHAR" property="subjectCode"/>
+        <id column="LICH_SU_GIANG_DAY_ID" jdbcType="NUMERIC" property="historyId"/>
+        <result column="MA_MON" jdbcType="VARCHAR" property="subjectCode"/>
         <result column="TEN_MON" jdbcType="VARCHAR" property="subjectTitle"/>
         <result column="SO_TIET" jdbcType="NUMERIC" property="numberLessons"/>
         <result column="MA_NHOM" jdbcType="VARCHAR" property="subjectGroupCode"/>
@@ -265,7 +266,8 @@
     </select>
 
     <select id="getLecturerTeachingHistory" resultMap="LecturerTeachingHistoryResult">
-        SELECT TMH.MA_MON,
+        SELECT TLSGD.ID AS LICH_SU_GIANG_DAY_ID,
+        TMH.MA_MON,
         TMH.TEN_MON,
         TMH.SO_TIET,
         TNM.MA_NHOM,
