@@ -9,6 +9,7 @@ import java.time.LocalDateTime;
 @Data
 @Builder
 public class LecturerTeachingHistoryResult {
+    private BigDecimal historyId;
     private String subjectCode;
     private String subjectTitle;
     private BigDecimal numberLessons;

@@ -47,6 +47,7 @@ public class LecturerTeachingHistoryService {
 
     private TeachingHistoryDetailResponse buildResponse(LecturerTeachingHistoryResult result) {
         return TeachingHistoryDetailResponse.builder()
+                .historyId(result.getHistoryId())
                 .subjectCode(result.getSubjectCode())
                 .subjectTitle(result.getSubjectTitle())
                 .numberLessons(result.getNumberLessons())
@@ -58,7 +59,7 @@ public class LecturerTeachingHistoryService {
                 .nameTrainingSys(result.getNameTrainingSys())
                 .identification(result.getIdentification())
                 .createDatetime(Optional.ofNullable(result.getCreateDatetime()).isPresent()
-                        ? DateUtil.getValueFromLocalDateTime(result.getCreateDatetime(), DateUtil.YYYYMMDD_FORMAT_HYPHEN)
+                        ? DateUtil.getValueFromLocalDateTime(result.getCreateDatetime(), DateUtil.DATETIME_FORMAT_HYPHEN)
                         : null)
                 .build();
     }
