@@ -5,7 +5,9 @@ import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.condition.SatisfactionScoreCondition;
 import com.tdtu.webproject.repository.SatisfactionScoreRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
+import com.tdtu.webproject.utils.MessageProperties;
 import com.tdtu.webproject.utils.NumberUtil;
+import com.tdtu.webproject.utils.StringUtil;
 import generater.openapi.model.SatisfactionScoreCreate;
 import generater.openapi.model.SatisfactionScoreDeleteRequest;
 import lombok.AllArgsConstructor;
@@ -18,8 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.tdtu.webproject.constant.Const.FAIL;
-import static com.tdtu.webproject.constant.Const.SUCCESSFUL;
+import static com.tdtu.webproject.constant.Const.*;
 
 @Service
 @AllArgsConstructor
@@ -45,7 +46,9 @@ public class SatisfactionScoreService {
     public String deleteSatisfactionScore(SatisfactionScoreDeleteRequest request) {
         SatisfactionScoreCondition condition = this.buildSatisfactionScoreConditionForDelete(request);
         if (!ArrayUtil.isNotNullAndNotEmptyList(condition.getSatisfactionScoreIds())) {
-            throw new BusinessException("40001", "The list of deleted Lecturers is empty!");
+            throw new BusinessException("40001",
+                    MessageProperties.getInstance().getProperty(DELETED_LECTURERS_EMPTY)
+            );
         }
         return satisfactionScoreRepository.delete(condition) > 0
                 ? SUCCESSFUL
@@ -66,14 +69,18 @@ public class SatisfactionScoreService {
     public String createSatisfactionScore(BigDecimal lecturerId, SatisfactionScoreCreate satisfactionScoreCreate, String createBy) {
         if (Optional.ofNullable(lecturerId).isPresent()) {
             if (lecturerManageService.checkNotExistLecturer(lecturerId)) {
-                throw new BusinessException("40001", "Not found Lecturer with ID: " + lecturerId);
+                throw new BusinessException("40001",
+                        MessageProperties.getInstance().getProperty(LECTURER_NOT_FOUND, StringUtil.convertBigDecimalToString(lecturerId))
+                );
             }
 
             return satisfactionScoreRepository.create(this.buildTdtDiemHaiLongForCreate(lecturerId, satisfactionScoreCreate), createBy) > 0
                     ? SUCCESSFUL
                     : FAIL;
         }
-        throw new BusinessException("40005", "Lecturer Id is null!");
+        throw new BusinessException("40005",
+                MessageProperties.getInstance().getProperty(LECTURER_ID_NULL)
+        );
     }
 
     private TdtDiemHaiLong buildTdtDiemHaiLongForCreate(BigDecimal lecturerId, SatisfactionScoreCreate satisfactionScoreCreate) {
@@ -81,7 +88,7 @@ public class SatisfactionScoreService {
                 .giangVienId(lecturerId)
                 .maMon(satisfactionScoreCreate.getMaMon())
                 .hocKy(satisfactionScoreCreate.getHocKy())
-                .diemHaiLong(satisfactionScoreCreate.getDiemHaiLong())
+                .diemHaiLong(NumberUtil.toBigDecimal(Float.toString(satisfactionScoreCreate.getDiemHaiLong())).orElse(BigDecimal.ZERO))
                 .build();
     }
 }

@@ -14,6 +14,7 @@ import com.tdtu.webproject.repository.SubjectTrainingSysRepository;
 import com.tdtu.webproject.repository.SubjectTypeRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;
+import com.tdtu.webproject.utils.MessageProperties;
 import com.tdtu.webproject.utils.NumberUtil;
 import generater.openapi.model.*;
 import lombok.AllArgsConstructor;
@@ -25,8 +26,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.tdtu.webproject.constant.Const.FAIL;
-import static com.tdtu.webproject.constant.Const.SUCCESSFUL;
+import static com.tdtu.webproject.constant.Const.*;
 
 @Service
 @AllArgsConstructor
@@ -147,14 +147,18 @@ public class SubjectService {
         String subjectCode = subjectCreate.getMaMon();
         if (Optional.ofNullable(subjectCode).isPresent()) {
             if (subjectManageService.checkExistSubject(subjectCode)) {
-                throw new BusinessException("40001", "The subject already exists in the system! (" + subjectCode + ")");
+                throw new BusinessException("40001",
+                        MessageProperties.getInstance().getProperty(SUBJECT_ALREADY, subjectCode)
+                );
             }
 
             return subjectRepository.create(this.buildTdtMonHocForCreate(subjectCreate, createBy)) > 0
                     ? SUCCESSFUL
                     : FAIL;
         }
-        throw new BusinessException("40002", "Subject code is null!");
+        throw new BusinessException("40002",
+                MessageProperties.getInstance().getProperty(SUBJECT_CODE_NULL)
+        );
     }
 
     private TdtMonHoc buildTdtMonHocForCreate(SubjectCreate subjectCreate, String createBy) {
@@ -172,7 +176,9 @@ public class SubjectService {
     public String deleteSubject(SubjectDeleteRequest request) {
         SubjectCondition condition = this.buildSubjectConditionForDelete(request);
         if (!ArrayUtil.isNotNullAndNotEmptyList(condition.getSubjectIds())) {
-            throw new BusinessException("40001", "The list of deleted Subject is empty!");
+            throw new BusinessException("40001",
+                    MessageProperties.getInstance().getProperty(DELETED_SUBJECT_EMPTY)
+            );
         }
         return subjectRepository.delete(condition) > 0
                 ? SUCCESSFUL
@@ -191,7 +197,9 @@ public class SubjectService {
     public String updateSubject(String subjectId, SubjectUpdate subject, String updateBy) {
         if (Optional.ofNullable(subjectId).isPresent()) {
             if (!subjectManageService.checkExistSubject(subjectId)) {
-                throw new BusinessException("40001", "Not found Subject with ID: " + subjectId);
+                throw new BusinessException("40001",
+                        MessageProperties.getInstance().getProperty(SUBJECT_NOT_FOUND, subjectId)
+                );
             }
 
             return subjectRepository.update(this.buildTdtMonHocForUpdate(subject, updateBy), subjectId) > 0

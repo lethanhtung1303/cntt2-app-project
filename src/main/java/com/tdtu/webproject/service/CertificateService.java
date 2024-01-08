@@ -4,9 +4,7 @@ import com.tdtu.mbGenerator.generate.mybatis.model.TdtChungChi;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.condition.CertificateCondition;
 import com.tdtu.webproject.repository.CertificateRepository;
-import com.tdtu.webproject.utils.ArrayUtil;
-import com.tdtu.webproject.utils.DateUtil;
-import com.tdtu.webproject.utils.NumberUtil;
+import com.tdtu.webproject.utils.*;
 import generater.openapi.model.CertificateCreate;
 import generater.openapi.model.CertificateDeleteRequest;
 import lombok.AllArgsConstructor;
@@ -19,8 +17,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.tdtu.webproject.constant.Const.FAIL;
-import static com.tdtu.webproject.constant.Const.SUCCESSFUL;
+import static com.tdtu.webproject.constant.Const.*;
 
 @Service
 @AllArgsConstructor
@@ -47,7 +44,9 @@ public class CertificateService {
     public String deleteCertificate(CertificateDeleteRequest request) {
         CertificateCondition condition = this.buildCertificateConditionForDelete(request);
         if (!ArrayUtil.isNotNullAndNotEmptyList(condition.getCertificateIds())) {
-            throw new BusinessException("40001", "The list of deleted Certificate is empty!");
+            throw new BusinessException("40001",
+                    MessageProperties.getInstance().getProperty(DELETED_CERTIFICATE_EMPTY)
+            );
         }
         return certificateRepository.delete(condition) > 0
                 ? SUCCESSFUL
@@ -68,14 +67,18 @@ public class CertificateService {
     public String createCertificate(BigDecimal lecturerId, CertificateCreate certificateCreate, String createBy) {
         if (Optional.ofNullable(lecturerId).isPresent()) {
             if (lecturerManageService.checkNotExistLecturer(lecturerId)) {
-                throw new BusinessException("40001", "Not found Lecturer with ID: " + lecturerId);
+                throw new BusinessException("40001",
+                        MessageProperties.getInstance().getProperty(LECTURER_NOT_FOUND, StringUtil.convertBigDecimalToString(lecturerId))
+                );
             }
 
             return certificateRepository.create(this.buildTdtChungChiForCreate(lecturerId, certificateCreate, createBy)) > 0
                     ? SUCCESSFUL
                     : FAIL;
         }
-        throw new BusinessException("40005", "Lecturer Id is null!");
+        throw new BusinessException("40005",
+                MessageProperties.getInstance().getProperty(LECTURER_ID_NULL)
+        );
     }
 
     private TdtChungChi buildTdtChungChiForCreate(BigDecimal lecturerId, CertificateCreate certificateCreate, String createBy) {

@@ -47,4 +47,21 @@ public class Const {
     public static final String STANDARD_CAMBRIDGE = "180";
     public static final String STANDARD_APTIS_ESOL = "145";
     public static final int MAXIMUM_ASSIGNMENTS = 4;
+    public static final String LECTURER_NOT_FOUND = "lecturer.not.found";
+    public static final String TRAINING_PROCESS_CREATE_FAIL = "training.process.create.fail";
+    public static final String TRAINING_LANGUAGE_EMPTY = "training.language.empty";
+    public static final String TRAINING_LANGUAGE_CREATE_FAIL = "training.language.create.fail";
+    public static final String LECTURER_ID_NULL = "lecturer.id.null";
+    public static final String DELETED_CERTIFICATE_EMPTY = "deleted.certificate.empty";
+    public static final String INVALID_CLASSIFICATION = "invalid.classification";
+    public static final String DELETED_LECTURERS_EMPTY = "deleted.lecturers.empty";
+    public static final String TRAINING_PROCESS_NOT_FOUND = "training.process.not.found";
+    public static final String DELETED_TRAINING_PROCESS_EMPTY = "deleted.training.process.empty";
+    public static final String LECTURER_ALREADY = "lecturer.already";
+    public static final String LECTURERS_MAXIMUM_ASSIGNMENTS = "lecturers.maximum.assignments";
+    public static final String SUBJECT_ASSIGNED = "subject.assigned";
+    public static final String SUBJECT_ALREADY = "subject.already";
+    public static final String SUBJECT_CODE_NULL = "subject.code.null";
+    public static final String DELETED_SUBJECT_EMPTY = "deleted.subject.empty";
+    public static final String SUBJECT_NOT_FOUND = "subject.not.found";
 }
