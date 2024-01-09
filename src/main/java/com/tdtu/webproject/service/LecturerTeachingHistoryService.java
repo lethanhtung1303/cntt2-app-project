@@ -5,6 +5,8 @@ import com.tdtu.webproject.mybatis.condition.LecturerTeachingHistoryCondition;
 import com.tdtu.webproject.mybatis.result.LecturerTeachingHistoryResult;
 import com.tdtu.webproject.repository.LecturerRepository;
 import com.tdtu.webproject.utils.DateUtil;
+import com.tdtu.webproject.utils.MessageProperties;
+import com.tdtu.webproject.utils.StringUtil;
 import generater.openapi.model.TeachingHistoryDetailResponse;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -14,6 +16,8 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
+
+import static com.tdtu.webproject.constant.Const.LECTURER_NOT_FOUND;
 
 @Service
 @AllArgsConstructor
@@ -25,7 +29,9 @@ public class LecturerTeachingHistoryService {
     public List<TeachingHistoryDetailResponse> getTeachingHistory(BigDecimal lecturerId, BigDecimal semester) {
         if (Optional.ofNullable(lecturerId).isPresent()) {
             if (lecturerManageService.checkNotExistLecturer(lecturerId)) {
-                throw new BusinessException("40001", "Not found Lecturer with ID: " + lecturerId);
+                throw new BusinessException("40001",
+                        MessageProperties.getInstance().getProperty(LECTURER_NOT_FOUND, StringUtil.convertBigDecimalToString(lecturerId))
+                );
             }
         }
         LecturerTeachingHistoryCondition condition = this.buildLecturerTeachingHistoryCondition(lecturerId, semester);

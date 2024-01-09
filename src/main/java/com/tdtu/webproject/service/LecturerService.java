@@ -5,9 +5,7 @@ import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.condition.LecturerCondition;
 import com.tdtu.webproject.mybatis.condition.LecturerRequest;
 import com.tdtu.webproject.repository.LecturerRepository;
-import com.tdtu.webproject.utils.ArrayUtil;
-import com.tdtu.webproject.utils.DateUtil;
-import com.tdtu.webproject.utils.NumberUtil;
+import com.tdtu.webproject.utils.*;
 import generater.openapi.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -16,8 +14,7 @@ import java.math.BigDecimal;
 import java.util.*;
 import java.util.stream.Collectors;
 
-import static com.tdtu.webproject.constant.Const.FAIL;
-import static com.tdtu.webproject.constant.Const.SUCCESSFUL;
+import static com.tdtu.webproject.constant.Const.*;
 
 @Service
 @AllArgsConstructor
@@ -263,10 +260,14 @@ public class LecturerService {
     public String updateLecturer(BigDecimal lecturerId, LecturerUpdate lecturer, String updateBy) {
         if (Optional.ofNullable(lecturerId).isPresent()) {
             if (lecturerManageService.checkNotExistLecturer(lecturerId)) {
-                throw new BusinessException("40001", "Not found Lecturer with ID: " + lecturerId);
+                throw new BusinessException("40001",
+                        MessageProperties.getInstance().getProperty(LECTURER_NOT_FOUND, StringUtil.convertBigDecimalToString(lecturerId))
+                );
             }
             if (!classificationManageService.checkExistClassification(lecturer.getClassification())) {
-                throw new BusinessException("40002", "Invalid Lecturer Classification!");
+                throw new BusinessException("40002",
+                        MessageProperties.getInstance().getProperty(INVALID_CLASSIFICATION)
+                );
             }
             return lecturerRepository.update(this.buildTdtGiangVienForUpdate(lecturer, updateBy), lecturerId) > 0
                     ? SUCCESSFUL
@@ -300,7 +301,9 @@ public class LecturerService {
     public String deleteLecturer(LecturerDeleteRequest request) {
         LecturerCondition condition = this.buildLecturerConditionForDelete(request);
         if (!ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
-            throw new BusinessException("40001", "The list of deleted Lecturers is empty!");
+            throw new BusinessException("40001",
+                    MessageProperties.getInstance().getProperty(DELETED_LECTURERS_EMPTY)
+            );
         }
         return lecturerRepository.delete(condition) > 0
                 ? SUCCESSFUL
@@ -309,14 +312,18 @@ public class LecturerService {
 
     public String createLecturer(LecturerCreate lecturer, String createBy) {
         if (!classificationManageService.checkExistClassification(lecturer.getClassification())) {
-            throw new BusinessException("40001", "Invalid Lecturer Classification!");
+            throw new BusinessException("40001",
+                    MessageProperties.getInstance().getProperty(INVALID_CLASSIFICATION)
+            );
         }
         LecturerRequest request = LecturerRequest.builder()
                 .emailTdtu(lecturer.getEmailTdtu())
                 .build();
         List<TdtGiangVien> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
         if (ArrayUtil.isNotNullAndNotEmptyList(lecturerList)) {
-            throw new BusinessException("40002", "Lecturer already exists in the system!");
+            throw new BusinessException("40002",
+                    MessageProperties.getInstance().getProperty(LECTURER_ALREADY)
+            );
         }
         return lecturerRepository.create(this.buildTdtGiangVienForCreate(lecturer, createBy)) > 0
                 ? SUCCESSFUL

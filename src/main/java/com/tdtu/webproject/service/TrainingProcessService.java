@@ -6,9 +6,7 @@ import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.condition.TrainingProcessCondition;
 import com.tdtu.webproject.repository.TrainingLanguageRepository;
 import com.tdtu.webproject.repository.TrainingProcessRepository;
-import com.tdtu.webproject.utils.ArrayUtil;
-import com.tdtu.webproject.utils.DateUtil;
-import com.tdtu.webproject.utils.NumberUtil;
+import com.tdtu.webproject.utils.*;
 import generater.openapi.model.TrainingProcessCreate;
 import generater.openapi.model.TrainingProcessDeleteRequest;
 import generater.openapi.model.TrainingProcessUpdate;
@@ -22,8 +20,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-import static com.tdtu.webproject.constant.Const.FAIL;
-import static com.tdtu.webproject.constant.Const.SUCCESSFUL;
+import static com.tdtu.webproject.constant.Const.*;
 
 @Service
 @AllArgsConstructor
@@ -53,34 +50,46 @@ public class TrainingProcessService {
     public String createTrainingProcess(BigDecimal lecturerId, TrainingProcessCreate createRequest, String createBy) {
         if (Optional.ofNullable(lecturerId).isPresent()) {
             if (lecturerManageService.checkNotExistLecturer(lecturerId)) {
-                throw new BusinessException("40001", "Not found Lecturer with ID: " + lecturerId);
+                throw new BusinessException("40001",
+                        MessageProperties.getInstance().getProperty(LECTURER_NOT_FOUND, StringUtil.convertBigDecimalToString(lecturerId))
+                );
             }
 
             List<TdtQuaTrinhDaoTao> createList =
                     trainingProcessRepository.create(this.buildTdtQuaTrinhDaoTaoForCreate(lecturerId, createRequest, createBy));
 
             if (!ArrayUtil.isNotNullAndNotEmptyList(createList)) {
-                throw new BusinessException("40002", "Training Process create FAIL!");
+                throw new BusinessException("40002",
+                        MessageProperties.getInstance().getProperty(TRAINING_PROCESS_CREATE_FAIL)
+                );
             }
 
             TdtQuaTrinhDaoTao create = createList.stream().findFirst().orElse(null);
             if (Optional.ofNullable(create).isEmpty()) {
-                throw new BusinessException("40002", "Training Process create FAIL!");
+                throw new BusinessException("40002",
+                        MessageProperties.getInstance().getProperty(TRAINING_PROCESS_CREATE_FAIL)
+                );
             }
 
             List<TdtNgonNguDaoTao> trainingLanguageList = this.buildTdtNgonNguDaoTao(create.getId(), createRequest.getLanguageIds(), createBy);
             if (!ArrayUtil.isNotNullAndNotEmptyList(trainingLanguageList)) {
-                throw new BusinessException("40003", "Training Language is empty list!");
+                throw new BusinessException("40003",
+                        MessageProperties.getInstance().getProperty(TRAINING_LANGUAGE_EMPTY)
+                );
             }
 
             int totalResult = trainingLanguageList.stream().mapToInt(trainingLanguageRepository::create).sum();
             if (totalResult == trainingLanguageList.size()) {
                 return SUCCESSFUL;
             } else {
-                throw new BusinessException("40004", "Training Language create FAIL!");
+                throw new BusinessException("40004",
+                        MessageProperties.getInstance().getProperty(TRAINING_LANGUAGE_CREATE_FAIL)
+                );
             }
         }
-        throw new BusinessException("40005", "Lecturer Id is null!");
+        throw new BusinessException("40005",
+                MessageProperties.getInstance().getProperty(LECTURER_ID_NULL)
+        );
     }
 
     private List<TdtNgonNguDaoTao> buildTdtNgonNguDaoTao(BigDecimal trainingProcessId, String languageIds, String user) {
@@ -118,25 +127,33 @@ public class TrainingProcessService {
     public String updateTrainingProcess(BigDecimal processId, TrainingProcessUpdate updateRequest, String updateBy) {
         if (Optional.ofNullable(processId).isPresent()) {
             if (!trainingProcessManageService.checkExistTrainingProcess(processId)) {
-                throw new BusinessException("40001", "Not found Training Process with ID: " + processId);
+                throw new BusinessException("40001",
+                        MessageProperties.getInstance().getProperty(TRAINING_PROCESS_NOT_FOUND, StringUtil.convertBigDecimalToString(processId))
+                );
             }
 
             int updated = trainingProcessRepository.update(this.buildTdtQuaTrinhDaoTaoForUpdate(updateRequest, updateBy), processId);
 
             if (updated <= 0) {
-                throw new BusinessException("40002", "Training Process update FAIL!");
+                throw new BusinessException("40002",
+                        MessageProperties.getInstance().getProperty(TRAINING_PROCESS_CREATE_FAIL)
+                );
             }
 
             List<TdtNgonNguDaoTao> trainingLanguageList = this.buildTdtNgonNguDaoTao(processId, updateRequest.getLanguageIds(), updateBy);
             if (!ArrayUtil.isNotNullAndNotEmptyList(trainingLanguageList)) {
-                throw new BusinessException("40003", "Training Language is empty list!");
+                throw new BusinessException("40003",
+                        MessageProperties.getInstance().getProperty(TRAINING_LANGUAGE_EMPTY)
+                );
             }
             trainingLanguageRepository.deleteByTrainingId(processId);
             int totalResult = trainingLanguageList.stream().mapToInt(trainingLanguageRepository::create).sum();
             if (totalResult == trainingLanguageList.size()) {
                 return SUCCESSFUL;
             } else {
-                throw new BusinessException("40004", "Training Language create FAIL!");
+                throw new BusinessException("40004",
+                        MessageProperties.getInstance().getProperty(TRAINING_LANGUAGE_CREATE_FAIL)
+                );
             }
         }
         return FAIL;
@@ -159,7 +176,9 @@ public class TrainingProcessService {
     public String deleteTrainingProcess(TrainingProcessDeleteRequest request) {
         TrainingProcessCondition condition = this.buildTrainingProcessConditionForDelete(request);
         if (!ArrayUtil.isNotNullAndNotEmptyList(condition.getProcessIds())) {
-            throw new BusinessException("40001", "The list of deleted Training Process is empty!");
+            throw new BusinessException("40001",
+                    MessageProperties.getInstance().getProperty(DELETED_TRAINING_PROCESS_EMPTY)
+            );
         }
         return trainingProcessRepository.delete(condition) > 0
                 ? SUCCESSFUL

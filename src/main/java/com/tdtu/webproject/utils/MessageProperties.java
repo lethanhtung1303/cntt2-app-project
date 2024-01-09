@@ -12,7 +12,7 @@ public class MessageProperties {
     private final Properties configProp = new Properties();
 
     private MessageProperties() {
-        try (InputStream in = this.configProp.getClass().getClassLoader().getResourceAsStream("messages.properties")) {
+        try (InputStream in = this.getClass().getClassLoader().getResourceAsStream("messages.properties")) {
             configProp.load(new InputStreamReader(in, StandardCharsets.UTF_8));
         } catch (IOException e) {
             e.printStackTrace();

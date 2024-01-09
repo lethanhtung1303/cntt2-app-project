@@ -1814,10 +1814,11 @@ components:
           maximum: 299903
         diemHaiLong:
           type: number
+          format: float
           description: diemHaiLong of Satisfaction Score
           example: 200
           minimum: 0
-          maximum: 100
+          maximum: 10
     SatisfactionScoreCreateResponse:
       type: object
       properties:
@@ -1986,9 +1987,11 @@ components:
       description: New Subject
       type: object
       required:
+        - maNhom
+        - maLoai
         - maMon
-        - hocKy
-        - diemHaiLong
+        - tenMon
+        - soTiet
       properties:
         maNhom:
           type: string
