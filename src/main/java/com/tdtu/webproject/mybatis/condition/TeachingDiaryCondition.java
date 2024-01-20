@@ -9,8 +9,6 @@ import java.math.BigDecimal;
 @Data
 @Builder
 @AllArgsConstructor
-public class LecturerTeachingHistoryCondition {
+public class TeachingDiaryCondition {
     private BigDecimal historyId;
-    private BigDecimal lecturerId;
-    private BigDecimal semester;
 }

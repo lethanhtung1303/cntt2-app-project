@@ -296,6 +296,9 @@
         AND TNM.IS_ACTIVE = '1'
         AND TLM.IS_ACTIVE = '1'
         AND THDT.IS_ACTIVE = '1'
+        <if test="(historyId != null and historyId != '')">
+            AND TLSGD.ID = ${historyId}
+        </if>
         <if test="(lecturerId != null and lecturerId != '')">
             AND TLSGD.GIANG_VIEN_ID = ${lecturerId}
         </if>

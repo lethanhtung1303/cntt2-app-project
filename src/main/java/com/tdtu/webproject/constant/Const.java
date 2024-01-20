@@ -64,4 +64,7 @@ public class Const {
     public static final String SUBJECT_CODE_NULL = "subject.code.null";
     public static final String DELETED_SUBJECT_EMPTY = "deleted.subject.empty";
     public static final String SUBJECT_NOT_FOUND = "subject.not.found";
+    public static final String DELETED_HISTORY_EMPTY = "deleted.history.empty";
+    public static final String HISTORY_EMPTY = "history.empty";
+    public static final String TEACHING_DIARY_EMPTY = "teaching.diary.empty";
 }
