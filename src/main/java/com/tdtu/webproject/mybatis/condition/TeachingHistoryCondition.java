@@ -5,12 +5,12 @@ import lombok.Builder;
 import lombok.Data;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 @Data
 @Builder
 @AllArgsConstructor
-public class LecturerTeachingHistoryCondition {
-    private BigDecimal historyId;
-    private BigDecimal lecturerId;
-    private BigDecimal semester;
+public class TeachingHistoryCondition {
+    private List<BigDecimal> historyId;
+    private String deleteBy;
 }

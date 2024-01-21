@@ -831,6 +831,126 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AssignmentResponse'
+  /v1/deleteTeachingHistory:
+    delete:
+      tags:
+        - LecturerHistory
+      summary: Api for delete Teaching History
+      operationId: deleteTeachingHistory
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeachingHistoryDeleteRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Status delete Teaching History
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeachingHistoryDeleteResponse'
+  /v1/teachingHistoryDetail:
+    get:
+      tags:
+        - LecturerHistory
+      summary: Api for get teaching History Detail
+      operationId: teachingHistoryDetail
+      parameters:
+        - name: historyId
+          required: true
+          in: query
+          schema:
+            type: string
+            pattern: '^(\d{1,19},)*\d{1,19}$'
+            description: List of ID teaching History
+            example: '200'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Teaching History Detail
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeachingHistoryResponse'
+  /v1/teachingDiary:
+    get:
+      tags:
+        - TeachingDiary
+      summary: Api for get teaching Diary
+      operationId: teachingDiary
+      parameters:
+        - name: historyId
+          required: true
+          in: query
+          schema:
+            type: string
+            pattern: '^(\d{1,19},)*\d{1,19}$'
+            description: List of ID Teaching Diary
+            example: '200'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Teaching Diary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeachingDiaryResponse'
+  /v1/updateTeachingDiary:
+    put:
+      tags:
+        - TeachingDiary
+      summary: Api for update Teaching Diary
+      operationId: updateTeachingDiary
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TeachingDiaryUpdateRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Teaching Diary
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeachingDiaryUpdateResponse'
   #    End here
 
 components:
@@ -2525,6 +2645,172 @@ components:
           example: 200
         message:
           description: Message of the create Assignment
+          type: string
+          example: 'OK'
+    TeachingHistoryDeleteRequest:
+      type: object
+      required:
+        - historyId
+        - deleteBy
+      properties:
+        historyId:
+          type: string
+          description: List ID of Subject
+          example: '200'
+        deleteBy:
+          type: string
+          description: Deleted By of Subject
+          example: 'deleteBy'
+    TeachingHistoryDeleteResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the delete Teaching History
+          type: string
+          example: 'OK'
+    TeachingDiaryResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        results:
+          type: object
+          properties:
+            teachingDiary:
+              description: Teaching Diary list
+              type: array
+              items:
+                $ref: '#/components/schemas/TeachingDiaryDetailResponse'
+    TeachingDiaryDetailResponse:
+      type: object
+      properties:
+        historyId:
+          type: number
+          description: Id of Teaching Diary
+          example: 200
+        absenceReport:
+          type: number
+          description: Absence Report
+          example: 200
+        compensationReport:
+          type: number
+          description: Compensation Report
+          example: 200
+        reminderReport:
+          type: number
+          description: Reminder Report
+          example: 200
+        lateReport:
+          type: number
+          description: Late Report
+          example: 200
+        returnEarlyReport:
+          type: number
+          description: Return Early Report
+          example: 200
+        reportBehavior:
+          type: number
+          description: Report Behavior
+          example: 200
+        incorrectGradingReport:
+          type: number
+          description: Incorrect Grading Report
+          example: 200
+        lateSubmissionScoresReport:
+          type: number
+          description: Late Submission Scores Report
+          example: 200
+        reviewReport:
+          type: number
+          description: Review Report
+          example: 200
+        manyPassingReports:
+          description: Many Passing Reports
+          type: number
+          example: 200
+        manyFailedReport:
+          description: Many Failed Report
+          type: number
+          example: 200
+    TeachingDiaryUpdateRequest:
+      type: object
+      required:
+        - historyId
+        - teachingDiaryUpdate
+        - updateBy
+      properties:
+        historyId:
+          type: string
+          description: History Id of Teaching Diary
+          example: 200
+        teachingDiaryUpdate:
+          $ref: '#/components/schemas/TeachingDiaryUpdate'
+        updateBy:
+          type: string
+          description: Update By of Teaching Diary
+          example: 'updateBy'
+    TeachingDiaryUpdate:
+      type: object
+      properties:
+        absenceReport:
+          type: number
+          description: Absence Report
+          example: 200
+        compensationReport:
+          type: number
+          description: Compensation Report
+          example: 200
+        reminderReport:
+          type: number
+          description: Reminder Report
+          example: 200
+        lateReport:
+          type: number
+          description: Late Report
+          example: 200
+        returnEarlyReport:
+          type: number
+          description: Return Early Report
+          example: 200
+        reportBehavior:
+          type: number
+          description: Report Behavior
+          example: 200
+        incorrectGradingReport:
+          type: number
+          description: Incorrect Grading Report
+          example: 200
+        lateSubmissionScoresReport:
+          type: number
+          description: Late Submission Scores Report
+          example: 200
+        reviewReport:
+          type: number
+          description: Review Report
+          example: 200
+        manyPassingReports:
+          description: Many Passing Reports
+          type: number
+          example: 200
+        manyFailedReport:
+          description: Many Failed Report
+          type: number
+          example: 200
+    TeachingDiaryUpdateResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the update Teaching Diary
           type: string
           example: 'OK'
     #    End here
