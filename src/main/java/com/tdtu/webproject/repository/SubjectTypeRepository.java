@@ -1,6 +1,6 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtLoaiMon;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSubjectType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 public interface SubjectTypeRepository {
     Long countAllSubjectType();
 
-    List<TdtLoaiMon> getAllSubjectType();
+    List<TdtSubjectType> getAllSubjectType();
 
-    TdtLoaiMon getSubjectTypeById(BigDecimal typeId);
+    TdtSubjectType getSubjectTypeById(BigDecimal typeId);
 }

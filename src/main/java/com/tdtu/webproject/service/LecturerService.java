@@ -49,9 +49,9 @@ public class LecturerService {
                 .build();
         List<TdtGiangVien> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
 
-        List<TdtChungChi> certificateList = certificateService.findByLecturerId(lecturerIds);
-        Map<BigDecimal, List<TdtChungChi>> certificateMap = certificateList.stream()
-                .collect(Collectors.groupingBy(TdtChungChi::getGiangVienId));
+        List<TdtCertificate> certificateList = certificateService.findByLecturerId(lecturerIds);
+        Map<BigDecimal, List<TdtCertificate>> certificateMap = certificateList.stream()
+                .collect(Collectors.groupingBy(TdtCertificate::getLecturerId));
 
         List<TdtQuaTrinhDaoTao> trainingProcessList = trainingProcessService.findByLecturerId(lecturerIds);
         Map<BigDecimal, List<TdtQuaTrinhDaoTao>> trainingProcessMap = trainingProcessList.stream()
@@ -76,30 +76,30 @@ public class LecturerService {
     }
 
     private LecturerDetailResponse buildLecturerDetailResponse(TdtGiangVien lecturer,
-                                                               List<TdtChungChi> certificateList,
+                                                               List<TdtCertificate> certificateList,
                                                                List<TdtQuaTrinhDaoTao> trainingProcessList,
                                                                List<TdtDiemHaiLong> satisfactionScoreList) {
-        List<TdtNgonNguDaoTao> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
-        List<TdtNgonNgu> languageList = languageService.getAllLanguage();
+        List<TdtTrainingLanguage> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
+        List<TdtLanguage> languageList = languageService.getAllLanguage();
         List<TdtTrinhDo> levelList = levelService.getAllLevel();
-        List<TdtLoaiTotNghiep> graduationTypeList = graduationTypeService.getAllGraduationType();
+        List<TdtGraduationType> graduationTypeList = graduationTypeService.getAllGraduationType();
         List<TdtMonHoc> subjectList = subjectService.getAllSubject();
-        List<TdtLoaiGiangVien> classificationLecturerList = classificationLecturerService.getAllClassification();
+        List<TdtLecturerType> classificationLecturerList = classificationLecturerService.getAllClassification();
 
-        Map<BigDecimal, TdtLoaiGiangVien> classificationLecturerMap = classificationLecturerList.stream()
-                .collect(Collectors.toMap(TdtLoaiGiangVien::getMaLoai, classification -> classification));
+        Map<BigDecimal, TdtLecturerType> classificationLecturerMap = classificationLecturerList.stream()
+                .collect(Collectors.toMap(TdtLecturerType::getTypeId, classification -> classification));
 
         Map<BigDecimal, List<Language>> trainingLanguageMap = trainingLanguageList.stream()
-                .collect(Collectors.groupingBy(TdtNgonNguDaoTao::getQuaTrinhDaoTaoId,
-                        Collectors.mapping(trainingLanguage -> getLanguageById(trainingLanguage.getNgonNguId(),
+                .collect(Collectors.groupingBy(TdtTrainingLanguage::getTrainingProcessId,
+                        Collectors.mapping(trainingLanguage -> getLanguageById(trainingLanguage.getLanguageId(),
                                         languageList),
                                 Collectors.toList())));
 
         Map<BigDecimal, TdtTrinhDo> levelMap = levelList.stream()
                 .collect(Collectors.toMap(TdtTrinhDo::getId, level -> level));
 
-        Map<BigDecimal, TdtLoaiTotNghiep> graduationTypeMap = graduationTypeList.stream()
-                .collect(Collectors.toMap(TdtLoaiTotNghiep::getId, graduationType -> graduationType));
+        Map<BigDecimal, TdtGraduationType> graduationTypeMap = graduationTypeList.stream()
+                .collect(Collectors.toMap(TdtGraduationType::getId, graduationType -> graduationType));
 
         List<TrainingProcess> trainingProcesses = trainingProcessList.stream()
                 .map(trainingProcess -> TrainingProcess.builder()
@@ -116,7 +116,7 @@ public class LecturerService {
                         .graduationType(Optional.ofNullable(graduationTypeMap.getOrDefault(trainingProcess.getLoaiTotNghiepId(), null)).isPresent()
                                 ? GraduationType.builder()
                                 .id(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getId())
-                                .loaiTotNghiep(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getLoaiTotNghiep())
+                                .loaiTotNghiep(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getGraduationType())
                                 .build()
                                 : null)
                         .build())
@@ -199,19 +199,19 @@ public class LecturerService {
                 .build();
     }
 
-    public Certificate buildCertificate(TdtChungChi certificateList) {
-        TdtLoaiChungChi certificateType = certificateTypeService.getCertificateTypeById(certificateList.getLoaiChungChi());
+    public Certificate buildCertificate(TdtCertificate certificateList) {
+        TdtCertificateType certificateType = certificateTypeService.getCertificateTypeById(certificateList.getCertificateType());
         return Certificate.builder()
                 .id(certificateList.getId())
                 .certificateType(CertificateType.builder()
-                        .maLoai(certificateType.getMaLoai())
-                        .tenLoai(certificateType.getPhanLoai())
+                        .maLoai(certificateType.getTypeId())
+                        .tenLoai(certificateType.getType())
                         .build())
-                .diem(certificateList.getDiem())
+                .diem(certificateList.getGrade())
                 .build();
     }
 
-    public Language getLanguageById(BigDecimal languageId, List<TdtNgonNgu> languageList) {
+    public Language getLanguageById(BigDecimal languageId, List<TdtLanguage> languageList) {
         return languageList.stream()
                 .filter(language -> language.getId().equals(languageId))
                 .map(this::buildLanguage)
@@ -219,10 +219,10 @@ public class LecturerService {
                 .orElse(null);
     }
 
-    public Language buildLanguage(TdtNgonNgu language) {
+    public Language buildLanguage(TdtLanguage language) {
         return Language.builder()
                 .id(language.getId())
-                .tenNgonNgu(language.getTenNgonNgu())
+                .tenNgonNgu(language.getLanguageName())
                 .build();
     }
 
@@ -237,23 +237,23 @@ public class LecturerService {
 
     private Subject buildSubject(TdtMonHoc subject) {
         TdtNhomMon subjectGroup = subjectGroupService.getSubjectGroupById(subject.getMaNhom());
-        TdtLoaiMon subjectType = subjectTypeService.getSubjectTypeById(subject.getMaLoai());
+        TdtSubjectType subjectType = subjectTypeService.getSubjectTypeById(subject.getMaLoai());
         return Subject.builder()
                 .maMon(subject.getMaMon())
-                .phanLoai(subjectType.getPhanLoai())
+                .phanLoai(subjectType.getType())
                 .subjectGroup(SubjectGroup.builder()
                         .maNhom(subjectGroup.getMaNhom())
                         .tenNhom(subjectGroup.getTenNhom())
                         .build())
-                .tenMon("[".concat(subjectType.getKyHieu()).concat("] ").concat(subject.getTenMon()))
+                .tenMon("[".concat(subjectType.getSignature()).concat("] ").concat(subject.getTenMon()))
                 .soTiet(subject.getSoTiet())
                 .build();
     }
 
-    private ClassificationLecturers buildClassificationLecturers(TdtLoaiGiangVien classification) {
+    private ClassificationLecturers buildClassificationLecturers(TdtLecturerType classification) {
         return ClassificationLecturers.builder()
-                .maLoai(classification.getMaLoai())
-                .phanLoai(classification.getPhanLoai())
+                .maLoai(classification.getTypeId())
+                .phanLoai(classification.getType())
                 .build();
     }
 

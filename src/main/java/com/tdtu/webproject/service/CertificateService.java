@@ -1,6 +1,6 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtChungChi;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtCertificate;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.condition.CertificateCondition;
 import com.tdtu.webproject.repository.CertificateRepository;
@@ -25,7 +25,7 @@ public class CertificateService {
     private final LecturerManageService lecturerManageService;
     private final CertificateRepository certificateRepository;
 
-    public List<TdtChungChi> findByLecturerId(String lecturerIds) {
+    public List<TdtCertificate> findByLecturerId(String lecturerIds) {
         CertificateCondition condition = this.buildCertificateCondition(lecturerIds);
         return certificateRepository.findCertificate(condition);
     }
@@ -81,11 +81,11 @@ public class CertificateService {
         );
     }
 
-    private TdtChungChi buildTdtChungChiForCreate(BigDecimal lecturerId, CertificateCreate certificateCreate, String createBy) {
-        return TdtChungChi.builder()
-                .giangVienId(lecturerId)
-                .diem(certificateCreate.getDiem())
-                .loaiChungChi(certificateCreate.getMaLoai())
+    private TdtCertificate buildTdtChungChiForCreate(BigDecimal lecturerId, CertificateCreate certificateCreate, String createBy) {
+        return TdtCertificate.builder()
+                .lecturerId(lecturerId)
+                .grade(certificateCreate.getDiem())
+                .certificateType(certificateCreate.getMaLoai())
                 .createdAt(DateUtil.getTimeNow())
                 .createdBy(createBy)
                 .build();

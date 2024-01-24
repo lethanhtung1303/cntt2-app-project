@@ -1,6 +1,6 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtChungChi;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtCertificate;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtDiemHaiLong;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
@@ -26,9 +26,9 @@ public class LecturerManageService {
 
     private final LecturerRepository lecturerRepository;
 
-    public List<TdtChungChi> getAllCertificateOfLecturer(BigDecimal lecturerId, List<TdtChungChi> certificateList) {
+    public List<TdtCertificate> getAllCertificateOfLecturer(BigDecimal lecturerId, List<TdtCertificate> certificateList) {
         return certificateList.stream()
-                .filter(certificate -> certificate.getGiangVienId().equals(lecturerId))
+                .filter(certificate -> certificate.getLecturerId().equals(lecturerId))
                 .collect(Collectors.toList());
     }
 

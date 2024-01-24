@@ -1,9 +1,9 @@
 package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtHeDaoTao;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtLoaiMon;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtMonHoc;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtNhomMon;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSubjectType;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.condition.SubjectCondition;
 import com.tdtu.webproject.mybatis.condition.SubjectGroupCondition;
@@ -58,10 +58,10 @@ public class SubjectService {
 
     private Subject buildSubject(TdtMonHoc subject) {
         TdtNhomMon subjectGroup = subjectGroupRepository.getSubjectGroupById(subject.getMaNhom());
-        TdtLoaiMon subjectType = subjectTypeRepository.getSubjectTypeById(subject.getMaLoai());
+        TdtSubjectType subjectType = subjectTypeRepository.getSubjectTypeById(subject.getMaLoai());
         return Subject.builder()
                 .maMon(subject.getMaMon())
-                .phanLoai(subjectType.getPhanLoai())
+                .phanLoai(subjectType.getType())
                 .subjectGroup(SubjectGroup.builder()
                         .maNhom(subjectGroup.getMaNhom())
                         .tenNhom(subjectGroup.getTenNhom())
