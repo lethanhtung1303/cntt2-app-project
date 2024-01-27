@@ -56,7 +56,7 @@ public class TrainingProcessService {
             }
 
             List<TdtTrainingProcess> createList =
-                    trainingProcessRepository.create(this.buildTdtQuaTrinhDaoTaoForCreate(lecturerId, createRequest, createBy));
+                    trainingProcessRepository.create(this.buildTdtTrainingProcessForCreate(lecturerId, createRequest, createBy));
 
             if (!ArrayUtil.isNotNullAndNotEmptyList(createList)) {
                 throw new BusinessException("40002",
@@ -109,16 +109,16 @@ public class TrainingProcessService {
                 : Collections.emptyList();
     }
 
-    private TdtTrainingProcess buildTdtQuaTrinhDaoTaoForCreate(BigDecimal lecturerId, TrainingProcessCreate trainingProcess, String createBy) {
+    private TdtTrainingProcess buildTdtTrainingProcessForCreate(BigDecimal lecturerId, TrainingProcessCreate trainingProcess, String createBy) {
         return TdtTrainingProcess.builder()
                 .lecturerId(lecturerId)
                 .qualificationId(trainingProcess.getLevel())
-                .university(trainingProcess.getUniversity())
-                .major(trainingProcess.getMajor())
-                .graduationYear(trainingProcess.getGraduationYear())
-                .thesisTitle(trainingProcess.getThesisTitle())
-                .instructor(trainingProcess.getInstructor())
-                .graduationTypeId(trainingProcess.getGraduationType())
+                .university(trainingProcess.getTruong())
+                .major(trainingProcess.getNganh())
+                .graduationYear(trainingProcess.getNamTotNghiep())
+                .thesisTitle(trainingProcess.getDeTaiTotNghiep())
+                .instructor(trainingProcess.getNguoiHuongDan())
+                .graduationTypeId(trainingProcess.getLoaiTotNghiep())
                 .createdBy(createBy)
                 .createdAt(DateUtil.getTimeNow())
                 .build();
@@ -162,12 +162,12 @@ public class TrainingProcessService {
     private TdtTrainingProcess buildTdtQuaTrinhDaoTaoForUpdate(TrainingProcessUpdate trainingProcess, String updateBy) {
         return TdtTrainingProcess.builder()
                 .qualificationId(trainingProcess.getLevel())
-                .university(trainingProcess.getUniversity())
-                .major(trainingProcess.getMajor())
-                .graduationYear(trainingProcess.getGraduationYear())
-                .thesisTitle(trainingProcess.getThesisTitle())
-                .instructor(trainingProcess.getInstructor())
-                .graduationTypeId(trainingProcess.getGraduationType())
+                .university(trainingProcess.getTruong())
+                .major(trainingProcess.getNganh())
+                .graduationYear(trainingProcess.getNamTotNghiep())
+                .thesisTitle(trainingProcess.getDeTaiTotNghiep())
+                .instructor(trainingProcess.getNguoiHuongDan())
+                .graduationTypeId(trainingProcess.getLoaiTotNghiep())
                 .updatedAt(DateUtil.getTimeNow())
                 .updateBy(updateBy)
                 .build();

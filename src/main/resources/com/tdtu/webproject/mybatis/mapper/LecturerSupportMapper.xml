@@ -16,8 +16,8 @@
         <result column="FULL_NAME" jdbcType="VARCHAR" property="fullName"/>
         <result column="IMAGES" jdbcType="VARCHAR" property="images"/>
         <result column="EMAIL_TDTU" jdbcType="VARCHAR" property="emailTdtu"/>
-        <result column="university" jdbcType="VARCHAR" property="school"/>
-        <result column="major" jdbcType="VARCHAR" property="majors"/>
+        <result column="UNIVERSITY" jdbcType="VARCHAR" property="school"/>
+        <result column="MAJOR" jdbcType="VARCHAR" property="majors"/>
         <result column="NAM_TOT_NGHIEP" jdbcType="NUMERIC" property="graduationYear"/>
         <result column="LOAI_TOT_NGHIEP" jdbcType="VARCHAR" property="graduationType"/>
         <result column="LOAI_TOT_NGHIEP_ID" jdbcType="NUMERIC" property="graduationTypeCode"/>
@@ -106,8 +106,8 @@
                CONCAT(TGV.FIRST_NAME, ' ', TGV.FULL_NAME) AS FULL_NAME,
                TGV.IMAGES,
                TGV.EMAIL_TDTU,
-               TQTDT.university,
-               TQTDT.major,
+               TQTDT.UNIVERSITY,
+               TQTDT.MAJOR,
                TQTDT.NAM_TOT_NGHIEP,
                TLTN.LOAI_TOT_NGHIEP,
                TLTN.ID,

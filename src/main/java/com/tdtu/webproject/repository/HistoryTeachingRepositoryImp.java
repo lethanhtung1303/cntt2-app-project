@@ -18,7 +18,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class HistoryTeachingRepositoryImp implements HistoryTeachingRepository {
-    private final TdtTeachingHistoryMapper historyTeachingMapper;
+    private final TdtTeachingHistoryMapper teachingHistoryMapper;
     private final TeachingDiaryRepository teachingDiaryRepository;
 
     @Override
@@ -30,7 +30,7 @@ public class HistoryTeachingRepositoryImp implements HistoryTeachingRepository {
         Optional.ofNullable(condition.getSubjectId()).ifPresent(criteria::andSubjectIdEqualTo);
         Optional.ofNullable(condition.getTrainingSysId()).ifPresent(criteria::andSystemIdEqualTo);
         criteria.andIsActiveEqualTo(true);
-        return historyTeachingMapper.countByExample(example);
+        return teachingHistoryMapper.countByExample(example);
     }
 
     @Override
@@ -42,12 +42,12 @@ public class HistoryTeachingRepositoryImp implements HistoryTeachingRepository {
         Optional.ofNullable(condition.getSubjectId()).ifPresent(criteria::andSubjectIdEqualTo);
         Optional.ofNullable(condition.getTrainingSysId()).ifPresent(criteria::andSystemIdEqualTo);
         criteria.andIsActiveEqualTo(true);
-        return historyTeachingMapper.selectByExample(example);
+        return teachingHistoryMapper.selectByExample(example);
     }
 
     @Override
     public int create(TdtTeachingHistory record) {
-        int insert = historyTeachingMapper.insertSelective(record);
+        int insert = teachingHistoryMapper.insertSelective(record);
         if (insert == 0) {
             return 0;
         }
@@ -66,7 +66,7 @@ public class HistoryTeachingRepositoryImp implements HistoryTeachingRepository {
         Optional.ofNullable(condition.getSubjectId()).ifPresent(criteria::andSubjectIdEqualTo);
         Optional.ofNullable(condition.getTrainingSysId()).ifPresent(criteria::andSystemIdEqualTo);
 
-        TdtTeachingHistory historyTeaching = historyTeachingMapper.selectByExample(example).stream().findFirst().orElse(null);
+        TdtTeachingHistory historyTeaching = teachingHistoryMapper.selectByExample(example).stream().findFirst().orElse(null);
         if (Optional.ofNullable(historyTeaching).isEmpty()) {
             return 0;
         }
@@ -94,6 +94,6 @@ public class HistoryTeachingRepositoryImp implements HistoryTeachingRepository {
                 .isActive(false)
                 .updateBy(condition.getDeleteBy())
                 .build();
-        return historyTeachingMapper.updateByExampleSelective(record, example);
+        return teachingHistoryMapper.updateByExampleSelective(record, example);
     }
 }

@@ -16,7 +16,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class TeachingDiaryRepositoryImp implements TeachingDiaryRepository {
-    private final TdtTeachingLogMapper teachingDiaryMapper;
+    private final TdtTeachingLogMapper teachingLogMapper;
 
     @Override
     public Long countTeachingDiary(TeachingDiaryCondition condition) {
@@ -24,7 +24,7 @@ public class TeachingDiaryRepositoryImp implements TeachingDiaryRepository {
         TdtTeachingLogExample.Criteria criteria = example.createCriteria();
         Optional.ofNullable(condition.getHistoryId()).ifPresent(criteria::andTeachingHistoryIdEqualTo);
         criteria.andIsActiveEqualTo(true);
-        return teachingDiaryMapper.countByExample(example);
+        return teachingLogMapper.countByExample(example);
     }
 
     @Override
@@ -33,12 +33,12 @@ public class TeachingDiaryRepositoryImp implements TeachingDiaryRepository {
         TdtTeachingLogExample.Criteria criteria = example.createCriteria();
         Optional.ofNullable(condition.getHistoryId()).ifPresent(criteria::andTeachingHistoryIdEqualTo);
         criteria.andIsActiveEqualTo(true);
-        return teachingDiaryMapper.selectByExample(example);
+        return teachingLogMapper.selectByExample(example);
     }
 
     @Override
     public int create(TdtTeachingLog record) {
-        return teachingDiaryMapper.insertSelective(record);
+        return teachingLogMapper.insertSelective(record);
     }
 
     @Override
@@ -47,6 +47,6 @@ public class TeachingDiaryRepositoryImp implements TeachingDiaryRepository {
         TdtTeachingLogExample.Criteria criteria = example.createCriteria();
         Optional.ofNullable(historyId).ifPresent(criteria::andTeachingHistoryIdEqualTo);
         criteria.andIsActiveEqualTo(true);
-        return teachingDiaryMapper.updateByExampleSelective(record, example);
+        return teachingLogMapper.updateByExampleSelective(record, example);
     }
 }

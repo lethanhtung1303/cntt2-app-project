@@ -17,7 +17,7 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class SubjectTrainingSysRepositoryImp implements SubjectTrainingSysRepository {
-    private final TdtTrainingSystemMapper subjectTrainingSysMapper;
+    private final TdtTrainingSystemMapper trainingSystemMapper;
 
     @Override
     public Long countSubjectTrainingSys(SubjectTrainingSysCondition condition) {
@@ -27,7 +27,7 @@ public class SubjectTrainingSysRepositoryImp implements SubjectTrainingSysReposi
             criteria.andSystemIdIn(condition.getTrainingSysIds());
         }
         criteria.andIsActiveEqualTo(true);
-        return subjectTrainingSysMapper.countByExample(example);
+        return trainingSystemMapper.countByExample(example);
     }
 
     @Override
@@ -38,7 +38,7 @@ public class SubjectTrainingSysRepositoryImp implements SubjectTrainingSysReposi
             criteria.andSystemIdIn(condition.getTrainingSysIds());
         }
         criteria.andIsActiveEqualTo(true);
-        return subjectTrainingSysMapper.selectByExample(example);
+        return trainingSystemMapper.selectByExample(example);
     }
 
     @Override
@@ -47,7 +47,7 @@ public class SubjectTrainingSysRepositoryImp implements SubjectTrainingSysReposi
         TdtTrainingSystemExample.Criteria criteria = example.createCriteria();
         Optional.ofNullable(trainingSysId).ifPresent(criteria::andSystemIdEqualTo);
         criteria.andIsActiveEqualTo(true);
-        return subjectTrainingSysMapper.selectByExample(example).stream()
+        return trainingSystemMapper.selectByExample(example).stream()
                 .findFirst()
                 .orElse(null);
     }
