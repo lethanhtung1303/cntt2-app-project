@@ -79,7 +79,7 @@ public class LecturerService {
                                                                List<TdtChungChi> certificateList,
                                                                List<TdtTrainingProcess> trainingProcessList,
                                                                List<TdtDiemHaiLong> satisfactionScoreList) {
-        List<TdtNgonNguDaoTao> trainingLanguageList = trainingLanguageService.getAllNgonNguDaoTao();
+        List<TdtNgonNguDaoTao> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
         List<TdtNgonNgu> languageList = languageService.getAllLanguage();
         List<TdtTrinhDo> levelList = levelService.getAllLevel();
         List<TdtGraduationType> graduationTypeList = graduationTypeService.getAllGraduationType();

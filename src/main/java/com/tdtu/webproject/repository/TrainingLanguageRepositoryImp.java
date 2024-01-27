@@ -17,49 +17,49 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class TrainingLanguageRepositoryImp implements TrainingLanguageRepository {
-    private final TdtNgonNguDaoTaoMapper ngonNguDaoTaoMapper;
+    private final TdtNgonNguDaoTaoMapper trainingLanguageMapper;
 
     @Override
-    public Long countAllNgonNguDaoTao(TrainingLanguageCondition condition) {
+    public Long countAllTrainingLanguage(TrainingLanguageCondition condition) {
         TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
         TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getTrainingProcessIds())) {
             criteria.andQuaTrinhDaoTaoIdIn(condition.getTrainingProcessIds());
         }
         criteria.andIsActiveEqualTo(true);
-        return ngonNguDaoTaoMapper.countByExample(example);
+        return trainingLanguageMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtNgonNguDaoTao> findNgonNguDaoTao(TrainingLanguageCondition condition) {
+    public List<TdtNgonNguDaoTao> findTrainingLanguage(TrainingLanguageCondition condition) {
         TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
         TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getTrainingProcessIds())) {
             criteria.andQuaTrinhDaoTaoIdIn(condition.getTrainingProcessIds());
         }
         criteria.andIsActiveEqualTo(true);
-        return ngonNguDaoTaoMapper.selectByExample(example);
+        return trainingLanguageMapper.selectByExample(example);
     }
 
     @Override
-    public Long countAllNgonNguDaoTao() {
+    public Long countAllTrainingLanguage() {
         TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
         TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
-        return ngonNguDaoTaoMapper.countByExample(example);
+        return trainingLanguageMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtNgonNguDaoTao> getAllNgonNguDaoTao() {
+    public List<TdtNgonNguDaoTao> getAllTrainingLanguage() {
         TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
         TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
-        return ngonNguDaoTaoMapper.selectByExample(example);
+        return trainingLanguageMapper.selectByExample(example);
     }
 
     @Override
     public int create(TdtNgonNguDaoTao record) {
-        return ngonNguDaoTaoMapper.insertSelective(record);
+        return trainingLanguageMapper.insertSelective(record);
     }
 
     @Override
@@ -70,6 +70,6 @@ public class TrainingLanguageRepositoryImp implements TrainingLanguageRepository
         TdtNgonNguDaoTao record = TdtNgonNguDaoTao.builder()
                 .isActive(false)
                 .build();
-        return ngonNguDaoTaoMapper.updateByExampleSelective(record, example);
+        return trainingLanguageMapper.updateByExampleSelective(record, example);
     }
 }

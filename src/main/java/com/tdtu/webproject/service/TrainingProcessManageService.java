@@ -22,7 +22,7 @@ public class TrainingProcessManageService {
     private final TrainingProcessRepository trainingProcessRepository;
 
     public List<TdtNgonNguDaoTao> getAllLanguageOfTrainingProcess(BigDecimal trainingProcessId) {
-        return trainingLanguageRepository.findNgonNguDaoTao(this.buildTrainingLanguageCondition(trainingProcessId));
+        return trainingLanguageRepository.findTrainingLanguage(this.buildTrainingLanguageCondition(trainingProcessId));
     }
 
     private TrainingLanguageCondition buildTrainingLanguageCondition(BigDecimal trainingProcessId) {

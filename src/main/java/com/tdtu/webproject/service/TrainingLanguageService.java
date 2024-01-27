@@ -12,7 +12,7 @@ import java.util.List;
 public class TrainingLanguageService {
     private final TrainingLanguageRepository trainingLanguageRepository;
 
-    public List<TdtNgonNguDaoTao> getAllNgonNguDaoTao() {
-        return trainingLanguageRepository.getAllNgonNguDaoTao();
+    public List<TdtNgonNguDaoTao> getAllTrainingLanguage() {
+        return trainingLanguageRepository.getAllTrainingLanguage();
     }
 }
