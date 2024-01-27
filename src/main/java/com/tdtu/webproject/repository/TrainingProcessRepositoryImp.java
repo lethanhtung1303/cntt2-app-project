@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtQuaTrinhDaoTaoExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtQuaTrinhDaoTaoMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtTrainingProcessExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtTrainingProcessMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingProcess;
 import com.tdtu.webproject.mybatis.condition.TrainingProcessCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;
@@ -20,52 +20,52 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class TrainingProcessRepositoryImp implements TrainingProcessRepository {
-    private final TdtQuaTrinhDaoTaoMapper trainingProcessMapper;
+    private final TdtTrainingProcessMapper trainingProcessMapper;
 
     @Override
     public Long countTrainingProcess(TrainingProcessCondition condition) {
-        TdtQuaTrinhDaoTaoExample example = new TdtQuaTrinhDaoTaoExample();
-        TdtQuaTrinhDaoTaoExample.Criteria criteria = example.createCriteria();
+        TdtTrainingProcessExample example = new TdtTrainingProcessExample();
+        TdtTrainingProcessExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
-            criteria.andGiangVienIdIn(condition.getLecturerIds());
+            criteria.andLecturerIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);
         return trainingProcessMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtQuaTrinhDaoTao> findTrainingProcess(TrainingProcessCondition condition) {
-        TdtQuaTrinhDaoTaoExample example = new TdtQuaTrinhDaoTaoExample();
-        TdtQuaTrinhDaoTaoExample.Criteria criteria = example.createCriteria();
+    public List<TdtTrainingProcess> findTrainingProcess(TrainingProcessCondition condition) {
+        TdtTrainingProcessExample example = new TdtTrainingProcessExample();
+        TdtTrainingProcessExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
-            criteria.andGiangVienIdIn(condition.getLecturerIds());
+            criteria.andLecturerIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);
         return trainingProcessMapper.selectByExample(example);
     }
 
     @Override
-    public List<TdtQuaTrinhDaoTao> create(TdtQuaTrinhDaoTao record) {
+    public List<TdtTrainingProcess> create(TdtTrainingProcess record) {
         int insert = trainingProcessMapper.insertSelective(record);
         if (insert > 0) {
-            TdtQuaTrinhDaoTaoExample example = new TdtQuaTrinhDaoTaoExample();
-            TdtQuaTrinhDaoTaoExample.Criteria criteria = example.createCriteria();
-            criteria.andGiangVienIdEqualTo(record.getGiangVienId());
-            criteria.andTrinhDoIdEqualTo(record.getTrinhDoId());
-            if (StringUtil.isNotNullOrEmptyString(record.getTruong())) {
-                criteria.andTruongEqualTo(record.getTruong());
+            TdtTrainingProcessExample example = new TdtTrainingProcessExample();
+            TdtTrainingProcessExample.Criteria criteria = example.createCriteria();
+            criteria.andLecturerIdEqualTo(record.getLecturerId());
+            criteria.andQualificationIdEqualTo(record.getQualificationId());
+            if (StringUtil.isNotNullOrEmptyString(record.getUniversity())) {
+                criteria.andUniversityEqualTo(record.getUniversity());
             }
-            if (StringUtil.isNotNullOrEmptyString(record.getNganh())) {
-                criteria.andNganhEqualTo(record.getNganh());
+            if (StringUtil.isNotNullOrEmptyString(record.getMajor())) {
+                criteria.andMajorEqualTo(record.getMajor());
             }
-            criteria.andNamTotNghiepEqualTo(record.getNamTotNghiep());
-            if (StringUtil.isNotNullOrEmptyString(record.getDeTaiTotNghiep())) {
-                criteria.andDeTaiTotNghiepEqualTo(record.getDeTaiTotNghiep());
+            criteria.andGraduationYearEqualTo(record.getGraduationYear());
+            if (StringUtil.isNotNullOrEmptyString(record.getThesisTitle())) {
+                criteria.andThesisTitleEqualTo(record.getThesisTitle());
             }
-            if (StringUtil.isNotNullOrEmptyString(record.getNguoiHuongDan())) {
-                criteria.andNguoiHuongDanEqualTo(record.getNguoiHuongDan());
+            if (StringUtil.isNotNullOrEmptyString(record.getInstructor())) {
+                criteria.andInstructorEqualTo(record.getInstructor());
             }
-            criteria.andLoaiTotNghiepIdEqualTo(record.getLoaiTotNghiepId());
+            criteria.andGraduationTypeIdEqualTo(record.getGraduationTypeId());
             if (StringUtil.isNotNullOrEmptyString(record.getCreatedBy())) {
                 criteria.andCreatedByEqualTo(record.getCreatedBy());
             }
@@ -75,23 +75,23 @@ public class TrainingProcessRepositoryImp implements TrainingProcessRepository {
     }
 
     @Override
-    public int update(TdtQuaTrinhDaoTao record, BigDecimal processId) {
-        TdtQuaTrinhDaoTaoExample example = new TdtQuaTrinhDaoTaoExample();
-        TdtQuaTrinhDaoTaoExample.Criteria criteria = example.createCriteria();
+    public int update(TdtTrainingProcess record, BigDecimal processId) {
+        TdtTrainingProcessExample example = new TdtTrainingProcessExample();
+        TdtTrainingProcessExample.Criteria criteria = example.createCriteria();
         Optional.ofNullable(processId).ifPresent(criteria::andIdEqualTo);
         return trainingProcessMapper.updateByExampleSelective(record, example);
     }
 
     @Override
     public int delete(TrainingProcessCondition condition) {
-        TdtQuaTrinhDaoTaoExample example = new TdtQuaTrinhDaoTaoExample();
-        TdtQuaTrinhDaoTaoExample.Criteria criteria = example.createCriteria();
+        TdtTrainingProcessExample example = new TdtTrainingProcessExample();
+        TdtTrainingProcessExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getProcessIds())) {
             criteria.andIdIn(condition.getProcessIds());
         }
         criteria.andIsActiveEqualTo(true);
 
-        TdtQuaTrinhDaoTao record = TdtQuaTrinhDaoTao.builder()
+        TdtTrainingProcess record = TdtTrainingProcess.builder()
                 .isActive(false)
                 .updatedAt(DateUtil.getTimeNow())
                 .updateBy(condition.getUpdateBy())

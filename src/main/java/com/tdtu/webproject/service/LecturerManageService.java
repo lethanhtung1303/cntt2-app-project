@@ -3,7 +3,7 @@ package com.tdtu.webproject.service;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtChungChi;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtDiemHaiLong;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingProcess;
 import com.tdtu.webproject.mybatis.condition.LecturerCondition;
 import com.tdtu.webproject.mybatis.condition.NormsLectureHoursCondition;
 import com.tdtu.webproject.mybatis.result.NormsLectureHoursResult;
@@ -32,9 +32,9 @@ public class LecturerManageService {
                 .collect(Collectors.toList());
     }
 
-    public List<TdtQuaTrinhDaoTao> getAllTrainingProcessOfLecturer(BigDecimal lecturerId, List<TdtQuaTrinhDaoTao> trainingProcessList) {
+    public List<TdtTrainingProcess> getAllTrainingProcessOfLecturer(BigDecimal lecturerId, List<TdtTrainingProcess> trainingProcessList) {
         return trainingProcessList.stream()
-                .filter(trainingProcess -> trainingProcess.getGiangVienId().equals(lecturerId))
+                .filter(trainingProcess -> trainingProcess.getLecturerId().equals(lecturerId))
                 .collect(Collectors.toList());
     }
 

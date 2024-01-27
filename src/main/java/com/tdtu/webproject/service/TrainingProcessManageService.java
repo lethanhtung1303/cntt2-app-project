@@ -1,7 +1,7 @@
 package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtNgonNguDaoTao;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingProcess;
 import com.tdtu.webproject.mybatis.condition.TrainingLanguageCondition;
 import com.tdtu.webproject.mybatis.condition.TrainingProcessCondition;
 import com.tdtu.webproject.repository.TrainingLanguageRepository;
@@ -22,7 +22,7 @@ public class TrainingProcessManageService {
     private final TrainingProcessRepository trainingProcessRepository;
 
     public List<TdtNgonNguDaoTao> getAllLanguageOfTrainingProcess(BigDecimal trainingProcessId) {
-        return trainingLanguageRepository.findTrainingLanguage(this.buildTrainingLanguageCondition(trainingProcessId));
+        return trainingLanguageRepository.findNgonNguDaoTao(this.buildTrainingLanguageCondition(trainingProcessId));
     }
 
     private TrainingLanguageCondition buildTrainingLanguageCondition(BigDecimal trainingProcessId) {
@@ -35,7 +35,7 @@ public class TrainingProcessManageService {
     }
 
     public boolean checkExistTrainingProcess(BigDecimal processId) {
-        List<TdtQuaTrinhDaoTao> trainingProcessList = trainingProcessRepository
+        List<TdtTrainingProcess> trainingProcessList = trainingProcessRepository
                 .findTrainingProcess(
                         TrainingProcessCondition.builder()
                                 .processIds(List.of(processId))

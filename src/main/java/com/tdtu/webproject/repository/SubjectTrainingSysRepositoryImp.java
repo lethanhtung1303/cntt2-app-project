@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtHeDaoTaoExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtHeDaoTaoMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtHeDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtTrainingSystemExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtTrainingSystemMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingSystem;
 import com.tdtu.webproject.mybatis.condition.SubjectTrainingSysCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
@@ -17,35 +17,35 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class SubjectTrainingSysRepositoryImp implements SubjectTrainingSysRepository {
-    private final TdtHeDaoTaoMapper subjectTrainingSysMapper;
+    private final TdtTrainingSystemMapper subjectTrainingSysMapper;
 
     @Override
     public Long countSubjectTrainingSys(SubjectTrainingSysCondition condition) {
-        TdtHeDaoTaoExample example = new TdtHeDaoTaoExample();
-        TdtHeDaoTaoExample.Criteria criteria = example.createCriteria();
+        TdtTrainingSystemExample example = new TdtTrainingSystemExample();
+        TdtTrainingSystemExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getTrainingSysIds())) {
-            criteria.andMaHeIn(condition.getTrainingSysIds());
+            criteria.andSystemIdIn(condition.getTrainingSysIds());
         }
         criteria.andIsActiveEqualTo(true);
         return subjectTrainingSysMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtHeDaoTao> findSubjectTrainingSys(SubjectTrainingSysCondition condition) {
-        TdtHeDaoTaoExample example = new TdtHeDaoTaoExample();
-        TdtHeDaoTaoExample.Criteria criteria = example.createCriteria();
+    public List<TdtTrainingSystem> findSubjectTrainingSys(SubjectTrainingSysCondition condition) {
+        TdtTrainingSystemExample example = new TdtTrainingSystemExample();
+        TdtTrainingSystemExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getTrainingSysIds())) {
-            criteria.andMaHeIn(condition.getTrainingSysIds());
+            criteria.andSystemIdIn(condition.getTrainingSysIds());
         }
         criteria.andIsActiveEqualTo(true);
         return subjectTrainingSysMapper.selectByExample(example);
     }
 
     @Override
-    public TdtHeDaoTao getSubjectTrainingSysById(BigDecimal trainingSysId) {
-        TdtHeDaoTaoExample example = new TdtHeDaoTaoExample();
-        TdtHeDaoTaoExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(trainingSysId).ifPresent(criteria::andMaHeEqualTo);
+    public TdtTrainingSystem getSubjectTrainingSysById(BigDecimal trainingSysId) {
+        TdtTrainingSystemExample example = new TdtTrainingSystemExample();
+        TdtTrainingSystemExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(trainingSysId).ifPresent(criteria::andSystemIdEqualTo);
         criteria.andIsActiveEqualTo(true);
         return subjectTrainingSysMapper.selectByExample(example).stream()
                 .findFirst()

@@ -53,9 +53,9 @@ public class LecturerService {
         Map<BigDecimal, List<TdtChungChi>> certificateMap = certificateList.stream()
                 .collect(Collectors.groupingBy(TdtChungChi::getGiangVienId));
 
-        List<TdtQuaTrinhDaoTao> trainingProcessList = trainingProcessService.findByLecturerId(lecturerIds);
-        Map<BigDecimal, List<TdtQuaTrinhDaoTao>> trainingProcessMap = trainingProcessList.stream()
-                .collect(Collectors.groupingBy(TdtQuaTrinhDaoTao::getGiangVienId));
+        List<TdtTrainingProcess> trainingProcessList = trainingProcessService.findByLecturerId(lecturerIds);
+        Map<BigDecimal, List<TdtTrainingProcess>> trainingProcessMap = trainingProcessList.stream()
+                .collect(Collectors.groupingBy(TdtTrainingProcess::getLecturerId));
 
         List<TdtDiemHaiLong> satisfactionScoreList = satisfactionScoreService.findByLecturerId(lecturerIds);
         Map<BigDecimal, List<TdtDiemHaiLong>> satisfactionScoreMap = satisfactionScoreList.stream()
@@ -77,12 +77,12 @@ public class LecturerService {
 
     private LecturerDetailResponse buildLecturerDetailResponse(TdtGiangVien lecturer,
                                                                List<TdtChungChi> certificateList,
-                                                               List<TdtQuaTrinhDaoTao> trainingProcessList,
+                                                               List<TdtTrainingProcess> trainingProcessList,
                                                                List<TdtDiemHaiLong> satisfactionScoreList) {
-        List<TdtNgonNguDaoTao> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
+        List<TdtNgonNguDaoTao> trainingLanguageList = trainingLanguageService.getAllNgonNguDaoTao();
         List<TdtNgonNgu> languageList = languageService.getAllLanguage();
         List<TdtTrinhDo> levelList = levelService.getAllLevel();
-        List<TdtLoaiTotNghiep> graduationTypeList = graduationTypeService.getAllGraduationType();
+        List<TdtGraduationType> graduationTypeList = graduationTypeService.getAllGraduationType();
         List<TdtMonHoc> subjectList = subjectService.getAllSubject();
         List<TdtLoaiGiangVien> classificationLecturerList = classificationLecturerService.getAllClassification();
 
@@ -98,25 +98,26 @@ public class LecturerService {
         Map<BigDecimal, TdtTrinhDo> levelMap = levelList.stream()
                 .collect(Collectors.toMap(TdtTrinhDo::getId, level -> level));
 
-        Map<BigDecimal, TdtLoaiTotNghiep> graduationTypeMap = graduationTypeList.stream()
-                .collect(Collectors.toMap(TdtLoaiTotNghiep::getId, graduationType -> graduationType));
+        Map<BigDecimal, TdtGraduationType> graduationTypeMap = graduationTypeList.stream()
+                .collect(Collectors.toMap(TdtGraduationType::getId, graduationType -> graduationType));
 
         List<TrainingProcess> trainingProcesses = trainingProcessList.stream()
                 .map(trainingProcess -> TrainingProcess.builder()
                         .id(trainingProcess.getId())
-                        .level(Optional.ofNullable(levelMap.getOrDefault(trainingProcess.getTrinhDoId(), null)).isPresent()
-                                ? this.buildLevel(levelMap.get(trainingProcess.getTrinhDoId()))
+                        .level(Optional.ofNullable(levelMap.getOrDefault(trainingProcess.getQualificationId(), null)).isPresent()
+                                ? this.buildLevel(levelMap.get(trainingProcess.getQualificationId()))
                                 : null)
                         .language(trainingLanguageMap.getOrDefault(trainingProcess.getId(), Collections.emptyList()))
-                        .truong(trainingProcess.getTruong())
-                        .nganh(trainingProcess.getNganh())
-                        .namTotNghiep(trainingProcess.getNamTotNghiep())
-                        .deTaiTotNghiep(trainingProcess.getDeTaiTotNghiep())
-                        .nguoiHuongDan(trainingProcess.getNguoiHuongDan())
-                        .graduationType(Optional.ofNullable(graduationTypeMap.getOrDefault(trainingProcess.getLoaiTotNghiepId(), null)).isPresent()
+                        .university(trainingProcess.getUniversity())
+                        .major(trainingProcess.getMajor())
+                        .graduationYear(trainingProcess.getGraduationYear())
+                        .thesisTitle(trainingProcess.getThesisTitle())
+                        .instructor(trainingProcess.getInstructor())
+                        .graduationType(Optional.ofNullable(graduationTypeMap.getOrDefault(trainingProcess.getGraduationTypeId(),
+                                null)).isPresent()
                                 ? GraduationType.builder()
-                                .id(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getId())
-                                .loaiTotNghiep(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getLoaiTotNghiep())
+                                .id(graduationTypeMap.get(trainingProcess.getGraduationTypeId()).getId())
+                                .graduationType(graduationTypeMap.get(trainingProcess.getGraduationTypeId()).getGraduationType())
                                 .build()
                                 : null)
                         .build())

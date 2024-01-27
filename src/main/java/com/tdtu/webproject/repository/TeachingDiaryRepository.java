@@ -1,6 +1,6 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtNhatKyGiangDay;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTeachingLog;
 import com.tdtu.webproject.mybatis.condition.TeachingDiaryCondition;
 
 import java.math.BigDecimal;
@@ -9,9 +9,9 @@ import java.util.List;
 public interface TeachingDiaryRepository {
     Long countTeachingDiary(TeachingDiaryCondition condition);
 
-    List<TdtNhatKyGiangDay> findTeachingDiary(TeachingDiaryCondition condition);
+    List<TdtTeachingLog> findTeachingDiary(TeachingDiaryCondition condition);
 
-    int create(TdtNhatKyGiangDay record);
+    int create(TdtTeachingLog record);
 
-    int update(TdtNhatKyGiangDay record, BigDecimal historyId);
+    int update(TdtTeachingLog record, BigDecimal historyId);
 }

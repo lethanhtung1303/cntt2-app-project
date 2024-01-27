@@ -1,9 +1,9 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtLichSuGiangDayExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtLichSuGiangDayMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtLichSuGiangDay;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtNhatKyGiangDay;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtTeachingHistoryExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtTeachingHistoryMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTeachingHistory;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTeachingLog;
 import com.tdtu.webproject.mybatis.condition.HistoryTeachingCondition;
 import com.tdtu.webproject.mybatis.condition.TeachingHistoryCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
@@ -18,61 +18,61 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class HistoryTeachingRepositoryImp implements HistoryTeachingRepository {
-    private final TdtLichSuGiangDayMapper historyTeachingMapper;
+    private final TdtTeachingHistoryMapper historyTeachingMapper;
     private final TeachingDiaryRepository teachingDiaryRepository;
 
     @Override
     public Long countHistoryTeaching(HistoryTeachingCondition condition) {
-        TdtLichSuGiangDayExample example = new TdtLichSuGiangDayExample();
-        TdtLichSuGiangDayExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(condition.getLecturerId()).ifPresent(criteria::andGiangVienIdEqualTo);
-        Optional.ofNullable(condition.getSemester()).ifPresent(criteria::andHocKyEqualTo);
-        Optional.ofNullable(condition.getSubjectId()).ifPresent(criteria::andMaMonEqualTo);
-        Optional.ofNullable(condition.getTrainingSysId()).ifPresent(criteria::andMaHeEqualTo);
+        TdtTeachingHistoryExample example = new TdtTeachingHistoryExample();
+        TdtTeachingHistoryExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(condition.getLecturerId()).ifPresent(criteria::andLecturerIdEqualTo);
+        Optional.ofNullable(condition.getSemester()).ifPresent(criteria::andSemesterIdEqualTo);
+        Optional.ofNullable(condition.getSubjectId()).ifPresent(criteria::andSubjectIdEqualTo);
+        Optional.ofNullable(condition.getTrainingSysId()).ifPresent(criteria::andSystemIdEqualTo);
         criteria.andIsActiveEqualTo(true);
         return historyTeachingMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtLichSuGiangDay> findHistoryTeaching(HistoryTeachingCondition condition) {
-        TdtLichSuGiangDayExample example = new TdtLichSuGiangDayExample();
-        TdtLichSuGiangDayExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(condition.getLecturerId()).ifPresent(criteria::andGiangVienIdEqualTo);
-        Optional.ofNullable(condition.getSemester()).ifPresent(criteria::andHocKyEqualTo);
-        Optional.ofNullable(condition.getSubjectId()).ifPresent(criteria::andMaMonEqualTo);
-        Optional.ofNullable(condition.getTrainingSysId()).ifPresent(criteria::andMaHeEqualTo);
+    public List<TdtTeachingHistory> findHistoryTeaching(HistoryTeachingCondition condition) {
+        TdtTeachingHistoryExample example = new TdtTeachingHistoryExample();
+        TdtTeachingHistoryExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(condition.getLecturerId()).ifPresent(criteria::andLecturerIdEqualTo);
+        Optional.ofNullable(condition.getSemester()).ifPresent(criteria::andSemesterIdEqualTo);
+        Optional.ofNullable(condition.getSubjectId()).ifPresent(criteria::andSubjectIdEqualTo);
+        Optional.ofNullable(condition.getTrainingSysId()).ifPresent(criteria::andSystemIdEqualTo);
         criteria.andIsActiveEqualTo(true);
         return historyTeachingMapper.selectByExample(example);
     }
 
     @Override
-    public int create(TdtLichSuGiangDay record) {
+    public int create(TdtTeachingHistory record) {
         int insert = historyTeachingMapper.insertSelective(record);
         if (insert == 0) {
             return 0;
         }
 
         HistoryTeachingCondition condition = HistoryTeachingCondition.builder()
-                .lecturerId(record.getGiangVienId())
-                .semester(record.getHocKy())
-                .subjectId(record.getMaMon())
-                .trainingSysId(record.getMaHe())
+                .lecturerId(record.getLecturerId())
+                .semester(record.getSemesterId())
+                .subjectId(record.getSubjectId())
+                .trainingSysId(record.getSystemId())
                 .build();
 
-        TdtLichSuGiangDayExample example = new TdtLichSuGiangDayExample();
-        TdtLichSuGiangDayExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(condition.getLecturerId()).ifPresent(criteria::andGiangVienIdEqualTo);
-        Optional.ofNullable(condition.getSemester()).ifPresent(criteria::andHocKyEqualTo);
-        Optional.ofNullable(condition.getSubjectId()).ifPresent(criteria::andMaMonEqualTo);
-        Optional.ofNullable(condition.getTrainingSysId()).ifPresent(criteria::andMaHeEqualTo);
+        TdtTeachingHistoryExample example = new TdtTeachingHistoryExample();
+        TdtTeachingHistoryExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(condition.getLecturerId()).ifPresent(criteria::andLecturerIdEqualTo);
+        Optional.ofNullable(condition.getSemester()).ifPresent(criteria::andSemesterIdEqualTo);
+        Optional.ofNullable(condition.getSubjectId()).ifPresent(criteria::andSubjectIdEqualTo);
+        Optional.ofNullable(condition.getTrainingSysId()).ifPresent(criteria::andSystemIdEqualTo);
 
-        TdtLichSuGiangDay historyTeaching = historyTeachingMapper.selectByExample(example).stream().findFirst().orElse(null);
+        TdtTeachingHistory historyTeaching = historyTeachingMapper.selectByExample(example).stream().findFirst().orElse(null);
         if (Optional.ofNullable(historyTeaching).isEmpty()) {
             return 0;
         }
 
-        TdtNhatKyGiangDay teachingDiary = TdtNhatKyGiangDay.builder()
-                .lichSuGiangDayId(historyTeaching.getId())
+        TdtTeachingLog teachingDiary = TdtTeachingLog.builder()
+                .teachingHistoryId(historyTeaching.getId())
                 .createdBy(historyTeaching.getCreatedBy())
                 .createdAt(historyTeaching.getCreatedAt())
                 .build();
@@ -83,14 +83,14 @@ public class HistoryTeachingRepositoryImp implements HistoryTeachingRepository {
 
     @Override
     public int delete(TeachingHistoryCondition condition) {
-        TdtLichSuGiangDayExample example = new TdtLichSuGiangDayExample();
-        TdtLichSuGiangDayExample.Criteria criteria = example.createCriteria();
+        TdtTeachingHistoryExample example = new TdtTeachingHistoryExample();
+        TdtTeachingHistoryExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getHistoryId())) {
             criteria.andIdIn(condition.getHistoryId());
         }
         criteria.andIsActiveEqualTo(true);
 
-        TdtLichSuGiangDay record = TdtLichSuGiangDay.builder()
+        TdtTeachingHistory record = TdtTeachingHistory.builder()
                 .isActive(false)
                 .updateBy(condition.getDeleteBy())
                 .build();

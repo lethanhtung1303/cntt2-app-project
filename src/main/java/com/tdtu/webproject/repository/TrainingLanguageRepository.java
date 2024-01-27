@@ -7,13 +7,13 @@ import java.math.BigDecimal;
 import java.util.List;
 
 public interface TrainingLanguageRepository {
-    Long countAllTrainingLanguage(TrainingLanguageCondition condition);
+    Long countAllNgonNguDaoTao(TrainingLanguageCondition condition);
 
-    List<TdtNgonNguDaoTao> findTrainingLanguage(TrainingLanguageCondition condition);
+    List<TdtNgonNguDaoTao> findNgonNguDaoTao(TrainingLanguageCondition condition);
 
-    Long countAllTrainingLanguage();
+    Long countAllNgonNguDaoTao();
 
-    List<TdtNgonNguDaoTao> getAllTrainingLanguage();
+    List<TdtNgonNguDaoTao> getAllNgonNguDaoTao();
 
     int create(TdtNgonNguDaoTao record);
 

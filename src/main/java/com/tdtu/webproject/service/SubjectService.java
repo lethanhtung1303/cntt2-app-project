@@ -1,9 +1,9 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtHeDaoTao;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtLoaiMon;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtMonHoc;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtNhomMon;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingSystem;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.condition.SubjectCondition;
 import com.tdtu.webproject.mybatis.condition.SubjectGroupCondition;
@@ -102,7 +102,7 @@ public class SubjectService {
 
     public List<TrainingSys> findSubjectTrainingSys(String trainingSysIds) {
         SubjectTrainingSysCondition condition = this.buildSubjectTrainingSysCondition(trainingSysIds);
-        List<TdtHeDaoTao> subjectGroupList = subjectTrainingSysRepository.findSubjectTrainingSys(condition);
+        List<TdtTrainingSystem> subjectGroupList = subjectTrainingSysRepository.findSubjectTrainingSys(condition);
         return Optional.ofNullable(subjectGroupList).isPresent()
                 ? subjectGroupList.stream()
                 .map(this::buildTrainingSys)
@@ -120,10 +120,10 @@ public class SubjectService {
                 .build();
     }
 
-    private TrainingSys buildTrainingSys(TdtHeDaoTao trainingSys) {
+    private TrainingSys buildTrainingSys(TdtTrainingSystem trainingSys) {
         return TrainingSys.builder()
-                .maHe(trainingSys.getMaHe())
-                .phanHe(trainingSys.getPhanHe())
+                .maHe(trainingSys.getSystemId())
+                .phanHe(trainingSys.getSubsystem())
                 .build();
     }
 

@@ -1196,26 +1196,26 @@ components:
           type: array
           items:
             $ref: '#/components/schemas/Language'
-        truong:
+        university:
           type: string
-          description: Truong of Training Process
-          example: 'truong'
-        nganh:
+          description: university of Training Process
+          example: 'university'
+        major:
           type: string
-          description: Nganh of Training Process
-          example: 'nganh'
-        namTotNghiep:
+          description: major of Training Process
+          example: 'major'
+        graduationYear:
           type: number
           description: Nam tot nghiep of Training Process
-          example: 'namTotNghiep'
-        deTaiTotNghiep:
+          example: 'graduationYear'
+        thesisTitle:
           type: string
           description: De tai tot nghiep of Training Process
-          example: 'deTaiTotNghiep'
-        nguoiHuongDan:
+          example: 'thesisTitle'
+        instructor:
           type: string
           description: Nguoi huong dan of Training Process
-          example: 'nguoiHuongDan'
+          example: 'instructor'
         graduationType:
           $ref: '#/components/schemas/GraduationType'
     Level:
@@ -1310,7 +1310,7 @@ components:
           type: number
           description: id of Level
           example: 200
-        loaiTotNghiep:
+        graduationType:
           type: string
           description: Level
           example: 'trinhDo'
@@ -1727,39 +1727,39 @@ components:
       required:
         - level
         - languageIds
-        - truong
-        - nganh
-        - loaiTotNghiep
-        - namTotNghiep
+        - university
+        - major
+        - graduationType
+        - graduationYear
       properties:
-        namTotNghiep:
+        graduationYear:
           type: number
-          description: namTotNghiep of Training Process
+          description: graduationYear of Training Process
           example: 200
           minimum: 1900
           maximum: 2999
-        loaiTotNghiep:
+        graduationType:
           type: number
-          description: loaiTotNghiep of Training Process
+          description: graduationType of Training Process
           example: 200
           minimum: 1
           maximum: 6
-        nguoiHuongDan:
+        instructor:
           type: string
-          description: nguoiHuongDan of Training Process
-          example: 'nguoiHuongDan'
-        deTaiTotNghiep:
+          description: instructor of Training Process
+          example: 'instructor'
+        thesisTitle:
           type: string
-          description: deTaiTotNghiep of Training Process
-          example: 'deTaiTotNghiep'
-        nganh:
+          description: thesisTitle of Training Process
+          example: 'thesisTitle'
+        major:
           type: string
-          description: Nganh of Training Process
-          example: 'nganh'
-        truong:
+          description: major of Training Process
+          example: 'major'
+        university:
           type: string
-          description: Truong of Training Process
-          example: 'truong'
+          description: university of Training Process
+          example: 'university'
         languageIds:
           type: string
           description: Id list of Training Process
@@ -1816,39 +1816,39 @@ components:
       required:
         - level
         - languageIds
-        - truong
-        - nganh
-        - loaiTotNghiep
-        - namTotNghiep
+        - university
+        - major
+        - graduationType
+        - graduationYear
       properties:
-        namTotNghiep:
+        graduationYear:
           type: number
-          description: namTotNghiep of Training Process
+          description: graduationYear of Training Process
           example: 200
           minimum: 1900
           maximum: 2999
-        loaiTotNghiep:
+        graduationType:
           type: number
-          description: loaiTotNghiep of Training Process
+          description: graduationType of Training Process
           example: 200
           minimum: 1
           maximum: 7
-        nguoiHuongDan:
+        instructor:
           type: string
-          description: nguoiHuongDan of Training Process
-          example: 'nguoiHuongDan'
-        deTaiTotNghiep:
+          description: instructor of Training Process
+          example: 'instructor'
+        thesisTitle:
           type: string
-          description: deTaiTotNghiep of Training Process
-          example: 'deTaiTotNghiep'
-        nganh:
+          description: thesisTitle of Training Process
+          example: 'thesisTitle'
+        major:
           type: string
-          description: Nganh of Training Process
-          example: 'nganh'
-        truong:
+          description: major of Training Process
+          example: 'major'
+        university:
           type: string
-          description: Truong of Training Process
-          example: 'truong'
+          description: university of Training Process
+          example: 'university'
         languageIds:
           type: string
           description: Id list of Training Process
@@ -1925,7 +1925,7 @@ components:
         maMon:
           type: string
           description: maMon of Satisfaction Score
-          example: 'nguoiHuongDan'
+          example: 'instructor'
         hocKy:
           type: number
           description: hocKy of Satisfaction Score

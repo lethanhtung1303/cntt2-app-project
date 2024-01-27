@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtNhatKyGiangDayExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtNhatKyGiangDayMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtNhatKyGiangDay;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtTeachingLogExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtTeachingLogMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTeachingLog;
 import com.tdtu.webproject.mybatis.condition.TeachingDiaryCondition;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
@@ -16,36 +16,36 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class TeachingDiaryRepositoryImp implements TeachingDiaryRepository {
-    private final TdtNhatKyGiangDayMapper teachingDiaryMapper;
+    private final TdtTeachingLogMapper teachingDiaryMapper;
 
     @Override
     public Long countTeachingDiary(TeachingDiaryCondition condition) {
-        TdtNhatKyGiangDayExample example = new TdtNhatKyGiangDayExample();
-        TdtNhatKyGiangDayExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(condition.getHistoryId()).ifPresent(criteria::andLichSuGiangDayIdEqualTo);
+        TdtTeachingLogExample example = new TdtTeachingLogExample();
+        TdtTeachingLogExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(condition.getHistoryId()).ifPresent(criteria::andTeachingHistoryIdEqualTo);
         criteria.andIsActiveEqualTo(true);
         return teachingDiaryMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtNhatKyGiangDay> findTeachingDiary(TeachingDiaryCondition condition) {
-        TdtNhatKyGiangDayExample example = new TdtNhatKyGiangDayExample();
-        TdtNhatKyGiangDayExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(condition.getHistoryId()).ifPresent(criteria::andLichSuGiangDayIdEqualTo);
+    public List<TdtTeachingLog> findTeachingDiary(TeachingDiaryCondition condition) {
+        TdtTeachingLogExample example = new TdtTeachingLogExample();
+        TdtTeachingLogExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(condition.getHistoryId()).ifPresent(criteria::andTeachingHistoryIdEqualTo);
         criteria.andIsActiveEqualTo(true);
         return teachingDiaryMapper.selectByExample(example);
     }
 
     @Override
-    public int create(TdtNhatKyGiangDay record) {
+    public int create(TdtTeachingLog record) {
         return teachingDiaryMapper.insertSelective(record);
     }
 
     @Override
-    public int update(TdtNhatKyGiangDay record, BigDecimal historyId) {
-        TdtNhatKyGiangDayExample example = new TdtNhatKyGiangDayExample();
-        TdtNhatKyGiangDayExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(historyId).ifPresent(criteria::andLichSuGiangDayIdEqualTo);
+    public int update(TdtTeachingLog record, BigDecimal historyId) {
+        TdtTeachingLogExample example = new TdtTeachingLogExample();
+        TdtTeachingLogExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(historyId).ifPresent(criteria::andTeachingHistoryIdEqualTo);
         criteria.andIsActiveEqualTo(true);
         return teachingDiaryMapper.updateByExampleSelective(record, example);
     }
