@@ -1,6 +1,6 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtDiemHaiLong;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSatisfactoryScore;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.condition.SatisfactionScoreCondition;
 import com.tdtu.webproject.repository.SatisfactionScoreRepository;
@@ -27,7 +27,7 @@ public class SatisfactionScoreService {
     private final LecturerManageService lecturerManageService;
     private final SatisfactionScoreRepository satisfactionScoreRepository;
 
-    public List<TdtDiemHaiLong> findByLecturerId(String lecturerIds) {
+    public List<TdtSatisfactoryScore> findByLecturerId(String lecturerIds) {
         SatisfactionScoreCondition condition = this.buildSatisfactionScoreConditionForFind(lecturerIds);
         return satisfactionScoreRepository.findSatisfactionScore(condition);
     }
@@ -76,12 +76,12 @@ public class SatisfactionScoreService {
         throw new BusinessException("40005", "Lecturer Id is null!");
     }
 
-    private TdtDiemHaiLong buildTdtDiemHaiLongForCreate(BigDecimal lecturerId, SatisfactionScoreCreate satisfactionScoreCreate) {
-        return TdtDiemHaiLong.builder()
-                .giangVienId(lecturerId)
-                .maMon(satisfactionScoreCreate.getMaMon())
-                .hocKy(satisfactionScoreCreate.getHocKy())
-                .diemHaiLong(satisfactionScoreCreate.getDiemHaiLong())
+    private TdtSatisfactoryScore buildTdtDiemHaiLongForCreate(BigDecimal lecturerId, SatisfactionScoreCreate satisfactionScoreCreate) {
+        return TdtSatisfactoryScore.builder()
+                .lecturerId(lecturerId)
+                .subjectId(satisfactionScoreCreate.getMaMon())
+                .semester(satisfactionScoreCreate.getHocKy())
+                .satisfactoryScore(satisfactionScoreCreate.getDiemHaiLong())
                 .build();
     }
 }
