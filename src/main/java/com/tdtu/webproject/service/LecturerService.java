@@ -82,7 +82,7 @@ public class LecturerService {
         List<TdtTrainingLanguage> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
         List<TdtLanguage> languageList = languageService.getAllLanguage();
         List<TdtTrinhDo> levelList = levelService.getAllLevel();
-        List<TdtGraduationType> graduationTypeList = graduationTypeService.getAllGraduationType();
+        List<TdtLoaiTotNghiep> graduationTypeList = graduationTypeService.getAllGraduationType();
         List<TdtSubject> subjectList = subjectService.getAllSubject();
         List<TdtLecturerType> classificationLecturerList = classificationLecturerService.getAllClassification();
 
@@ -98,8 +98,8 @@ public class LecturerService {
         Map<BigDecimal, TdtTrinhDo> levelMap = levelList.stream()
                 .collect(Collectors.toMap(TdtTrinhDo::getId, level -> level));
 
-        Map<BigDecimal, TdtGraduationType> graduationTypeMap = graduationTypeList.stream()
-                .collect(Collectors.toMap(TdtGraduationType::getId, graduationType -> graduationType));
+        Map<BigDecimal, TdtLoaiTotNghiep> graduationTypeMap = graduationTypeList.stream()
+                .collect(Collectors.toMap(TdtLoaiTotNghiep::getId, graduationType -> graduationType));
 
         List<TrainingProcess> trainingProcesses = trainingProcessList.stream()
                 .map(trainingProcess -> TrainingProcess.builder()
@@ -116,7 +116,7 @@ public class LecturerService {
                         .graduationType(Optional.ofNullable(graduationTypeMap.getOrDefault(trainingProcess.getLoaiTotNghiepId(), null)).isPresent()
                                 ? GraduationType.builder()
                                 .id(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getId())
-                                .loaiTotNghiep(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getGraduationType())
+                                .loaiTotNghiep(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getLoaiTotNghiep())
                                 .build()
                                 : null)
                         .build())

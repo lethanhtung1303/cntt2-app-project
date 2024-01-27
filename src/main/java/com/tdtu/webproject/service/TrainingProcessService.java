@@ -71,7 +71,7 @@ public class TrainingProcessService {
                 );
             }
 
-            List<TdtTrainingLanguage> trainingLanguageList = this.buildTdtNgonNguDaoTao(create.getId(),
+            List<TdtTrainingLanguage> trainingLanguageList = this.buildTdtTrainingLanguage(create.getId(),
                     createRequest.getLanguageIds(),
                     createBy);
             if (!ArrayUtil.isNotNullAndNotEmptyList(trainingLanguageList)) {
@@ -94,7 +94,7 @@ public class TrainingProcessService {
         );
     }
 
-    private List<TdtTrainingLanguage> buildTdtNgonNguDaoTao(BigDecimal trainingProcessId, String languageIds, String user) {
+    private List<TdtTrainingLanguage> buildTdtTrainingLanguage(BigDecimal trainingProcessId, String languageIds, String user) {
         List<BigDecimal> languageIdList = Arrays.stream(languageIds.split(","))
                 .map(languageId -> NumberUtil.toBigDecimal(languageId).orElse(null))
                 .toList();
@@ -142,7 +142,7 @@ public class TrainingProcessService {
                 );
             }
 
-            List<TdtTrainingLanguage> trainingLanguageList = this.buildTdtNgonNguDaoTao(processId, updateRequest.getLanguageIds(),
+            List<TdtTrainingLanguage> trainingLanguageList = this.buildTdtTrainingLanguage(processId, updateRequest.getLanguageIds(),
                     updateBy);
             if (!ArrayUtil.isNotNullAndNotEmptyList(trainingLanguageList)) {
                 throw new BusinessException("40003",
