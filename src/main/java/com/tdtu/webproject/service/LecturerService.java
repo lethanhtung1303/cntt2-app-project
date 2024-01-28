@@ -57,9 +57,9 @@ public class LecturerService {
         Map<BigDecimal, List<TdtQuaTrinhDaoTao>> trainingProcessMap = trainingProcessList.stream()
                 .collect(Collectors.groupingBy(TdtQuaTrinhDaoTao::getGiangVienId));
 
-        List<TdtDiemHaiLong> satisfactionScoreList = satisfactionScoreService.findByLecturerId(lecturerIds);
-        Map<BigDecimal, List<TdtDiemHaiLong>> satisfactionScoreMap = satisfactionScoreList.stream()
-                .collect(Collectors.groupingBy(TdtDiemHaiLong::getGiangVienId));
+        List<TdtSatisfactoryScore> satisfactionScoreList = satisfactionScoreService.findByLecturerId(lecturerIds);
+        Map<BigDecimal, List<TdtSatisfactoryScore>> satisfactionScoreMap = satisfactionScoreList.stream()
+                .collect(Collectors.groupingBy(TdtSatisfactoryScore::getLecturerId));
 
         return Optional.ofNullable(lecturerList).isPresent()
                 ? lecturerList.stream()
@@ -78,10 +78,10 @@ public class LecturerService {
     private LecturerDetailResponse buildLecturerDetailResponse(TdtGiangVien lecturer,
                                                                List<TdtChungChi> certificateList,
                                                                List<TdtQuaTrinhDaoTao> trainingProcessList,
-                                                               List<TdtDiemHaiLong> satisfactionScoreList) {
+                                                               List<TdtSatisfactoryScore> satisfactionScoreList) {
         List<TdtNgonNguDaoTao> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
         List<TdtNgonNgu> languageList = languageService.getAllLanguage();
-        List<TdtTrinhDo> levelList = levelService.getAllLevel();
+        List<TdtDegree> levelList = levelService.getAllLevel();
         List<TdtLoaiTotNghiep> graduationTypeList = graduationTypeService.getAllGraduationType();
         List<TdtMonHoc> subjectList = subjectService.getAllSubject();
         List<TdtLoaiGiangVien> classificationLecturerList = classificationLecturerService.getAllClassification();
@@ -95,8 +95,8 @@ public class LecturerService {
                                         languageList),
                                 Collectors.toList())));
 
-        Map<BigDecimal, TdtTrinhDo> levelMap = levelList.stream()
-                .collect(Collectors.toMap(TdtTrinhDo::getId, level -> level));
+        Map<BigDecimal, TdtDegree> levelMap = levelList.stream()
+                .collect(Collectors.toMap(TdtDegree::getId, level -> level));
 
         Map<BigDecimal, TdtLoaiTotNghiep> graduationTypeMap = graduationTypeList.stream()
                 .collect(Collectors.toMap(TdtLoaiTotNghiep::getId, graduationType -> graduationType));
@@ -128,9 +128,9 @@ public class LecturerService {
         List<SatisfactionScore> satisfactionScores = satisfactionScoreList.stream()
                 .map(satisfactionScore -> SatisfactionScore.builder()
                         .id(satisfactionScore.getId())
-                        .subject(this.buildSubject(subjectMap.getOrDefault(satisfactionScore.getMaMon(), null)))
-                        .hocKy(satisfactionScore.getHocKy())
-                        .diemHaiLong(satisfactionScore.getDiemHaiLong())
+                        .subject(this.buildSubject(subjectMap.getOrDefault(satisfactionScore.getSubjectId(), null)))
+                        .hocKy(satisfactionScore.getSemester())
+                        .diemHaiLong(satisfactionScore.getSatisfactoryScore())
                         .build())
                 .toList();
 
@@ -226,11 +226,11 @@ public class LecturerService {
                 .build();
     }
 
-    public Level buildLevel(TdtTrinhDo level) {
+    public Level buildLevel(TdtDegree level) {
         return Level.builder()
                 .id(level.getId())
-                .trinhDo(level.getTrinhDo())
-                .kyHieu(level.getKyHieu())
+                .trinhDo(level.getDegree())
+                .kyHieu(level.getSignature())
                 .displayOrder(level.getDisplayOrder())
                 .build();
     }
@@ -301,9 +301,7 @@ public class LecturerService {
     public String deleteLecturer(LecturerDeleteRequest request) {
         LecturerCondition condition = this.buildLecturerConditionForDelete(request);
         if (!ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
-            throw new BusinessException("40001",
-                    MessageProperties.getInstance().getProperty(DELETED_LECTURERS_EMPTY)
-            );
+            throw new BusinessException("40001", "The list of deleted Lecturers is empty!");
         }
         return lecturerRepository.delete(condition) > 0
                 ? SUCCESSFUL
@@ -312,18 +310,14 @@ public class LecturerService {
 
     public String createLecturer(LecturerCreate lecturer, String createBy) {
         if (!classificationManageService.checkExistClassification(lecturer.getClassification())) {
-            throw new BusinessException("40001",
-                    MessageProperties.getInstance().getProperty(INVALID_CLASSIFICATION)
-            );
+            throw new BusinessException("40001", "Invalid Lecturer Classification!");
         }
         LecturerRequest request = LecturerRequest.builder()
                 .emailTdtu(lecturer.getEmailTdtu())
                 .build();
         List<TdtGiangVien> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
         if (ArrayUtil.isNotNullAndNotEmptyList(lecturerList)) {
-            throw new BusinessException("40002",
-                    MessageProperties.getInstance().getProperty(LECTURER_ALREADY)
-            );
+            throw new BusinessException("40002", "Lecturer already exists in the system!");
         }
         return lecturerRepository.create(this.buildTdtGiangVienForCreate(lecturer, createBy)) > 0
                 ? SUCCESSFUL
