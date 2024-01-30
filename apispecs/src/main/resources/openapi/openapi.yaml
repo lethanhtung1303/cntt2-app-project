@@ -1207,7 +1207,7 @@ components:
         namTotNghiep:
           type: number
           description: Nam tot nghiep of Training Process
-          example: 'graduationYear'
+          example: 'namTotNghiep'
         deTaiTotNghiep:
           type: string
           description: De tai tot nghiep of Training Process
