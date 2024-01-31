@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtGiangVienExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtGiangVienMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtLecturerExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtLecturerMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtLecturer;
 import com.tdtu.webproject.mybatis.condition.LecturerCondition;
 import com.tdtu.webproject.mybatis.condition.LecturerTeachingHistoryCondition;
 import com.tdtu.webproject.mybatis.condition.NormsLectureHoursCondition;
@@ -22,13 +22,13 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class LecturerRepositoryImp implements LecturerRepository {
-    private final TdtGiangVienMapper lecturerMapper;
+    private final TdtLecturerMapper lecturerMapper;
     private final LecturerSupportMapper lecturerSupportMapper;
 
     @Override
     public Long countLecturer(LecturerCondition condition) {
-        TdtGiangVienExample example = new TdtGiangVienExample();
-        TdtGiangVienExample.Criteria criteria = example.createCriteria();
+        TdtLecturerExample example = new TdtLecturerExample();
+        TdtLecturerExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andIdIn(condition.getLecturerIds());
         }
@@ -37,9 +37,9 @@ public class LecturerRepositoryImp implements LecturerRepository {
     }
 
     @Override
-    public List<TdtGiangVien> findLecturer(LecturerCondition condition) {
-        TdtGiangVienExample example = new TdtGiangVienExample();
-        TdtGiangVienExample.Criteria criteria = example.createCriteria();
+    public List<TdtLecturer> findLecturer(LecturerCondition condition) {
+        TdtLecturerExample example = new TdtLecturerExample();
+        TdtLecturerExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andIdIn(condition.getLecturerIds());
         }
@@ -49,9 +49,9 @@ public class LecturerRepositoryImp implements LecturerRepository {
     }
 
     @Override
-    public int update(TdtGiangVien record, BigDecimal lecturerId) {
-        TdtGiangVienExample example = new TdtGiangVienExample();
-        TdtGiangVienExample.Criteria criteria = example.createCriteria();
+    public int update(TdtLecturer record, BigDecimal lecturerId) {
+        TdtLecturerExample example = new TdtLecturerExample();
+        TdtLecturerExample.Criteria criteria = example.createCriteria();
         Optional.ofNullable(lecturerId).ifPresent(criteria::andIdEqualTo);
         criteria.andDeletedFlagEqualTo(false);
         return lecturerMapper.updateByExampleSelective(record, example);
@@ -59,14 +59,14 @@ public class LecturerRepositoryImp implements LecturerRepository {
 
     @Override
     public int delete(LecturerCondition condition) {
-        TdtGiangVienExample example = new TdtGiangVienExample();
-        TdtGiangVienExample.Criteria criteria = example.createCriteria();
+        TdtLecturerExample example = new TdtLecturerExample();
+        TdtLecturerExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
             criteria.andIdIn(condition.getLecturerIds());
         }
         criteria.andDeletedFlagEqualTo(false);
 
-        TdtGiangVien record = TdtGiangVien.builder()
+        TdtLecturer record = TdtLecturer.builder()
                 .deletedFlag(true)
                 .deletedAt(DateUtil.getTimeNow())
                 .deletedBy(condition.getDeleteBy())
@@ -75,7 +75,7 @@ public class LecturerRepositoryImp implements LecturerRepository {
     }
 
     @Override
-    public int create(TdtGiangVien record) {
+    public int create(TdtLecturer record) {
         return lecturerMapper.insertSelective(record);
     }
 

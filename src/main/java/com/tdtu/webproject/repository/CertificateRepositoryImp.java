@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtChungChiExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtChungChiMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtChungChi;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtCertificateExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtCertificateMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtCertificate;
 import com.tdtu.webproject.mybatis.condition.CertificateCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;
@@ -16,25 +16,25 @@ import java.util.List;
 @AllArgsConstructor
 @ComponentScan
 public class CertificateRepositoryImp implements CertificateRepository {
-    private final TdtChungChiMapper certificateMapper;
+    private final TdtCertificateMapper certificateMapper;
 
     @Override
     public Long countCertificate(CertificateCondition condition) {
-        TdtChungChiExample example = new TdtChungChiExample();
-        TdtChungChiExample.Criteria criteria = example.createCriteria();
+        TdtCertificateExample example = new TdtCertificateExample();
+        TdtCertificateExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
-            criteria.andGiangVienIdIn(condition.getLecturerIds());
+            criteria.andLecturerIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);
         return certificateMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtChungChi> findCertificate(CertificateCondition condition) {
-        TdtChungChiExample example = new TdtChungChiExample();
-        TdtChungChiExample.Criteria criteria = example.createCriteria();
+    public List<TdtCertificate> findCertificate(CertificateCondition condition) {
+        TdtCertificateExample example = new TdtCertificateExample();
+        TdtCertificateExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
-            criteria.andGiangVienIdIn(condition.getLecturerIds());
+            criteria.andLecturerIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);
         return certificateMapper.selectByExample(example);
@@ -42,14 +42,14 @@ public class CertificateRepositoryImp implements CertificateRepository {
 
     @Override
     public int delete(CertificateCondition condition) {
-        TdtChungChiExample example = new TdtChungChiExample();
-        TdtChungChiExample.Criteria criteria = example.createCriteria();
+        TdtCertificateExample example = new TdtCertificateExample();
+        TdtCertificateExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getCertificateIds())) {
             criteria.andIdIn(condition.getCertificateIds());
         }
         criteria.andIsActiveEqualTo(true);
 
-        TdtChungChi record = TdtChungChi.builder()
+        TdtCertificate record = TdtCertificate.builder()
                 .isActive(false)
                 .updatedAt(DateUtil.getTimeNow())
                 .updateBy(condition.getUpdateBy())
@@ -58,7 +58,7 @@ public class CertificateRepositoryImp implements CertificateRepository {
     }
 
     @Override
-    public int create(TdtChungChi record) {
+    public int create(TdtCertificate record) {
         return certificateMapper.insertSelective(record);
     }
 }

@@ -1,6 +1,6 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtLoaiChungChi;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtCertificateType;
 
 import java.math.BigDecimal;
 import java.util.List;
@@ -8,7 +8,7 @@ import java.util.List;
 public interface CertificateTypeRepository {
     Long countAllCertificateType();
 
-    List<TdtLoaiChungChi> getAllCertificateType();
+    List<TdtCertificateType> getAllCertificateType();
 
-    TdtLoaiChungChi getCertificateTypeById(BigDecimal typeId);
+    TdtCertificateType getCertificateTypeById(BigDecimal typeId);
 }

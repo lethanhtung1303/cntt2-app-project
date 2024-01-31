@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtLoaiChungChiExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtLoaiChungChiMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtLoaiChungChi;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtCertificateTypeExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtCertificateTypeMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtCertificateType;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
@@ -15,29 +15,29 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class CertificateTypeRepositoryImp implements CertificateTypeRepository {
-    private final TdtLoaiChungChiMapper certificateTypeMapper;
+    private final TdtCertificateTypeMapper certificateTypeMapper;
 
     @Override
     public Long countAllCertificateType() {
-        TdtLoaiChungChiExample example = new TdtLoaiChungChiExample();
-        TdtLoaiChungChiExample.Criteria criteria = example.createCriteria();
+        TdtCertificateTypeExample example = new TdtCertificateTypeExample();
+        TdtCertificateTypeExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
         return certificateTypeMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtLoaiChungChi> getAllCertificateType() {
-        TdtLoaiChungChiExample example = new TdtLoaiChungChiExample();
-        TdtLoaiChungChiExample.Criteria criteria = example.createCriteria();
+    public List<TdtCertificateType> getAllCertificateType() {
+        TdtCertificateTypeExample example = new TdtCertificateTypeExample();
+        TdtCertificateTypeExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
         return certificateTypeMapper.selectByExample(example);
     }
 
     @Override
-    public TdtLoaiChungChi getCertificateTypeById(BigDecimal TypeId) {
-        TdtLoaiChungChiExample example = new TdtLoaiChungChiExample();
-        TdtLoaiChungChiExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(TypeId).ifPresent(criteria::andMaLoaiEqualTo);
+    public TdtCertificateType getCertificateTypeById(BigDecimal TypeId) {
+        TdtCertificateTypeExample example = new TdtCertificateTypeExample();
+        TdtCertificateTypeExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(TypeId).ifPresent(criteria::andTypeIdEqualTo);
         criteria.andIsActiveEqualTo(true);
         return certificateTypeMapper.selectByExample(example).stream()
                 .findFirst()

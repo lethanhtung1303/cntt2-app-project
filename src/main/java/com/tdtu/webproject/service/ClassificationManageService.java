@@ -1,6 +1,6 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtLoaiGiangVien;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtLecturerType;
 import com.tdtu.webproject.repository.ClassificationLecturerRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
@@ -14,13 +14,13 @@ import java.util.List;
 public class ClassificationManageService {
     private final ClassificationLecturerRepository classificationLecturerRepository;
 
-    public List<TdtLoaiGiangVien> getAllClassification() {
+    public List<TdtLecturerType> getAllClassification() {
         return classificationLecturerRepository.getAllClassification();
     }
 
     public boolean checkExistClassification(BigDecimal classificationId) {
-        List<TdtLoaiGiangVien> results = this.getAllClassification().stream()
-                .filter(classification -> classification.getMaLoai().equals(classificationId)).toList();
+        List<TdtLecturerType> results = this.getAllClassification().stream()
+                .filter(classification -> classification.getTypeId().equals(classificationId)).toList();
         return ArrayUtil.isNotNullAndNotEmptyList(results);
     }
 }

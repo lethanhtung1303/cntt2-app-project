@@ -1,6 +1,6 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtLecturer;
 import com.tdtu.webproject.mybatis.result.*;
 import com.tdtu.webproject.repository.LecturerRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
@@ -25,7 +25,7 @@ public class LecturerStandardService {
     private final LecturerRepository lecturerRepository;
 
     public List<UniversityStandardDetailResponse> getUniversityStandards(BigDecimal semester) {
-        List<TdtGiangVien> lecturerList = lecturerManageService.getAllLecturer();
+        List<TdtLecturer> lecturerList = lecturerManageService.getAllLecturer();
         List<UniversityStandardDetailResponse> lecturerStandardRawData = this.buildLecturerStandardDetailResponse(lecturerList);
 
         List<LecturerTrainingProcessResult> trainingProcessList = lecturerRepository.getLecturerTrainingProcess();
@@ -93,7 +93,7 @@ public class LecturerStandardService {
         return lecturer;
     }
 
-    private List<UniversityStandardDetailResponse> buildLecturerStandardDetailResponse(List<TdtGiangVien> lecturerList) {
+    private List<UniversityStandardDetailResponse> buildLecturerStandardDetailResponse(List<TdtLecturer> lecturerList) {
         return Optional.ofNullable(lecturerList).isPresent()
                 ? lecturerList.stream()
                 .map(this::buildLecturerStandardDetail)
@@ -101,7 +101,7 @@ public class LecturerStandardService {
                 : Collections.emptyList();
     }
 
-    private UniversityStandardDetailResponse buildLecturerStandardDetail(TdtGiangVien lecturer) {
+    private UniversityStandardDetailResponse buildLecturerStandardDetail(TdtLecturer lecturer) {
         return UniversityStandardDetailResponse.builder()
                 .id(lecturer.getId())
                 .fullName(lecturer.getFirstName().concat(" ").concat(lecturer.getFullName()))
@@ -201,7 +201,7 @@ public class LecturerStandardService {
     }
 
     public List<MasterStandardDetailResponse> getMasterStandards() {
-        List<TdtGiangVien> lecturerList = lecturerManageService.getAllLecturer();
+        List<TdtLecturer> lecturerList = lecturerManageService.getAllLecturer();
         List<MasterStandardDetailResponse> masterStandardRawData = this.buildMasterStandardDetailResponse(lecturerList);
 
         List<LecturerTrainingProcessResult> trainingProcessList = lecturerRepository.getLecturerTrainingProcess();
@@ -224,7 +224,7 @@ public class LecturerStandardService {
                 .collect(Collectors.toList());
     }
 
-    private List<MasterStandardDetailResponse> buildMasterStandardDetailResponse(List<TdtGiangVien> lecturerList) {
+    private List<MasterStandardDetailResponse> buildMasterStandardDetailResponse(List<TdtLecturer> lecturerList) {
         return Optional.ofNullable(lecturerList).isPresent()
                 ? lecturerList.stream()
                 .map(this::buildMasterStandardDetail)
@@ -232,7 +232,7 @@ public class LecturerStandardService {
                 : Collections.emptyList();
     }
 
-    private MasterStandardDetailResponse buildMasterStandardDetail(TdtGiangVien lecturer) {
+    private MasterStandardDetailResponse buildMasterStandardDetail(TdtLecturer lecturer) {
         return MasterStandardDetailResponse.builder()
                 .id(lecturer.getId())
                 .fullName(lecturer.getFirstName().concat(" ").concat(lecturer.getFullName()))
