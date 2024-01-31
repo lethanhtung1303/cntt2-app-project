@@ -16,8 +16,8 @@
         <result column="FULL_NAME" jdbcType="VARCHAR" property="fullName"/>
         <result column="IMAGES" jdbcType="VARCHAR" property="images"/>
         <result column="EMAIL_TDTU" jdbcType="VARCHAR" property="emailTdtu"/>
-        <result column="TRUONG" jdbcType="VARCHAR" property="school"/>
-        <result column="NGANH" jdbcType="VARCHAR" property="majors"/>
+        <result column="UNIVERSITY" jdbcType="VARCHAR" property="school"/>
+        <result column="MAJOR" jdbcType="VARCHAR" property="majors"/>
         <result column="NAM_TOT_NGHIEP" jdbcType="NUMERIC" property="graduationYear"/>
         <result column="LOAI_TOT_NGHIEP" jdbcType="VARCHAR" property="graduationType"/>
         <result column="LOAI_TOT_NGHIEP_ID" jdbcType="NUMERIC" property="graduationTypeCode"/>
@@ -91,7 +91,7 @@
                TMH.TEN_MON,
                TMH.SO_TIET,
                TMH.MA_LOAI
-        FROM TDT_LICH_SU_GIANG_DAY TLSGD
+        FROM TDT_TEACHING_HISTORY TLSGD
                  LEFT JOIN TDT_MON_HOC TMH
                            ON
                                TLSGD.MA_MON = TMH.MA_MON
@@ -106,18 +106,18 @@
                CONCAT(TGV.FIRST_NAME, ' ', TGV.FULL_NAME) AS FULL_NAME,
                TGV.IMAGES,
                TGV.EMAIL_TDTU,
-               TQTDT.TRUONG,
-               TQTDT.NGANH,
+               TQTDT.UNIVERSITY,
+               TQTDT.MAJOR,
                TQTDT.NAM_TOT_NGHIEP,
                TLTN.LOAI_TOT_NGHIEP,
                TLTN.ID,
                TTD.TRINH_DO,
                TTD.DISPLAY_ORDER
-        FROM TDT_QUA_TRINH_DAO_TAO TQTDT
+        FROM TDT_TRAINING_PROCESS TQTDT
                  LEFT JOIN TDT_GIANG_VIEN TGV
                            ON
                                TQTDT.GIANG_VIEN_ID = TGV.ID
-                 LEFT JOIN TDT_LOAI_TOT_NGHIEP TLTN
+                 LEFT JOIN TDT_GRADUATION_TYPE TLTN
                            ON
                                TQTDT.LOAI_TOT_NGHIEP_ID = TLTN.ID
                  LEFT JOIN TDT_TRINH_DO TTD
@@ -137,14 +137,14 @@
                TGV.ID   AS LECTURER_ID,
                TNN.ID   AS NGON_NGU_ID,
                TNN.TEN_NGON_NGU
-        FROM TDT_QUA_TRINH_DAO_TAO TQTDT
+        FROM TDT_TRAINING_PROCESS TQTDT
                  LEFT JOIN TDT_GIANG_VIEN TGV
                            ON
                                TQTDT.GIANG_VIEN_ID = TGV.ID
-                 LEFT JOIN TDT_NGON_NGU_DAO_TAO TNNDT
+                 LEFT JOIN TDT_TRAINING_LANGUAGE TNNDT
                            ON
                                TQTDT.ID = TNNDT.QUA_TRINH_DAO_TAO_ID
-                 LEFT JOIN TDT_NGON_NGU TNN
+                 LEFT JOIN TDT_LANGUAGE TNN
                            ON
                                TNNDT.NGON_NGU_ID = TNN.ID
         WHERE TNN.ID IS NOT NULL
@@ -221,13 +221,13 @@
         TNM.MA_NHOM,
         TLSGD.CREATED_AT AS CREATE_DATETIME
         FROM TDT_GIANG_VIEN TGV
-        LEFT JOIN TDT_LICH_SU_GIANG_DAY TLSGD
+        LEFT JOIN TDT_TEACHING_HISTORY TLSGD
         ON
         TGV.ID = TLSGD.GIANG_VIEN_ID
         LEFT JOIN TDT_LOAI_GIANG_VIEN TLGV
         ON
         TGV.CLASSIFICATION_LECTURERS = TLGV.MA_LOAI
-        LEFT JOIN TDT_QUA_TRINH_DAO_TAO TQTDT
+        LEFT JOIN TDT_TRAINING_PROCESS TQTDT
         ON
         TGV.ID = TQTDT.GIANG_VIEN_ID
         LEFT JOIN TDT_TRINH_DO TTD
@@ -236,7 +236,7 @@
         LEFT JOIN TDT_MON_HOC TMH
         ON
         TLSGD.MA_MON = TMH.MA_MON
-        LEFT JOIN TDT_HE_DAO_TAO THDT
+        LEFT JOIN TDT_TRAINING_SYSTEM THDT
         ON
         THDT.MA_HE = TLSGD.MA_HE
         LEFT JOIN TDT_NHOM_MON TNM
@@ -278,7 +278,7 @@
         THDT.PHAN_HE,
         THDT.IDENTIFICATION,
         TLSGD.CREATED_AT AS CREATE_DATETIME
-        FROM TDT_LICH_SU_GIANG_DAY TLSGD
+        FROM TDT_TEACHING_HISTORY TLSGD
         LEFT JOIN TDT_MON_HOC TMH
         ON
         TLSGD.MA_MON = TMH.MA_MON
@@ -288,7 +288,7 @@
         LEFT JOIN TDT_LOAI_MON TLM
         ON
         TMH.MA_LOAI = TLM.MA_LOAI
-        LEFT JOIN TDT_HE_DAO_TAO THDT
+        LEFT JOIN TDT_TRAINING_SYSTEM THDT
         ON
         TLSGD.MA_HE = THDT.MA_HE
         WHERE TLSGD.IS_ACTIVE = '1'

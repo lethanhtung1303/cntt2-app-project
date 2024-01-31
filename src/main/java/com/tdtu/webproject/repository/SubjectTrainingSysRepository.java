@@ -1,6 +1,6 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtHeDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingSystem;
 import com.tdtu.webproject.mybatis.condition.SubjectTrainingSysCondition;
 
 import java.math.BigDecimal;
@@ -10,7 +10,7 @@ public interface SubjectTrainingSysRepository {
 
     Long countSubjectTrainingSys(SubjectTrainingSysCondition condition);
 
-    List<TdtHeDaoTao> findSubjectTrainingSys(SubjectTrainingSysCondition condition);
+    List<TdtTrainingSystem> findSubjectTrainingSys(SubjectTrainingSysCondition condition);
 
-    TdtHeDaoTao getSubjectTrainingSysById(BigDecimal trainingSysId);
+    TdtTrainingSystem getSubjectTrainingSysById(BigDecimal trainingSysId);
 }

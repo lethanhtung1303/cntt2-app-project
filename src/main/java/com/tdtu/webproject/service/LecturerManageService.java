@@ -2,7 +2,7 @@ package com.tdtu.webproject.service;
 
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtCertificate;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtLecturer;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingProcess;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtSatisfactoryScore;
 import com.tdtu.webproject.mybatis.condition.LecturerCondition;
 import com.tdtu.webproject.mybatis.condition.NormsLectureHoursCondition;
@@ -32,9 +32,9 @@ public class LecturerManageService {
                 .collect(Collectors.toList());
     }
 
-    public List<TdtQuaTrinhDaoTao> getAllTrainingProcessOfLecturer(BigDecimal lecturerId, List<TdtQuaTrinhDaoTao> trainingProcessList) {
+    public List<TdtTrainingProcess> getAllTrainingProcessOfLecturer(BigDecimal lecturerId, List<TdtTrainingProcess> trainingProcessList) {
         return trainingProcessList.stream()
-                .filter(trainingProcess -> trainingProcess.getGiangVienId().equals(lecturerId))
+                .filter(trainingProcess -> trainingProcess.getLecturerId().equals(lecturerId))
                 .collect(Collectors.toList());
     }
 
