@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtDiemHaiLongExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtDiemHaiLongMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtDiemHaiLong;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtSatisfactoryScoreExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtSatisfactoryScoreMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSatisfactoryScore;
 import com.tdtu.webproject.mybatis.condition.SatisfactionScoreCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;
@@ -16,25 +16,25 @@ import java.util.List;
 @AllArgsConstructor
 @ComponentScan
 public class SatisfactionScoreRepositoryImp implements SatisfactionScoreRepository {
-    private final TdtDiemHaiLongMapper satisfactionScoreMapper;
+    private final TdtSatisfactoryScoreMapper satisfactionScoreMapper;
 
     @Override
     public Long countSatisfactionScore(SatisfactionScoreCondition condition) {
-        TdtDiemHaiLongExample example = new TdtDiemHaiLongExample();
-        TdtDiemHaiLongExample.Criteria criteria = example.createCriteria();
+        TdtSatisfactoryScoreExample example = new TdtSatisfactoryScoreExample();
+        TdtSatisfactoryScoreExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
-            criteria.andGiangVienIdIn(condition.getLecturerIds());
+            criteria.andLecturerIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);
         return satisfactionScoreMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtDiemHaiLong> findSatisfactionScore(SatisfactionScoreCondition condition) {
-        TdtDiemHaiLongExample example = new TdtDiemHaiLongExample();
-        TdtDiemHaiLongExample.Criteria criteria = example.createCriteria();
+    public List<TdtSatisfactoryScore> findSatisfactionScore(SatisfactionScoreCondition condition) {
+        TdtSatisfactoryScoreExample example = new TdtSatisfactoryScoreExample();
+        TdtSatisfactoryScoreExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
-            criteria.andGiangVienIdIn(condition.getLecturerIds());
+            criteria.andLecturerIdIn(condition.getLecturerIds());
         }
         criteria.andIsActiveEqualTo(true);
         return satisfactionScoreMapper.selectByExample(example);
@@ -42,14 +42,14 @@ public class SatisfactionScoreRepositoryImp implements SatisfactionScoreReposito
 
     @Override
     public int delete(SatisfactionScoreCondition condition) {
-        TdtDiemHaiLongExample example = new TdtDiemHaiLongExample();
-        TdtDiemHaiLongExample.Criteria criteria = example.createCriteria();
+        TdtSatisfactoryScoreExample example = new TdtSatisfactoryScoreExample();
+        TdtSatisfactoryScoreExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getSatisfactionScoreIds())) {
             criteria.andIdIn(condition.getSatisfactionScoreIds());
         }
         criteria.andIsActiveEqualTo(true);
 
-        TdtDiemHaiLong record = TdtDiemHaiLong.builder()
+        TdtSatisfactoryScore record = TdtSatisfactoryScore.builder()
                 .isActive(false)
                 .updatedAt(DateUtil.getTimeNow())
                 .updateBy(condition.getUpdateBy())
@@ -58,12 +58,12 @@ public class SatisfactionScoreRepositoryImp implements SatisfactionScoreReposito
     }
 
     @Override
-    public int create(TdtDiemHaiLong record, String createBy) {
-        TdtDiemHaiLongExample example = new TdtDiemHaiLongExample();
-        TdtDiemHaiLongExample.Criteria criteria = example.createCriteria();
-        criteria.andGiangVienIdEqualTo(record.getGiangVienId());
-        criteria.andMaMonEqualTo(record.getMaMon());
-        criteria.andHocKyEqualTo(record.getHocKy());
+    public int create(TdtSatisfactoryScore record, String createBy) {
+        TdtSatisfactoryScoreExample example = new TdtSatisfactoryScoreExample();
+        TdtSatisfactoryScoreExample.Criteria criteria = example.createCriteria();
+        criteria.andLecturerIdEqualTo(record.getLecturerId());
+        criteria.andSubjectIdEqualTo(record.getSubjectId());
+        criteria.andSemesterEqualTo(record.getSemester());
         criteria.andIsActiveEqualTo(true);
         if (satisfactionScoreMapper.countByExample(example) > 0) {
             record.setUpdateBy(createBy);
