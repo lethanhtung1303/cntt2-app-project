@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtLoaiGiangVienExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtLoaiGiangVienMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtLoaiGiangVien;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtLecturerTypeExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtLecturerTypeMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtLecturerType;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
@@ -13,17 +13,17 @@ import java.util.List;
 @AllArgsConstructor
 @ComponentScan
 public class ClassificationLecturerRepositoryImp implements ClassificationLecturerRepository {
-    private final TdtLoaiGiangVienMapper classificationLecturerMapper;
+    private final TdtLecturerTypeMapper classificationLecturerMapper;
 
     @Override
     public Long countAllClassification() {
-        TdtLoaiGiangVienExample example = new TdtLoaiGiangVienExample();
+        TdtLecturerTypeExample example = new TdtLecturerTypeExample();
         return classificationLecturerMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtLoaiGiangVien> getAllClassification() {
-        TdtLoaiGiangVienExample example = new TdtLoaiGiangVienExample();
+    public List<TdtLecturerType> getAllClassification() {
+        TdtLecturerTypeExample example = new TdtLecturerTypeExample();
         return classificationLecturerMapper.selectByExample(example);
     }
 }

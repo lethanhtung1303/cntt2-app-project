@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtNhomMonExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtNhomMonMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtNhomMon;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtSubjectGroupExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtSubjectGroupMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSubjectGroup;
 import com.tdtu.webproject.mybatis.condition.SubjectGroupCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
@@ -16,40 +16,40 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class SubjectGroupRepositoryImp implements SubjectGroupRepository {
-    private final TdtNhomMonMapper subjectGroupMapper;
+    private final TdtSubjectGroupMapper subjectGroupMapper;
 
     @Override
     public Long countAllSubjectGroup() {
-        TdtNhomMonExample example = new TdtNhomMonExample();
-        TdtNhomMonExample.Criteria criteria = example.createCriteria();
+        TdtSubjectGroupExample example = new TdtSubjectGroupExample();
+        TdtSubjectGroupExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
         return subjectGroupMapper.countByExample(example);
     }
 
     @Override
     public Long countSubjectGroup(SubjectGroupCondition condition) {
-        TdtNhomMonExample example = new TdtNhomMonExample();
-        TdtNhomMonExample.Criteria criteria = example.createCriteria();
+        TdtSubjectGroupExample example = new TdtSubjectGroupExample();
+        TdtSubjectGroupExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getGroupIds())) {
-            criteria.andMaNhomIn(condition.getGroupIds());
+            criteria.andGroupIdIn(condition.getGroupIds());
         }
         criteria.andIsActiveEqualTo(true);
         return subjectGroupMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtNhomMon> getAllSubjectGroup() {
-        TdtNhomMonExample example = new TdtNhomMonExample();
-        TdtNhomMonExample.Criteria criteria = example.createCriteria();
+    public List<TdtSubjectGroup> getAllSubjectGroup() {
+        TdtSubjectGroupExample example = new TdtSubjectGroupExample();
+        TdtSubjectGroupExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
         return subjectGroupMapper.selectByExample(example);
     }
 
     @Override
-    public TdtNhomMon getSubjectGroupById(String groupId) {
-        TdtNhomMonExample example = new TdtNhomMonExample();
-        TdtNhomMonExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(groupId).ifPresent(criteria::andMaNhomEqualTo);
+    public TdtSubjectGroup getSubjectGroupById(String groupId) {
+        TdtSubjectGroupExample example = new TdtSubjectGroupExample();
+        TdtSubjectGroupExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(groupId).ifPresent(criteria::andGroupIdEqualTo);
         criteria.andIsActiveEqualTo(true);
         return subjectGroupMapper.selectByExample(example).stream()
                 .findFirst()
@@ -57,11 +57,11 @@ public class SubjectGroupRepositoryImp implements SubjectGroupRepository {
     }
 
     @Override
-    public List<TdtNhomMon> findSubjectGroup(SubjectGroupCondition condition) {
-        TdtNhomMonExample example = new TdtNhomMonExample();
-        TdtNhomMonExample.Criteria criteria = example.createCriteria();
+    public List<TdtSubjectGroup> findSubjectGroup(SubjectGroupCondition condition) {
+        TdtSubjectGroupExample example = new TdtSubjectGroupExample();
+        TdtSubjectGroupExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getGroupIds())) {
-            criteria.andMaNhomIn(condition.getGroupIds());
+            criteria.andGroupIdIn(condition.getGroupIds());
         }
         criteria.andIsActiveEqualTo(true);
         return subjectGroupMapper.selectByExample(example);
