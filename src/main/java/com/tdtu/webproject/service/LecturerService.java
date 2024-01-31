@@ -320,7 +320,7 @@ public class LecturerService {
         LecturerRequest request = LecturerRequest.builder()
                 .emailTdtu(lecturer.getEmailTdtu())
                 .build();
-        List<TdtGiangVien> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
+        List<TdtLecturer> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
         if (ArrayUtil.isNotNullAndNotEmptyList(lecturerList)) {
             throw new BusinessException("40002",
                     MessageProperties.getInstance().getProperty(LECTURER_ALREADY)
@@ -331,8 +331,8 @@ public class LecturerService {
                 : FAIL;
     }
 
-    private TdtGiangVien buildTdtGiangVienForCreate(LecturerCreate lecturer, String createBy) {
-        return TdtGiangVien.builder()
+    private TdtLecturer buildTdtGiangVienForCreate(LecturerCreate lecturer, String createBy) {
+        return TdtLecturer.builder()
                 .firstName(lecturer.getFirstName())
                 .fullName(lecturer.getFullName())
                 .gender(lecturer.getGender())
