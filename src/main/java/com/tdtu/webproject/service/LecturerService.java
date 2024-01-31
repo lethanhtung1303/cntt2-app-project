@@ -57,9 +57,9 @@ public class LecturerService {
         Map<BigDecimal, List<TdtQuaTrinhDaoTao>> trainingProcessMap = trainingProcessList.stream()
                 .collect(Collectors.groupingBy(TdtQuaTrinhDaoTao::getGiangVienId));
 
-        List<TdtDiemHaiLong> satisfactionScoreList = satisfactionScoreService.findByLecturerId(lecturerIds);
-        Map<BigDecimal, List<TdtDiemHaiLong>> satisfactionScoreMap = satisfactionScoreList.stream()
-                .collect(Collectors.groupingBy(TdtDiemHaiLong::getGiangVienId));
+        List<TdtSatisfactoryScore> satisfactionScoreList = satisfactionScoreService.findByLecturerId(lecturerIds);
+        Map<BigDecimal, List<TdtSatisfactoryScore>> satisfactionScoreMap = satisfactionScoreList.stream()
+                .collect(Collectors.groupingBy(TdtSatisfactoryScore::getLecturerId));
 
         return Optional.ofNullable(lecturerList).isPresent()
                 ? lecturerList.stream()
@@ -79,8 +79,8 @@ public class LecturerService {
                                                                List<TdtCertificate> certificateList,
                                                                List<TdtQuaTrinhDaoTao> trainingProcessList,
                                                                List<TdtSatisfactoryScore> satisfactionScoreList) {
-        List<TdtNgonNguDaoTao> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
-        List<TdtNgonNgu> languageList = languageService.getAllLanguage();
+        List<TdtTrainingLanguage> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
+        List<TdtLanguage> languageList = languageService.getAllLanguage();
         List<TdtDegree> levelList = levelService.getAllLevel();
         List<TdtLoaiTotNghiep> graduationTypeList = graduationTypeService.getAllGraduationType();
         List<TdtSubject> subjectList = subjectService.getAllSubject();
