@@ -1,7 +1,7 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtNgonNguDaoTao;
 import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingLanguage;
 import com.tdtu.webproject.mybatis.condition.TrainingLanguageCondition;
 import com.tdtu.webproject.mybatis.condition.TrainingProcessCondition;
 import com.tdtu.webproject.repository.TrainingLanguageRepository;
@@ -21,7 +21,7 @@ public class TrainingProcessManageService {
     private final TrainingLanguageRepository trainingLanguageRepository;
     private final TrainingProcessRepository trainingProcessRepository;
 
-    public List<TdtNgonNguDaoTao> getAllLanguageOfTrainingProcess(BigDecimal trainingProcessId) {
+    public List<TdtTrainingLanguage> getAllLanguageOfTrainingProcess(BigDecimal trainingProcessId) {
         return trainingLanguageRepository.findTrainingLanguage(this.buildTrainingLanguageCondition(trainingProcessId));
     }
 
