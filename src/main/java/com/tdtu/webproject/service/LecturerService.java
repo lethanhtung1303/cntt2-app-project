@@ -301,7 +301,9 @@ public class LecturerService {
     public String deleteLecturer(LecturerDeleteRequest request) {
         LecturerCondition condition = this.buildLecturerConditionForDelete(request);
         if (!ArrayUtil.isNotNullAndNotEmptyList(condition.getLecturerIds())) {
-            throw new BusinessException("40001", "The list of deleted Lecturers is empty!");
+            throw new BusinessException("40001",
+                    MessageProperties.getInstance().getProperty(DELETED_LECTURERS_EMPTY)
+            );
         }
         return lecturerRepository.delete(condition) > 0
                 ? SUCCESSFUL
@@ -310,14 +312,18 @@ public class LecturerService {
 
     public String createLecturer(LecturerCreate lecturer, String createBy) {
         if (!classificationManageService.checkExistClassification(lecturer.getClassification())) {
-            throw new BusinessException("40001", "Invalid Lecturer Classification!");
+            throw new BusinessException("40001",
+                    MessageProperties.getInstance().getProperty(INVALID_CLASSIFICATION)
+            );
         }
         LecturerRequest request = LecturerRequest.builder()
                 .emailTdtu(lecturer.getEmailTdtu())
                 .build();
         List<TdtGiangVien> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
         if (ArrayUtil.isNotNullAndNotEmptyList(lecturerList)) {
-            throw new BusinessException("40002", "Lecturer already exists in the system!");
+            throw new BusinessException("40002",
+                    MessageProperties.getInstance().getProperty(LECTURER_ALREADY)
+            );
         }
         return lecturerRepository.create(this.buildTdtGiangVienForCreate(lecturer, createBy)) > 0
                 ? SUCCESSFUL
