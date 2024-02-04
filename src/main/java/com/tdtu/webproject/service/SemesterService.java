@@ -26,7 +26,7 @@ public class SemesterService {
         List<TdtSemester> semesterList = semesterRepository.findSemester();
 
         Map<BigDecimal, List<Semester>> schoolYearSemesterMap = semesterList.stream()
-                .collect(Collectors.groupingBy(TdtSemester::getSemester,
+                .collect(Collectors.groupingBy(TdtSemester::getSchoolYear,
                         Collectors.mapping(semester -> getSemester(semester.getSemester(), semesterList),
                                 Collectors.toList())));
 

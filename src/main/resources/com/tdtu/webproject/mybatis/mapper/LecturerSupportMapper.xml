@@ -86,15 +86,15 @@
     </resultMap>
 
     <select id="getLecturerTeaching" resultMap="LecturerTeachingResult">
-        SELECT TLSGD.GIANG_VIEN_ID,
-               TMH.MA_MON,
-               TMH.TEN_MON,
-               TMH.SO_TIET,
-               TMH.MA_LOAI
+        SELECT TLSGD.LECTURER_ID AS GIANG_VIEN_ID,
+               TMH.SUBJECT_ID    AS MA_MON,
+               TMH.SUBJECT_NAME  AS TEN_MON,
+               TMH.TOTAL_SHIFT   AS SO_TIET,
+               TMH.TYPE_ID       AS MA_LOAI
         FROM TDT_TEACHING_HISTORY TLSGD
-                 LEFT JOIN TDT_MON_HOC TMH
+                 LEFT JOIN TDT_SUBJECT TMH
                            ON
-                               TLSGD.MA_MON = TMH.MA_MON
+                               TLSGD.SUBJECT_ID = TMH.SUBJECT_ID
         WHERE TLSGD.IS_ACTIVE = '1'
           AND TMH.IS_ACTIVE = '1'
         ;
@@ -104,25 +104,25 @@
         SELECT TQTDT.ID                                   AS TRAINING_PROCESS_ID,
                TGV.ID                                     AS LECTURER_ID,
                CONCAT(TGV.FIRST_NAME, ' ', TGV.FULL_NAME) AS FULL_NAME,
-               TGV.IMAGES,
-               TGV.EMAIL_TDTU,
-               TQTDT.UNIVERSITY,
-               TQTDT.MAJOR,
-               TQTDT.NAM_TOT_NGHIEP,
-               TLTN.LOAI_TOT_NGHIEP,
-               TLTN.ID,
-               TTD.TRINH_DO,
-               TTD.DISPLAY_ORDER
+               TGV.IMAGES                                 AS IMAGES,
+               TGV.EMAIL_TDTU                             AS EMAIL_TDTU,
+               TQTDT.UNIVERSITY                           AS UNIVERSITY,
+               TQTDT.MAJOR                                AS MAJOR,
+               TQTDT.GRADUATION_YEAR                      AS NAM_TOT_NGHIEP,
+               TLTN.GRADUATION_TYPE                       AS LOAI_TOT_NGHIEP,
+               TLTN.ID                                    AS ID,
+               TTD.DEGREE                                 AS TRINH_DO,
+               TTD.DISPLAY_ORDER                          AS DISPLAY_ORDER
         FROM TDT_TRAINING_PROCESS TQTDT
-                 LEFT JOIN TDT_GIANG_VIEN TGV
+                 LEFT JOIN TDT_LECTURER TGV
                            ON
-                               TQTDT.GIANG_VIEN_ID = TGV.ID
+                               TQTDT.LECTURER_ID = TGV.ID
                  LEFT JOIN TDT_GRADUATION_TYPE TLTN
                            ON
-                               TQTDT.LOAI_TOT_NGHIEP_ID = TLTN.ID
-                 LEFT JOIN TDT_TRINH_DO TTD
+                               TQTDT.GRADUATION_TYPE_ID = TLTN.ID
+                 LEFT JOIN TDT_DEGREE TTD
                            ON
-                               TQTDT.TRINH_DO_ID = TTD.ID
+                               TQTDT.QUALIFICATION_ID = TTD.ID
         WHERE TQTDT.IS_ACTIVE = '1'
           AND TGV.IS_ACTIVE = '1'
           AND TGV.DELETED_FLAG = '0'
@@ -133,20 +133,20 @@
     </select>
 
     <select id="getLecturerTrainingLanguage" resultMap="LecturerTrainingLanguageResult">
-        SELECT TQTDT.ID AS TRAINING_PROCESS_ID,
-               TGV.ID   AS LECTURER_ID,
-               TNN.ID   AS NGON_NGU_ID,
-               TNN.TEN_NGON_NGU
+        SELECT TQTDT.ID          AS TRAINING_PROCESS_ID,
+               TGV.ID            AS LECTURER_ID,
+               TNN.ID            AS NGON_NGU_ID,
+               TNN.LANGUAGE_NAME AS TEN_NGON_NGU
         FROM TDT_TRAINING_PROCESS TQTDT
-                 LEFT JOIN TDT_GIANG_VIEN TGV
+                 LEFT JOIN TDT_LECTURER TGV
                            ON
-                               TQTDT.GIANG_VIEN_ID = TGV.ID
+                               TQTDT.LECTURER_ID = TGV.ID
                  LEFT JOIN TDT_TRAINING_LANGUAGE TNNDT
                            ON
-                               TQTDT.ID = TNNDT.QUA_TRINH_DAO_TAO_ID
+                               TQTDT.ID = TNNDT.TRAINING_PROCESS_ID
                  LEFT JOIN TDT_LANGUAGE TNN
                            ON
-                               TNNDT.NGON_NGU_ID = TNN.ID
+                               TNNDT.LANGUAGE_ID = TNN.ID
         WHERE TNN.ID IS NOT NULL
           AND TQTDT.IS_ACTIVE = '1'
           AND TGV.IS_ACTIVE = '1'
@@ -160,17 +160,17 @@
     </select>
 
     <select id="getLecturerCertificate" resultMap="LecturerCertificateResult">
-        SELECT TGV.ID,
-               TCC.DIEM,
-               TLCC.MA_LOAI,
-               TLCC.PHAN_LOAI
-        FROM TDT_CHUNG_CHI TCC
-                 LEFT JOIN TDT_GIANG_VIEN TGV
+        SELECT TGV.ID       AS ID,
+               TCC.GRADE    AS DIEM,
+               TLCC.TYPE_ID AS MA_LOAI,
+               TLCC."TYPE"  AS PHAN_LOAI
+        FROM TDT_CERTIFICATE TCC
+                 LEFT JOIN TDT_LECTURER TGV
                            ON
-                               TCC.GIANG_VIEN_ID = TGV.ID
-                 LEFT JOIN TDT_LOAI_CHUNG_CHI TLCC
+                               TCC.LECTURER_ID = TGV.ID
+                 LEFT JOIN TDT_CERTIFICATE_TYPE TLCC
                            ON
-                               TCC.LOAI_CHUNG_CHI = TLCC.MA_LOAI
+                               TCC.CERTIFICATE_TYPE = TLCC.TYPE_ID
         WHERE TCC.IS_ACTIVE = '1'
           AND TGV.IS_ACTIVE = '1'
           AND TGV.DELETED_FLAG = '0'
@@ -180,22 +180,22 @@
     </select>
 
     <select id="getLecturerSatisfactionScore" resultMap="LecturerSatisfactionScoreResult">
-        SELECT TGV.ID,
-        TDHL.HOC_KY,
-        TDHL.DIEM_HAI_LONG
-        FROM TDT_DIEM_HAI_LONG TDHL
-        LEFT JOIN TDT_GIANG_VIEN TGV
+        SELECT TGV.ID AS ID,
+        TDHL.SEMESTER AS HOC_KY,
+        TDHL.SATISFACTORY_SCORE AS DIEM_HAI_LONG
+        FROM TDT_SATISFACTORY_SCORE TDHL
+        LEFT JOIN TDT_LECTURER TGV
         ON
-        TDHL.GIANG_VIEN_ID = TGV.ID
-        LEFT JOIN TDT_MON_HOC TMH
+        TDHL.LECTURER_ID = TGV.ID
+        LEFT JOIN TDT_SUBJECT TMH
         ON
-        TDHL.MA_MON = TMH.MA_MON
+        TDHL.SUBJECT_ID = TMH.SUBJECT_ID
         WHERE TDHL.IS_ACTIVE = '1'
         AND TGV.IS_ACTIVE = '1'
         AND TGV.DELETED_FLAG = '0'
         AND TMH.IS_ACTIVE = '1'
         <if test="(semester != null and semester != '')">
-            AND TDHL.HOC_KY = ${semester}
+            AND TDHL.SEMESTER = ${semester}
         </if>
         ORDER BY TGV.ID
         ;
@@ -203,45 +203,45 @@
 
 
     <select id="getNormsLectureHours" resultMap="NormsLectureHoursResult">
-        SELECT TGV.ID,
+        SELECT TGV.ID AS ID,
         CONCAT(TGV.FIRST_NAME, ' ', TGV.FULL_NAME) AS FULL_NAME,
-        TGV.IMAGES,
-        TGV.EMAIL_TDTU,
-        TLGV.MA_LOAI AS MA_LOAI_GIANG_VIEN,
-        TLGV.PHAN_LOAI,
+        TGV.IMAGES AS IMAGES,
+        TGV.EMAIL_TDTU AS EMAIL_TDTU,
+        TLGV.TYPE_ID AS MA_LOAI_GIANG_VIEN,
+        TLGV."TYPE" AS PHAN_LOAI,
         TTD.ID AS TRINH_DO_ID,
-        TTD.TRINH_DO,
-        TTD.DISPLAY_ORDER,
-        TLSGD.HOC_KY,
+        TTD."DEGREE" AS TRINH_DO,
+        TTD.DISPLAY_ORDER AS DISPLAY_ORDER,
+        TLSGD.SEMESTER_ID AS HOC_KY,
         TLSGD.ID AS LICH_SU_GIANG_DAY_ID,
-        TMH.MA_MON,
-        TMH.SO_TIET,
-        TMH.MA_LOAI,
+        TMH.SUBJECT_ID AS MA_MON,
+        TMH.TOTAL_SHIFT AS SO_TIET,
+        TMH.TYPE_ID AS MA_LOAI,
         THDT.IDENTIFICATION,
-        TNM.MA_NHOM,
+        TNM.GROUP_ID AS MA_NHOM,
         TLSGD.CREATED_AT AS CREATE_DATETIME
-        FROM TDT_GIANG_VIEN TGV
+        FROM TDT_LECTURER TGV
         LEFT JOIN TDT_TEACHING_HISTORY TLSGD
         ON
-        TGV.ID = TLSGD.GIANG_VIEN_ID
-        LEFT JOIN TDT_LOAI_GIANG_VIEN TLGV
+        TGV.ID = TLSGD.LECTURER_ID
+        LEFT JOIN TDT_LECTURER_TYPE TLGV
         ON
-        TGV.CLASSIFICATION_LECTURERS = TLGV.MA_LOAI
+        TGV.CLASSIFICATION_LECTURERS = TLGV.TYPE_ID
         LEFT JOIN TDT_TRAINING_PROCESS TQTDT
         ON
-        TGV.ID = TQTDT.GIANG_VIEN_ID
-        LEFT JOIN TDT_TRINH_DO TTD
+        TGV.ID = TQTDT.LECTURER_ID
+        LEFT JOIN TDT_DEGREE TTD
         ON
-        TQTDT.TRINH_DO_ID = TTD.ID
-        LEFT JOIN TDT_MON_HOC TMH
+        TQTDT.QUALIFICATION_ID = TTD.ID
+        LEFT JOIN TDT_SUBJECT TMH
         ON
-        TLSGD.MA_MON = TMH.MA_MON
+        TLSGD.SUBJECT_ID = TMH.SUBJECT_ID
         LEFT JOIN TDT_TRAINING_SYSTEM THDT
         ON
-        THDT.MA_HE = TLSGD.MA_HE
-        LEFT JOIN TDT_NHOM_MON TNM
+        THDT.SYSTEM_ID = TLSGD.SYSTEM_ID
+        LEFT JOIN TDT_SUBJECT_GROUP TNM
         ON
-        TNM.MA_NHOM = TMH.MA_NHOM
+        TNM.GROUP_ID = TMH.GROUP_ID
         WHERE TGV.IS_ACTIVE = '1'
         AND TGV.DELETED_FLAG = '0'
         AND (TLSGD.IS_ACTIVE = '1'
@@ -259,7 +259,7 @@
         AND (TNM.IS_ACTIVE = '1'
         OR TNM.IS_ACTIVE IS NULL)
         <if test="(isContractual != null and isContractual != '')">
-            AND TLGV.MA_LOAI = ${isContractual}
+            AND TLGV.TYPE_ID = ${isContractual}
         </if>
         ORDER BY TGV.ID
         ;
@@ -267,30 +267,30 @@
 
     <select id="getLecturerTeachingHistory" resultMap="LecturerTeachingHistoryResult">
         SELECT TLSGD.ID AS LICH_SU_GIANG_DAY_ID,
-        TMH.MA_MON,
-        TMH.TEN_MON,
-        TMH.SO_TIET,
-        TNM.MA_NHOM,
-        TNM.TEN_NHOM,
-        TLM.MA_LOAI,
-        TLM.PHAN_LOAI,
-        THDT.MA_HE,
-        THDT.PHAN_HE,
-        THDT.IDENTIFICATION,
+        TMH.SUBJECT_ID AS MA_MON,
+        TMH.SUBJECT_NAME AS TEN_MON,
+        TMH.TOTAL_SHIFT AS SO_TIET,
+        TNM.GROUP_ID AS MA_NHOM,
+        TNM.GROUP_NAME AS TEN_NHOM,
+        TLM.TYPE_ID AS MA_LOAI,
+        TLM."TYPE" AS PHAN_LOAI,
+        THDT.SYSTEM_ID AS MA_HE,
+        THDT.SUBSYSTEM AS PHAN_HE,
+        THDT.IDENTIFICATION AS IDENTIFICATION,
         TLSGD.CREATED_AT AS CREATE_DATETIME
         FROM TDT_TEACHING_HISTORY TLSGD
-        LEFT JOIN TDT_MON_HOC TMH
+        LEFT JOIN TDT_SUBJECT TMH
         ON
-        TLSGD.MA_MON = TMH.MA_MON
-        LEFT JOIN TDT_NHOM_MON TNM
+        TLSGD.SUBJECT_ID = TMH.SUBJECT_ID
+        LEFT JOIN TDT_SUBJECT_GROUP TNM
         ON
-        TMH.MA_NHOM = TNM.MA_NHOM
-        LEFT JOIN TDT_LOAI_MON TLM
+        TMH.GROUP_ID = TNM.GROUP_ID
+        LEFT JOIN TDT_SUBJECT_TYPE TLM
         ON
-        TMH.MA_LOAI = TLM.MA_LOAI
+        TMH.TYPE_ID = TLM.TYPE_ID
         LEFT JOIN TDT_TRAINING_SYSTEM THDT
         ON
-        TLSGD.MA_HE = THDT.MA_HE
+        TLSGD.SYSTEM_ID = THDT.SYSTEM_ID
         WHERE TLSGD.IS_ACTIVE = '1'
         AND TMH.IS_ACTIVE = '1'
         AND TNM.IS_ACTIVE = '1'
@@ -300,10 +300,10 @@
             AND TLSGD.ID = ${historyId}
         </if>
         <if test="(lecturerId != null and lecturerId != '')">
-            AND TLSGD.GIANG_VIEN_ID = ${lecturerId}
+            AND TLSGD.LECTURER_ID = ${lecturerId}
         </if>
         <if test="(semester != null and semester != '')">
-            AND TLSGD.HOC_KY = ${semester}
+            AND TLSGD.SEMESTER_ID = ${semester}
         </if>
         ORDER BY TLSGD.CREATED_AT DESC
         ;

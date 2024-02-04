@@ -25,7 +25,7 @@
         <if test="(employeeID != null and employeeID != '')">
             AND r.EMPLOYEE_ID = ${employeeID}
         </if>
-        LEFT JOIN TDT_giang_vien e ON
+        LEFT JOIN TDT_LECTURER e ON
         e.ID = r.EMPLOYEE_ID
         WHERE r.IS_ACTIVE IS NULL
         OR r.IS_ACTIVE != 0;

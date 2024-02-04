@@ -28,7 +28,7 @@ public class SchoolYearRepositoryImp implements SchoolYearRepository {
         TdtSchoolYearExample example = new TdtSchoolYearExample();
         TdtSchoolYearExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
-        example.setOrderByClause("NAM_HOC DESC");
+        example.setOrderByClause("SCHOOL_YEAR DESC");
         return schoolYearMapper.selectByExample(example);
     }
 }

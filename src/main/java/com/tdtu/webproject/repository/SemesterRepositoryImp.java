@@ -28,7 +28,7 @@ public class SemesterRepositoryImp implements SemesterRepository {
         TdtSemesterExample example = new TdtSemesterExample();
         TdtSemesterExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
-        example.setOrderByClause("HOC_KY DESC");
+        example.setOrderByClause("SEMESTER DESC");
         return semesterMapper.selectByExample(example);
     }
 }

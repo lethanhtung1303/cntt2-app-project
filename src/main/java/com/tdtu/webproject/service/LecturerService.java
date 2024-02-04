@@ -237,7 +237,7 @@ public class LecturerService {
     }
 
     private Subject buildSubject(TdtSubject subject) {
-        TdtSubjectGroup subjectGroup = subjectGroupService.getSubjectGroupById(subject.getSubjectId());
+        TdtSubjectGroup subjectGroup = subjectGroupService.getSubjectGroupById(subject.getGroupId());
         TdtSubjectType subjectType = subjectTypeService.getSubjectTypeById(subject.getTypeId());
         return Subject.builder()
                 .maMon(subject.getSubjectId())
