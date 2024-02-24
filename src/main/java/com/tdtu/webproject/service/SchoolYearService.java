@@ -1,6 +1,6 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtNamHoc;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSchoolYear;
 import com.tdtu.webproject.repository.SchoolYearRepository;
 import generater.openapi.model.SchoolYearDetailResponse;
 import lombok.AllArgsConstructor;
@@ -17,8 +17,8 @@ public class SchoolYearService {
     private final SchoolYearRepository schoolYearRepository;
 
     public List<SchoolYearDetailResponse> findAll() {
-        List<TdtNamHoc> schoolYearList = schoolYearRepository.findSchoolYear();
-        
+        List<TdtSchoolYear> schoolYearList = schoolYearRepository.findSchoolYear();
+
         return Optional.ofNullable(schoolYearList).isPresent()
                 ? schoolYearList.stream()
                 .map(this::buildSchoolYearDetailResponse)
@@ -26,10 +26,10 @@ public class SchoolYearService {
                 : Collections.emptyList();
     }
 
-    public SchoolYearDetailResponse buildSchoolYearDetailResponse(TdtNamHoc schoolYear) {
+    public SchoolYearDetailResponse buildSchoolYearDetailResponse(TdtSchoolYear schoolYear) {
         return SchoolYearDetailResponse.builder()
-                .value(schoolYear.getNamHoc())
-                .label(schoolYear.getNamHocLabels())
+                .value(schoolYear.getSchoolYear())
+                .label(schoolYear.getSchoolYearLabels())
                 .build();
     }
 }

@@ -58,3 +58,4 @@ bootRun.doFirst {
     delete "${rootDir}/apispecs/bin/"
     delete "${rootDir}/mbGenerator/bin/"
 }
+bootJar.enabled = false

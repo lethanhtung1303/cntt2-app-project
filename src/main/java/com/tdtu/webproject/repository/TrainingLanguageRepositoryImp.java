@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtNgonNguDaoTaoExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtNgonNguDaoTaoMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtNgonNguDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtTrainingLanguageExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtTrainingLanguageMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingLanguage;
 import com.tdtu.webproject.mybatis.condition.TrainingLanguageCondition;
 import com.tdtu.webproject.utils.ArrayUtil;
 import lombok.AllArgsConstructor;
@@ -17,25 +17,25 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class TrainingLanguageRepositoryImp implements TrainingLanguageRepository {
-    private final TdtNgonNguDaoTaoMapper trainingLanguageMapper;
+    private final TdtTrainingLanguageMapper trainingLanguageMapper;
 
     @Override
     public Long countAllTrainingLanguage(TrainingLanguageCondition condition) {
-        TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
-        TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
+        TdtTrainingLanguageExample example = new TdtTrainingLanguageExample();
+        TdtTrainingLanguageExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getTrainingProcessIds())) {
-            criteria.andQuaTrinhDaoTaoIdIn(condition.getTrainingProcessIds());
+            criteria.andTrainingProcessIdIn(condition.getTrainingProcessIds());
         }
         criteria.andIsActiveEqualTo(true);
         return trainingLanguageMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtNgonNguDaoTao> findTrainingLanguage(TrainingLanguageCondition condition) {
-        TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
-        TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
+    public List<TdtTrainingLanguage> findTrainingLanguage(TrainingLanguageCondition condition) {
+        TdtTrainingLanguageExample example = new TdtTrainingLanguageExample();
+        TdtTrainingLanguageExample.Criteria criteria = example.createCriteria();
         if (ArrayUtil.isNotNullAndNotEmptyList(condition.getTrainingProcessIds())) {
-            criteria.andQuaTrinhDaoTaoIdIn(condition.getTrainingProcessIds());
+            criteria.andTrainingProcessIdIn(condition.getTrainingProcessIds());
         }
         criteria.andIsActiveEqualTo(true);
         return trainingLanguageMapper.selectByExample(example);
@@ -43,31 +43,31 @@ public class TrainingLanguageRepositoryImp implements TrainingLanguageRepository
 
     @Override
     public Long countAllTrainingLanguage() {
-        TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
-        TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
+        TdtTrainingLanguageExample example = new TdtTrainingLanguageExample();
+        TdtTrainingLanguageExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
         return trainingLanguageMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtNgonNguDaoTao> getAllTrainingLanguage() {
-        TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
-        TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
+    public List<TdtTrainingLanguage> getAllTrainingLanguage() {
+        TdtTrainingLanguageExample example = new TdtTrainingLanguageExample();
+        TdtTrainingLanguageExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
         return trainingLanguageMapper.selectByExample(example);
     }
 
     @Override
-    public int create(TdtNgonNguDaoTao record) {
+    public int create(TdtTrainingLanguage record) {
         return trainingLanguageMapper.insertSelective(record);
     }
 
     @Override
     public int deleteByTrainingId(BigDecimal trainingId) {
-        TdtNgonNguDaoTaoExample example = new TdtNgonNguDaoTaoExample();
-        TdtNgonNguDaoTaoExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(trainingId).ifPresent(criteria::andQuaTrinhDaoTaoIdEqualTo);
-        TdtNgonNguDaoTao record = TdtNgonNguDaoTao.builder()
+        TdtTrainingLanguageExample example = new TdtTrainingLanguageExample();
+        TdtTrainingLanguageExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(trainingId).ifPresent(criteria::andTrainingProcessIdEqualTo);
+        TdtTrainingLanguage record = TdtTrainingLanguage.builder()
                 .isActive(false)
                 .build();
         return trainingLanguageMapper.updateByExampleSelective(record, example);

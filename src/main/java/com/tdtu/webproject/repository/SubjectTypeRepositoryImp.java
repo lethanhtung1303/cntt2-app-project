@@ -1,8 +1,8 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.example.TdtLoaiMonExample;
-import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtLoaiMonMapper;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtLoaiMon;
+import com.tdtu.mbGenerator.generate.mybatis.example.TdtSubjectTypeExample;
+import com.tdtu.mbGenerator.generate.mybatis.mapper.TdtSubjectTypeMapper;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSubjectType;
 import lombok.AllArgsConstructor;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.stereotype.Repository;
@@ -15,29 +15,29 @@ import java.util.Optional;
 @AllArgsConstructor
 @ComponentScan
 public class SubjectTypeRepositoryImp implements SubjectTypeRepository {
-    private final TdtLoaiMonMapper subjectTypeMapper;
+    private final TdtSubjectTypeMapper subjectTypeMapper;
 
     @Override
     public Long countAllSubjectType() {
-        TdtLoaiMonExample example = new TdtLoaiMonExample();
-        TdtLoaiMonExample.Criteria criteria = example.createCriteria();
+        TdtSubjectTypeExample example = new TdtSubjectTypeExample();
+        TdtSubjectTypeExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
         return subjectTypeMapper.countByExample(example);
     }
 
     @Override
-    public List<TdtLoaiMon> getAllSubjectType() {
-        TdtLoaiMonExample example = new TdtLoaiMonExample();
-        TdtLoaiMonExample.Criteria criteria = example.createCriteria();
+    public List<TdtSubjectType> getAllSubjectType() {
+        TdtSubjectTypeExample example = new TdtSubjectTypeExample();
+        TdtSubjectTypeExample.Criteria criteria = example.createCriteria();
         criteria.andIsActiveEqualTo(true);
         return subjectTypeMapper.selectByExample(example);
     }
 
     @Override
-    public TdtLoaiMon getSubjectTypeById(BigDecimal typeId) {
-        TdtLoaiMonExample example = new TdtLoaiMonExample();
-        TdtLoaiMonExample.Criteria criteria = example.createCriteria();
-        Optional.ofNullable(typeId).ifPresent(criteria::andMaLoaiEqualTo);
+    public TdtSubjectType getSubjectTypeById(BigDecimal typeId) {
+        TdtSubjectTypeExample example = new TdtSubjectTypeExample();
+        TdtSubjectTypeExample.Criteria criteria = example.createCriteria();
+        Optional.ofNullable(typeId).ifPresent(criteria::andTypeIdEqualTo);
         criteria.andIsActiveEqualTo(true);
         return subjectTypeMapper.selectByExample(example).stream()
                 .findFirst()

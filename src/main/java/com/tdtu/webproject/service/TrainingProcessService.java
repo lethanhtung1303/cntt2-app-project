@@ -1,7 +1,7 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtNgonNguDaoTao;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingLanguage;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingProcess;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.condition.TrainingProcessCondition;
 import com.tdtu.webproject.repository.TrainingLanguageRepository;
@@ -31,7 +31,7 @@ public class TrainingProcessService {
     private final TrainingProcessRepository trainingProcessRepository;
     private final TrainingLanguageRepository trainingLanguageRepository;
 
-    public List<TdtQuaTrinhDaoTao> findByLecturerId(String lecturerIds) {
+    public List<TdtTrainingProcess> findByLecturerId(String lecturerIds) {
         TrainingProcessCondition condition = this.buildTrainingProcessCondition(lecturerIds);
         return trainingProcessRepository.findTrainingProcess(condition);
     }
@@ -55,8 +55,8 @@ public class TrainingProcessService {
                 );
             }
 
-            List<TdtQuaTrinhDaoTao> createList =
-                    trainingProcessRepository.create(this.buildTdtQuaTrinhDaoTaoForCreate(lecturerId, createRequest, createBy));
+            List<TdtTrainingProcess> createList =
+                    trainingProcessRepository.create(this.buildTdtTrainingProcessForCreate(lecturerId, createRequest, createBy));
 
             if (!ArrayUtil.isNotNullAndNotEmptyList(createList)) {
                 throw new BusinessException("40002",
@@ -64,14 +64,16 @@ public class TrainingProcessService {
                 );
             }
 
-            TdtQuaTrinhDaoTao create = createList.stream().findFirst().orElse(null);
+            TdtTrainingProcess create = createList.stream().findFirst().orElse(null);
             if (Optional.ofNullable(create).isEmpty()) {
                 throw new BusinessException("40002",
                         MessageProperties.getInstance().getProperty(TRAINING_PROCESS_CREATE_FAIL)
                 );
             }
 
-            List<TdtNgonNguDaoTao> trainingLanguageList = this.buildTdtNgonNguDaoTao(create.getId(), createRequest.getLanguageIds(), createBy);
+            List<TdtTrainingLanguage> trainingLanguageList = this.buildTdtTrainingLanguage(create.getId(),
+                    createRequest.getLanguageIds(),
+                    createBy);
             if (!ArrayUtil.isNotNullAndNotEmptyList(trainingLanguageList)) {
                 throw new BusinessException("40003",
                         MessageProperties.getInstance().getProperty(TRAINING_LANGUAGE_EMPTY)
@@ -92,16 +94,16 @@ public class TrainingProcessService {
         );
     }
 
-    private List<TdtNgonNguDaoTao> buildTdtNgonNguDaoTao(BigDecimal trainingProcessId, String languageIds, String user) {
+    private List<TdtTrainingLanguage> buildTdtTrainingLanguage(BigDecimal trainingProcessId, String languageIds, String user) {
         List<BigDecimal> languageIdList = Arrays.stream(languageIds.split(","))
                 .map(languageId -> NumberUtil.toBigDecimal(languageId).orElse(null))
                 .toList();
 
         return ArrayUtil.isNotNullAndNotEmptyList(languageIdList)
                 ? languageIdList.stream()
-                .map(languageId -> TdtNgonNguDaoTao.builder()
-                        .ngonNguId(languageId)
-                        .quaTrinhDaoTaoId(trainingProcessId)
+                .map(languageId -> TdtTrainingLanguage.builder()
+                        .languageId(languageId)
+                        .trainingProcessId(trainingProcessId)
                         .createdBy(user)
                         .createdAt(DateUtil.getTimeNow())
                         .build())
@@ -109,16 +111,16 @@ public class TrainingProcessService {
                 : Collections.emptyList();
     }
 
-    private TdtQuaTrinhDaoTao buildTdtQuaTrinhDaoTaoForCreate(BigDecimal lecturerId, TrainingProcessCreate trainingProcess, String createBy) {
-        return TdtQuaTrinhDaoTao.builder()
-                .giangVienId(lecturerId)
-                .trinhDoId(trainingProcess.getLevel())
-                .truong(trainingProcess.getTruong())
-                .nganh(trainingProcess.getNganh())
-                .namTotNghiep(trainingProcess.getNamTotNghiep())
-                .deTaiTotNghiep(trainingProcess.getDeTaiTotNghiep())
-                .nguoiHuongDan(trainingProcess.getNguoiHuongDan())
-                .loaiTotNghiepId(trainingProcess.getLoaiTotNghiep())
+    private TdtTrainingProcess buildTdtTrainingProcessForCreate(BigDecimal lecturerId, TrainingProcessCreate trainingProcess, String createBy) {
+        return TdtTrainingProcess.builder()
+                .lecturerId(lecturerId)
+                .qualificationId(trainingProcess.getLevel())
+                .university(trainingProcess.getTruong())
+                .major(trainingProcess.getNganh())
+                .graduationYear(trainingProcess.getNamTotNghiep())
+                .thesisTitle(trainingProcess.getDeTaiTotNghiep())
+                .instructor(trainingProcess.getNguoiHuongDan())
+                .graduationTypeId(trainingProcess.getLoaiTotNghiep())
                 .createdBy(createBy)
                 .createdAt(DateUtil.getTimeNow())
                 .build();
@@ -140,7 +142,8 @@ public class TrainingProcessService {
                 );
             }
 
-            List<TdtNgonNguDaoTao> trainingLanguageList = this.buildTdtNgonNguDaoTao(processId, updateRequest.getLanguageIds(), updateBy);
+            List<TdtTrainingLanguage> trainingLanguageList = this.buildTdtTrainingLanguage(processId, updateRequest.getLanguageIds(),
+                    updateBy);
             if (!ArrayUtil.isNotNullAndNotEmptyList(trainingLanguageList)) {
                 throw new BusinessException("40003",
                         MessageProperties.getInstance().getProperty(TRAINING_LANGUAGE_EMPTY)
@@ -159,15 +162,15 @@ public class TrainingProcessService {
         return FAIL;
     }
 
-    private TdtQuaTrinhDaoTao buildTdtQuaTrinhDaoTaoForUpdate(TrainingProcessUpdate trainingProcess, String updateBy) {
-        return TdtQuaTrinhDaoTao.builder()
-                .trinhDoId(trainingProcess.getLevel())
-                .truong(trainingProcess.getTruong())
-                .nganh(trainingProcess.getNganh())
-                .namTotNghiep(trainingProcess.getNamTotNghiep())
-                .deTaiTotNghiep(trainingProcess.getDeTaiTotNghiep())
-                .nguoiHuongDan(trainingProcess.getNguoiHuongDan())
-                .loaiTotNghiepId(trainingProcess.getLoaiTotNghiep())
+    private TdtTrainingProcess buildTdtQuaTrinhDaoTaoForUpdate(TrainingProcessUpdate trainingProcess, String updateBy) {
+        return TdtTrainingProcess.builder()
+                .qualificationId(trainingProcess.getLevel())
+                .university(trainingProcess.getTruong())
+                .major(trainingProcess.getNganh())
+                .graduationYear(trainingProcess.getNamTotNghiep())
+                .thesisTitle(trainingProcess.getDeTaiTotNghiep())
+                .instructor(trainingProcess.getNguoiHuongDan())
+                .graduationTypeId(trainingProcess.getLoaiTotNghiep())
                 .updatedAt(DateUtil.getTimeNow())
                 .updateBy(updateBy)
                 .build();

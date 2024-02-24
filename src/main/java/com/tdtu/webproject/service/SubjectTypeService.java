@@ -1,6 +1,6 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtLoaiMon;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSubjectType;
 import com.tdtu.webproject.repository.SubjectTypeRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -13,11 +13,11 @@ import java.util.List;
 public class SubjectTypeService {
     private final SubjectTypeRepository subjectTypeRepository;
 
-    public List<TdtLoaiMon> getAllSubjectType() {
+    public List<TdtSubjectType> getAllSubjectType() {
         return subjectTypeRepository.getAllSubjectType();
     }
 
-    public TdtLoaiMon getSubjectTypeById(BigDecimal TypeId) {
+    public TdtSubjectType getSubjectTypeById(BigDecimal TypeId) {
         return subjectTypeRepository.getSubjectTypeById(TypeId);
     }
 }

@@ -1,6 +1,6 @@
 package com.tdtu.webproject.repository;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtLecturer;
 import com.tdtu.webproject.mybatis.condition.LecturerCondition;
 import com.tdtu.webproject.mybatis.condition.LecturerTeachingHistoryCondition;
 import com.tdtu.webproject.mybatis.condition.NormsLectureHoursCondition;
@@ -12,13 +12,13 @@ import java.util.List;
 public interface LecturerRepository {
     Long countLecturer(LecturerCondition condition);
 
-    List<TdtGiangVien> findLecturer(LecturerCondition condition);
+    List<TdtLecturer> findLecturer(LecturerCondition condition);
 
-    int update(TdtGiangVien record, BigDecimal lecturerId);
+    int update(TdtLecturer record, BigDecimal lecturerId);
 
     int delete(LecturerCondition condition);
 
-    int create(TdtGiangVien record);
+    int create(TdtLecturer record);
 
     List<LecturerTeachingResult> getLecturerTeaching();
 

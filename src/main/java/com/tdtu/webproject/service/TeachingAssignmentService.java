@@ -1,6 +1,6 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtLichSuGiangDay;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTeachingHistory;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.repository.HistoryTeachingRepository;
 import com.tdtu.webproject.utils.DateUtil;
@@ -38,18 +38,18 @@ public class TeachingAssignmentService {
                     MessageProperties.getInstance().getProperty(SUBJECT_ASSIGNED)
             );
         }
-        TdtLichSuGiangDay teachingAssignment = this.buildTdtLichSuGiangDayForCreate(assignmentCreate, createBy);
+        TdtTeachingHistory teachingAssignment = this.buildTeachingHistoryForCreate(assignmentCreate, createBy);
         return historyTeachingRepository.create(teachingAssignment) > 0
                 ? SUCCESSFUL
                 : FAIL;
     }
 
-    private TdtLichSuGiangDay buildTdtLichSuGiangDayForCreate(Assignment assignmentCreate, String createBy) {
-        return TdtLichSuGiangDay.builder()
-                .giangVienId(assignmentCreate.getGiangVienId())
-                .hocKy(assignmentCreate.getHocKy())
-                .maMon(assignmentCreate.getMaMon())
-                .maHe(assignmentCreate.getMaHe())
+    private TdtTeachingHistory buildTeachingHistoryForCreate(Assignment assignmentCreate, String createBy) {
+        return TdtTeachingHistory.builder()
+                .lecturerId(assignmentCreate.getGiangVienId())
+                .semesterId(assignmentCreate.getHocKy())
+                .subjectId(assignmentCreate.getMaMon())
+                .systemId(assignmentCreate.getMaHe())
                 .createdBy(createBy)
                 .createdAt(DateUtil.getTimeNow())
                 .build();

@@ -47,19 +47,19 @@ public class LecturerService {
         LecturerRequest request = LecturerRequest.builder()
                 .lecturerIds(lecturerIds)
                 .build();
-        List<TdtGiangVien> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
+        List<TdtLecturer> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
 
-        List<TdtChungChi> certificateList = certificateService.findByLecturerId(lecturerIds);
-        Map<BigDecimal, List<TdtChungChi>> certificateMap = certificateList.stream()
-                .collect(Collectors.groupingBy(TdtChungChi::getGiangVienId));
+        List<TdtCertificate> certificateList = certificateService.findByLecturerId(lecturerIds);
+        Map<BigDecimal, List<TdtCertificate>> certificateMap = certificateList.stream()
+                .collect(Collectors.groupingBy(TdtCertificate::getLecturerId));
 
-        List<TdtQuaTrinhDaoTao> trainingProcessList = trainingProcessService.findByLecturerId(lecturerIds);
-        Map<BigDecimal, List<TdtQuaTrinhDaoTao>> trainingProcessMap = trainingProcessList.stream()
-                .collect(Collectors.groupingBy(TdtQuaTrinhDaoTao::getGiangVienId));
+        List<TdtTrainingProcess> trainingProcessList = trainingProcessService.findByLecturerId(lecturerIds);
+        Map<BigDecimal, List<TdtTrainingProcess>> trainingProcessMap = trainingProcessList.stream()
+                .collect(Collectors.groupingBy(TdtTrainingProcess::getLecturerId));
 
-        List<TdtDiemHaiLong> satisfactionScoreList = satisfactionScoreService.findByLecturerId(lecturerIds);
-        Map<BigDecimal, List<TdtDiemHaiLong>> satisfactionScoreMap = satisfactionScoreList.stream()
-                .collect(Collectors.groupingBy(TdtDiemHaiLong::getGiangVienId));
+        List<TdtSatisfactoryScore> satisfactionScoreList = satisfactionScoreService.findByLecturerId(lecturerIds);
+        Map<BigDecimal, List<TdtSatisfactoryScore>> satisfactionScoreMap = satisfactionScoreList.stream()
+                .collect(Collectors.groupingBy(TdtSatisfactoryScore::getLecturerId));
 
         return Optional.ofNullable(lecturerList).isPresent()
                 ? lecturerList.stream()
@@ -75,62 +75,63 @@ public class LecturerService {
                 : Collections.emptyList();
     }
 
-    private LecturerDetailResponse buildLecturerDetailResponse(TdtGiangVien lecturer,
-                                                               List<TdtChungChi> certificateList,
-                                                               List<TdtQuaTrinhDaoTao> trainingProcessList,
-                                                               List<TdtDiemHaiLong> satisfactionScoreList) {
-        List<TdtNgonNguDaoTao> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
-        List<TdtNgonNgu> languageList = languageService.getAllLanguage();
-        List<TdtTrinhDo> levelList = levelService.getAllLevel();
-        List<TdtLoaiTotNghiep> graduationTypeList = graduationTypeService.getAllGraduationType();
-        List<TdtMonHoc> subjectList = subjectService.getAllSubject();
-        List<TdtLoaiGiangVien> classificationLecturerList = classificationLecturerService.getAllClassification();
+    private LecturerDetailResponse buildLecturerDetailResponse(TdtLecturer lecturer,
+                                                               List<TdtCertificate> certificateList,
+                                                               List<TdtTrainingProcess> trainingProcessList,
+                                                               List<TdtSatisfactoryScore> satisfactionScoreList) {
+        List<TdtTrainingLanguage> trainingLanguageList = trainingLanguageService.getAllTrainingLanguage();
+        List<TdtLanguage> languageList = languageService.getAllLanguage();
+        List<TdtDegree> levelList = levelService.getAllLevel();
+        List<TdtGraduationType> graduationTypeList = graduationTypeService.getAllGraduationType();
+        List<TdtSubject> subjectList = subjectService.getAllSubject();
+        List<TdtLecturerType> classificationLecturerList = classificationLecturerService.getAllClassification();
 
-        Map<BigDecimal, TdtLoaiGiangVien> classificationLecturerMap = classificationLecturerList.stream()
-                .collect(Collectors.toMap(TdtLoaiGiangVien::getMaLoai, classification -> classification));
+        Map<BigDecimal, TdtLecturerType> classificationLecturerMap = classificationLecturerList.stream()
+                .collect(Collectors.toMap(TdtLecturerType::getTypeId, classification -> classification));
 
         Map<BigDecimal, List<Language>> trainingLanguageMap = trainingLanguageList.stream()
-                .collect(Collectors.groupingBy(TdtNgonNguDaoTao::getQuaTrinhDaoTaoId,
-                        Collectors.mapping(trainingLanguage -> getLanguageById(trainingLanguage.getNgonNguId(),
+                .collect(Collectors.groupingBy(TdtTrainingLanguage::getTrainingProcessId,
+                        Collectors.mapping(trainingLanguage -> getLanguageById(trainingLanguage.getLanguageId(),
                                         languageList),
                                 Collectors.toList())));
 
-        Map<BigDecimal, TdtTrinhDo> levelMap = levelList.stream()
-                .collect(Collectors.toMap(TdtTrinhDo::getId, level -> level));
+        Map<BigDecimal, TdtDegree> levelMap = levelList.stream()
+                .collect(Collectors.toMap(TdtDegree::getId, level -> level));
 
-        Map<BigDecimal, TdtLoaiTotNghiep> graduationTypeMap = graduationTypeList.stream()
-                .collect(Collectors.toMap(TdtLoaiTotNghiep::getId, graduationType -> graduationType));
+        Map<BigDecimal, TdtGraduationType> graduationTypeMap = graduationTypeList.stream()
+                .collect(Collectors.toMap(TdtGraduationType::getId, graduationType -> graduationType));
 
         List<TrainingProcess> trainingProcesses = trainingProcessList.stream()
                 .map(trainingProcess -> TrainingProcess.builder()
                         .id(trainingProcess.getId())
-                        .level(Optional.ofNullable(levelMap.getOrDefault(trainingProcess.getTrinhDoId(), null)).isPresent()
-                                ? this.buildLevel(levelMap.get(trainingProcess.getTrinhDoId()))
+                        .level(Optional.ofNullable(levelMap.getOrDefault(trainingProcess.getQualificationId(), null)).isPresent()
+                                ? this.buildLevel(levelMap.get(trainingProcess.getQualificationId()))
                                 : null)
                         .language(trainingLanguageMap.getOrDefault(trainingProcess.getId(), Collections.emptyList()))
-                        .truong(trainingProcess.getTruong())
-                        .nganh(trainingProcess.getNganh())
-                        .namTotNghiep(trainingProcess.getNamTotNghiep())
-                        .deTaiTotNghiep(trainingProcess.getDeTaiTotNghiep())
-                        .nguoiHuongDan(trainingProcess.getNguoiHuongDan())
-                        .graduationType(Optional.ofNullable(graduationTypeMap.getOrDefault(trainingProcess.getLoaiTotNghiepId(), null)).isPresent()
+                        .truong(trainingProcess.getUniversity())
+                        .nganh(trainingProcess.getMajor())
+                        .namTotNghiep(trainingProcess.getGraduationYear())
+                        .deTaiTotNghiep(trainingProcess.getThesisTitle())
+                        .nguoiHuongDan(trainingProcess.getInstructor())
+                        .graduationType(Optional.ofNullable(graduationTypeMap.getOrDefault(trainingProcess.getGraduationTypeId(),
+                                null)).isPresent()
                                 ? GraduationType.builder()
-                                .id(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getId())
-                                .loaiTotNghiep(graduationTypeMap.get(trainingProcess.getLoaiTotNghiepId()).getLoaiTotNghiep())
+                                .id(graduationTypeMap.get(trainingProcess.getGraduationTypeId()).getId())
+                                .loaiTotNghiep(graduationTypeMap.get(trainingProcess.getGraduationTypeId()).getGraduationType())
                                 .build()
                                 : null)
                         .build())
                 .toList();
 
-        Map<String, TdtMonHoc> subjectMap = subjectList.stream()
-                .collect(Collectors.toMap(TdtMonHoc::getMaMon, subject -> subject));
+        Map<String, TdtSubject> subjectMap = subjectList.stream()
+                .collect(Collectors.toMap(TdtSubject::getSubjectId, subject -> subject));
 
         List<SatisfactionScore> satisfactionScores = satisfactionScoreList.stream()
                 .map(satisfactionScore -> SatisfactionScore.builder()
                         .id(satisfactionScore.getId())
-                        .subject(this.buildSubject(subjectMap.getOrDefault(satisfactionScore.getMaMon(), null)))
-                        .hocKy(satisfactionScore.getHocKy())
-                        .diemHaiLong(satisfactionScore.getDiemHaiLong())
+                        .subject(this.buildSubject(subjectMap.getOrDefault(satisfactionScore.getSubjectId(), null)))
+                        .hocKy(satisfactionScore.getSemester())
+                        .diemHaiLong(satisfactionScore.getSatisfactoryScore())
                         .build())
                 .toList();
 
@@ -199,19 +200,19 @@ public class LecturerService {
                 .build();
     }
 
-    public Certificate buildCertificate(TdtChungChi certificateList) {
-        TdtLoaiChungChi certificateType = certificateTypeService.getCertificateTypeById(certificateList.getLoaiChungChi());
+    public Certificate buildCertificate(TdtCertificate certificateList) {
+        TdtCertificateType certificateType = certificateTypeService.getCertificateTypeById(certificateList.getCertificateType());
         return Certificate.builder()
                 .id(certificateList.getId())
                 .certificateType(CertificateType.builder()
-                        .maLoai(certificateType.getMaLoai())
-                        .tenLoai(certificateType.getPhanLoai())
+                        .maLoai(certificateType.getTypeId())
+                        .tenLoai(certificateType.getType())
                         .build())
-                .diem(certificateList.getDiem())
+                .diem(certificateList.getGrade())
                 .build();
     }
 
-    public Language getLanguageById(BigDecimal languageId, List<TdtNgonNgu> languageList) {
+    public Language getLanguageById(BigDecimal languageId, List<TdtLanguage> languageList) {
         return languageList.stream()
                 .filter(language -> language.getId().equals(languageId))
                 .map(this::buildLanguage)
@@ -219,41 +220,41 @@ public class LecturerService {
                 .orElse(null);
     }
 
-    public Language buildLanguage(TdtNgonNgu language) {
+    public Language buildLanguage(TdtLanguage language) {
         return Language.builder()
                 .id(language.getId())
-                .tenNgonNgu(language.getTenNgonNgu())
+                .tenNgonNgu(language.getLanguageName())
                 .build();
     }
 
-    public Level buildLevel(TdtTrinhDo level) {
+    public Level buildLevel(TdtDegree level) {
         return Level.builder()
                 .id(level.getId())
-                .trinhDo(level.getTrinhDo())
-                .kyHieu(level.getKyHieu())
+                .trinhDo(level.getDegree())
+                .kyHieu(level.getSignature())
                 .displayOrder(level.getDisplayOrder())
                 .build();
     }
 
-    private Subject buildSubject(TdtMonHoc subject) {
-        TdtNhomMon subjectGroup = subjectGroupService.getSubjectGroupById(subject.getMaNhom());
-        TdtLoaiMon subjectType = subjectTypeService.getSubjectTypeById(subject.getMaLoai());
+    private Subject buildSubject(TdtSubject subject) {
+        TdtSubjectGroup subjectGroup = subjectGroupService.getSubjectGroupById(subject.getGroupId());
+        TdtSubjectType subjectType = subjectTypeService.getSubjectTypeById(subject.getTypeId());
         return Subject.builder()
-                .maMon(subject.getMaMon())
-                .phanLoai(subjectType.getPhanLoai())
+                .maMon(subject.getSubjectId())
+                .phanLoai(subjectType.getType())
                 .subjectGroup(SubjectGroup.builder()
-                        .maNhom(subjectGroup.getMaNhom())
-                        .tenNhom(subjectGroup.getTenNhom())
+                        .maNhom(subjectGroup.getGroupId())
+                        .tenNhom(subjectGroup.getGroupName())
                         .build())
-                .tenMon("[".concat(subjectType.getKyHieu()).concat("] ").concat(subject.getTenMon()))
-                .soTiet(subject.getSoTiet())
+                .tenMon("[".concat(subjectType.getSignature()).concat("] ").concat(subject.getSubjectName()))
+                .soTiet(subject.getTotalShift())
                 .build();
     }
 
-    private ClassificationLecturers buildClassificationLecturers(TdtLoaiGiangVien classification) {
+    private ClassificationLecturers buildClassificationLecturers(TdtLecturerType classification) {
         return ClassificationLecturers.builder()
-                .maLoai(classification.getMaLoai())
-                .phanLoai(classification.getPhanLoai())
+                .maLoai(classification.getTypeId())
+                .phanLoai(classification.getType())
                 .build();
     }
 
@@ -276,8 +277,8 @@ public class LecturerService {
         return FAIL;
     }
 
-    private TdtGiangVien buildTdtGiangVienForUpdate(LecturerUpdate lecturer, String updateBy) {
-        return TdtGiangVien.builder()
+    private TdtLecturer buildTdtGiangVienForUpdate(LecturerUpdate lecturer, String updateBy) {
+        return TdtLecturer.builder()
                 .firstName(lecturer.getFirstName())
                 .fullName(lecturer.getFullName())
                 .gender(lecturer.getGender())
@@ -319,7 +320,7 @@ public class LecturerService {
         LecturerRequest request = LecturerRequest.builder()
                 .emailTdtu(lecturer.getEmailTdtu())
                 .build();
-        List<TdtGiangVien> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
+        List<TdtLecturer> lecturerList = lecturerRepository.findLecturer(this.buildLecturerCondition(request));
         if (ArrayUtil.isNotNullAndNotEmptyList(lecturerList)) {
             throw new BusinessException("40002",
                     MessageProperties.getInstance().getProperty(LECTURER_ALREADY)
@@ -330,8 +331,8 @@ public class LecturerService {
                 : FAIL;
     }
 
-    private TdtGiangVien buildTdtGiangVienForCreate(LecturerCreate lecturer, String createBy) {
-        return TdtGiangVien.builder()
+    private TdtLecturer buildTdtGiangVienForCreate(LecturerCreate lecturer, String createBy) {
+        return TdtLecturer.builder()
                 .firstName(lecturer.getFirstName())
                 .fullName(lecturer.getFullName())
                 .gender(lecturer.getGender())

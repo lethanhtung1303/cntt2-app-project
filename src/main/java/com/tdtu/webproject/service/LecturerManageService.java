@@ -1,9 +1,9 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtChungChi;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtDiemHaiLong;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtGiangVien;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtQuaTrinhDaoTao;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtCertificate;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtLecturer;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingProcess;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSatisfactoryScore;
 import com.tdtu.webproject.mybatis.condition.LecturerCondition;
 import com.tdtu.webproject.mybatis.condition.NormsLectureHoursCondition;
 import com.tdtu.webproject.mybatis.result.NormsLectureHoursResult;
@@ -26,25 +26,26 @@ public class LecturerManageService {
 
     private final LecturerRepository lecturerRepository;
 
-    public List<TdtChungChi> getAllCertificateOfLecturer(BigDecimal lecturerId, List<TdtChungChi> certificateList) {
+    public List<TdtCertificate> getAllCertificateOfLecturer(BigDecimal lecturerId, List<TdtCertificate> certificateList) {
         return certificateList.stream()
-                .filter(certificate -> certificate.getGiangVienId().equals(lecturerId))
+                .filter(certificate -> certificate.getLecturerId().equals(lecturerId))
                 .collect(Collectors.toList());
     }
 
-    public List<TdtQuaTrinhDaoTao> getAllTrainingProcessOfLecturer(BigDecimal lecturerId, List<TdtQuaTrinhDaoTao> trainingProcessList) {
+    public List<TdtTrainingProcess> getAllTrainingProcessOfLecturer(BigDecimal lecturerId, List<TdtTrainingProcess> trainingProcessList) {
         return trainingProcessList.stream()
-                .filter(trainingProcess -> trainingProcess.getGiangVienId().equals(lecturerId))
+                .filter(trainingProcess -> trainingProcess.getLecturerId().equals(lecturerId))
                 .collect(Collectors.toList());
     }
 
-    public List<TdtDiemHaiLong> getAllSatisfactionScoreListOfLecturer(BigDecimal lecturerId, List<TdtDiemHaiLong> satisfactionScoreList) {
+    public List<TdtSatisfactoryScore> getAllSatisfactionScoreListOfLecturer(BigDecimal lecturerId,
+                                                                            List<TdtSatisfactoryScore> satisfactionScoreList) {
         return satisfactionScoreList.stream()
-                .filter(satisfactionScore -> satisfactionScore.getGiangVienId().equals(lecturerId))
+                .filter(satisfactionScore -> satisfactionScore.getLecturerId().equals(lecturerId))
                 .collect(Collectors.toList());
     }
 
-    public List<TdtGiangVien> getAllLecturer() {
+    public List<TdtLecturer> getAllLecturer() {
         return lecturerRepository.findLecturer(LecturerCondition.builder().build());
     }
 
@@ -66,7 +67,7 @@ public class LecturerManageService {
     }
 
     public boolean checkNotExistLecturer(BigDecimal lecturerId) {
-        List<TdtGiangVien> lecturerList = lecturerRepository
+        List<TdtLecturer> lecturerList = lecturerRepository
                 .findLecturer(
                         LecturerCondition.builder()
                                 .lecturerIds(List.of(lecturerId))

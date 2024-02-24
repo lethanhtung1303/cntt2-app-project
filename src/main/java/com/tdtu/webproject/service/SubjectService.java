@@ -1,9 +1,9 @@
 package com.tdtu.webproject.service;
 
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtHeDaoTao;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtLoaiMon;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtMonHoc;
-import com.tdtu.mbGenerator.generate.mybatis.model.TdtNhomMon;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSubject;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSubjectGroup;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtSubjectType;
+import com.tdtu.mbGenerator.generate.mybatis.model.TdtTrainingSystem;
 import com.tdtu.webproject.exception.BusinessException;
 import com.tdtu.webproject.mybatis.condition.SubjectCondition;
 import com.tdtu.webproject.mybatis.condition.SubjectGroupCondition;
@@ -37,7 +37,7 @@ public class SubjectService {
     private final SubjectTypeRepository subjectTypeRepository;
     private final SubjectManageService subjectManageService;
 
-    public List<TdtMonHoc> getAllSubject() {
+    public List<TdtSubject> getAllSubject() {
         return subjectRepository.getAllSubject();
     }
 
@@ -48,7 +48,7 @@ public class SubjectService {
 
     public List<Subject> find(String subjectIds) {
         SubjectCondition condition = this.buildSubjectCondition(subjectIds);
-        List<TdtMonHoc> subjectList = subjectRepository.findSubject(condition);
+        List<TdtSubject> subjectList = subjectRepository.findSubject(condition);
         return Optional.ofNullable(subjectList).isPresent()
                 ? subjectList.stream()
                 .map(this::buildSubject)
@@ -56,18 +56,18 @@ public class SubjectService {
                 : Collections.emptyList();
     }
 
-    private Subject buildSubject(TdtMonHoc subject) {
-        TdtNhomMon subjectGroup = subjectGroupRepository.getSubjectGroupById(subject.getMaNhom());
-        TdtLoaiMon subjectType = subjectTypeRepository.getSubjectTypeById(subject.getMaLoai());
+    private Subject buildSubject(TdtSubject subject) {
+        TdtSubjectGroup subjectGroup = subjectGroupRepository.getSubjectGroupById(subject.getGroupId());
+        TdtSubjectType subjectType = subjectTypeRepository.getSubjectTypeById(subject.getTypeId());
         return Subject.builder()
-                .maMon(subject.getMaMon())
-                .phanLoai(subjectType.getPhanLoai())
+                .maMon(subject.getSubjectId())
+                .phanLoai(subjectType.getType())
                 .subjectGroup(SubjectGroup.builder()
-                        .maNhom(subjectGroup.getMaNhom())
-                        .tenNhom(subjectGroup.getTenNhom())
+                        .maNhom(subjectGroup.getGroupId())
+                        .tenNhom(subjectGroup.getGroupName())
                         .build())
-                .tenMon(subject.getTenMon())
-                .soTiet(subject.getSoTiet())
+                .tenMon(subject.getSubjectName())
+                .soTiet(subject.getTotalShift())
                 .build();
     }
 
@@ -87,7 +87,7 @@ public class SubjectService {
 
     public List<SubjectGroup> findSubjectGroup(String groupIds) {
         SubjectGroupCondition condition = this.buildSubjectGroupCondition(groupIds);
-        List<TdtNhomMon> subjectGroupList = subjectGroupRepository.findSubjectGroup(condition);
+        List<TdtSubjectGroup> subjectGroupList = subjectGroupRepository.findSubjectGroup(condition);
         return Optional.ofNullable(subjectGroupList).isPresent()
                 ? subjectGroupList.stream()
                 .map(this::buildSubjectGroup)
@@ -102,7 +102,7 @@ public class SubjectService {
 
     public List<TrainingSys> findSubjectTrainingSys(String trainingSysIds) {
         SubjectTrainingSysCondition condition = this.buildSubjectTrainingSysCondition(trainingSysIds);
-        List<TdtHeDaoTao> subjectGroupList = subjectTrainingSysRepository.findSubjectTrainingSys(condition);
+        List<TdtTrainingSystem> subjectGroupList = subjectTrainingSysRepository.findSubjectTrainingSys(condition);
         return Optional.ofNullable(subjectGroupList).isPresent()
                 ? subjectGroupList.stream()
                 .map(this::buildTrainingSys)
@@ -120,10 +120,10 @@ public class SubjectService {
                 .build();
     }
 
-    private TrainingSys buildTrainingSys(TdtHeDaoTao trainingSys) {
+    private TrainingSys buildTrainingSys(TdtTrainingSystem trainingSys) {
         return TrainingSys.builder()
-                .maHe(trainingSys.getMaHe())
-                .phanHe(trainingSys.getPhanHe())
+                .maHe(trainingSys.getSystemId())
+                .phanHe(trainingSys.getSubsystem())
                 .build();
     }
 
@@ -136,10 +136,10 @@ public class SubjectService {
                 .build();
     }
 
-    private SubjectGroup buildSubjectGroup(TdtNhomMon subjectGroup) {
+    private SubjectGroup buildSubjectGroup(TdtSubjectGroup subjectGroup) {
         return SubjectGroup.builder()
-                .maNhom(subjectGroup.getMaNhom())
-                .tenNhom(subjectGroup.getTenNhom())
+                .maNhom(subjectGroup.getGroupId())
+                .tenNhom(subjectGroup.getGroupName())
                 .build();
     }
 
@@ -161,13 +161,13 @@ public class SubjectService {
         );
     }
 
-    private TdtMonHoc buildTdtMonHocForCreate(SubjectCreate subjectCreate, String createBy) {
-        return TdtMonHoc.builder()
-                .maMon(subjectCreate.getMaMon())
-                .maNhom(subjectCreate.getMaNhom())
-                .tenMon(subjectCreate.getTenMon())
-                .soTiet(subjectCreate.getSoTiet())
-                .maLoai(subjectCreate.getMaLoai())
+    private TdtSubject buildTdtMonHocForCreate(SubjectCreate subjectCreate, String createBy) {
+        return TdtSubject.builder()
+                .subjectId(subjectCreate.getMaMon())
+                .groupId(subjectCreate.getMaNhom())
+                .subjectName(subjectCreate.getTenMon())
+                .totalShift(subjectCreate.getSoTiet())
+                .typeId(subjectCreate.getMaLoai())
                 .createdAt(DateUtil.getTimeNow())
                 .createdBy(createBy)
                 .build();
@@ -209,10 +209,10 @@ public class SubjectService {
         return FAIL;
     }
 
-    private TdtMonHoc buildTdtMonHocForUpdate(SubjectUpdate subject, String updateBy) {
-        return TdtMonHoc.builder()
-                .tenMon(subject.getTenMon())
-                .soTiet(subject.getSoTiet())
+    private TdtSubject buildTdtMonHocForUpdate(SubjectUpdate subject, String updateBy) {
+        return TdtSubject.builder()
+                .subjectName(subject.getTenMon())
+                .totalShift(subject.getSoTiet())
                 .updateBy(updateBy)
                 .updatedAt(DateUtil.getTimeNow())
                 .build();
