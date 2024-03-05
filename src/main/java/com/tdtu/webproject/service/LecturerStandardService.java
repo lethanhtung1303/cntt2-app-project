@@ -51,7 +51,7 @@ public class LecturerStandardService {
                 ? lecturerStandardRawData.stream()
                 .map(lecturer -> this.buildResponse(lecturer,
                         lecturerTrainingProcessMap.getOrDefault(lecturer.getId(), Collections.emptyList()),
-                        lecturerTotalNumberLessonsMap.getOrDefault(lecturer.getId(), null),
+                        lecturerTotalNumberLessonsMap.getOrDefault(lecturer.getId(), BigDecimal.ZERO),
                         trainingLanguageMap.getOrDefault(lecturer.getId(), Collections.emptyList()),
                         certificateMap.getOrDefault(lecturer.getId(), Collections.emptyList()),
                         satisfactionScoreMap.getOrDefault(lecturer.getId(), Collections.emptyList())))
@@ -116,7 +116,14 @@ public class LecturerStandardService {
 
         LecturerCertificateResult certificateStandard = this.findCertificate(certificate).orElse(null);
 
+        LecturerTrainingProcessResult highestTrainingProcess = trainingProcessList.stream().min(Comparator.comparing(LecturerTrainingProcessResult::getDisplayOrder)).orElse(null);
+
         return List.of(StandardDetail.builder()
+                .highestLevel(HighestLevel.builder()
+                        .level(Optional.ofNullable(highestTrainingProcess).isPresent() ? highestTrainingProcess.getLevel() : null)
+                        .graduationYear(Optional.ofNullable(highestTrainingProcess).isPresent() ? highestTrainingProcess.getGraduationYear() : null)
+                        .graduationType(Optional.ofNullable(highestTrainingProcess).isPresent() ? highestTrainingProcess.getGraduationType() : null)
+                        .build())
                 .trainingProcessStandard(trainingProcessStandard)
                 .totalNumberLessons(totalNumberLessons)
                 .certificate(CertificateStandard.builder()
