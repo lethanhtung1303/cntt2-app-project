@@ -831,6 +831,34 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AssignmentResponse'
+  /v1/uploadLectureTime:
+    post:
+      tags:
+        - Assignment
+      summary: Api for Teaching Assignment
+      operationId: uploadLectureTime
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UploadAssignmentRequest'
+      responses:
+        400:
+          $ref: '#/components/responses/webApiValidationError'
+        401:
+          $ref: '#/components/responses/401'
+        403:
+          $ref: '#/components/responses/403'
+        404:
+          $ref: '#/components/responses/404'
+        500:
+          $ref: '#/components/responses/500'
+        200:
+          description: Create Teaching Assignment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UploadAssignmentResponse'
   /v1/deleteTeachingHistory:
     delete:
       tags:
@@ -2611,6 +2639,21 @@ components:
           type: string
           description: Create By of Assignment
           example: 'createBy'
+    UploadAssignmentRequest:
+      type: object
+      required:
+        - assignments
+        - createBy
+      properties:
+        assignments:
+          type: array
+          minItems: 1
+          items:
+            $ref: '#/components/schemas/Assignment'
+        createBy:
+          type: string
+          description: Create By of Assignment
+          example: 'createBy'
     Assignment:
       description: New Assignment
       type: object
@@ -2637,6 +2680,17 @@ components:
           description: Ma He of Assignment
           example: 200
     AssignmentResponse:
+      type: object
+      properties:
+        status:
+          type: integer
+          format: int32
+          example: 200
+        message:
+          description: Message of the create Assignment
+          type: string
+          example: 'OK'
+    UploadAssignmentResponse:
       type: object
       properties:
         status:

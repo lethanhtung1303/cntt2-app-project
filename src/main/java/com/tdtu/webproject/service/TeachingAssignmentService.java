@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.util.List;
 
 import static com.tdtu.webproject.constant.Const.*;
 
@@ -53,5 +54,12 @@ public class TeachingAssignmentService {
                 .createdBy(createBy)
                 .createdAt(DateUtil.getTimeNow())
                 .build();
+    }
+
+    public String uploadAssignment(List<Assignment> assignments, String createBy) {
+        return assignments.stream()
+                .map(assignment -> buildTeachingHistoryForCreate(assignment, createBy))
+                .mapToInt(historyTeachingRepository::create)
+                .sum() == assignments.size() ? SUCCESSFUL : FAIL;
     }
 }
