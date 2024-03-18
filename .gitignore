@@ -1,0 +1,45 @@
+HELP.md
+.gradle
+build/
+!gradle/wrapper/gradle-wrapper.jar
+!**/src/main/**/build/
+!**/src/test/**/build/
+
+### STS ###
+.apt_generated
+.classpath
+.factorypath
+.project
+.settings
+.springBeans
+.sts4-cache
+bin/
+!**/src/main/**/bin/
+!**/src/test/**/bin/
+
+### IntelliJ IDEA ###
+.idea
+*.iws
+*.iml
+*.ipr
+out/
+!**/src/main/**/out/
+!**/src/test/**/out/
+
+### NetBeans ###
+/nbproject/private/
+/nbbuild/
+/dist/
+/nbdist/
+/.nb-gradle/
+
+### VS Code ###
+.vscode/
+apispecs/src/main/java/.openapi-generator
+apispecs/src/main/java/generater/openapi
+/apispecs/src/main/java/.openapi-generator-ignore
+/apispecs/src/main/java/pom.xml
+/apispecs/src/main/java/README.md
+/mbGenerator/src/main/java/com/tdtu/mbGenerator/generate/
+/mbGenerator/src/main/resources/com/tdtu/mbGenerator/generate/
+.DS_Store

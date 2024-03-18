@@ -1,0 +1,57 @@
+package {{package}};
+{{#imports}}import {{import}};
+{{/imports}}
+import com.fasterxml.jackson.annotation.JsonProperty;
+import javax.validation.constraints.*;
+import javax.validation.Valid;
+{{#models}}
+{{#model}}
+{{#vendorExtensions.x-custom-validate.date-range}}
+{{#-first}}
+import validator.DateRange;
+{{/-first}}
+{{/vendorExtensions.x-custom-validate.date-range}}
+{{#description}}
+/**
+* {{description}}
+**/
+{{/description}}
+
+@lombok.NoArgsConstructor
+@lombok.AllArgsConstructor
+@lombok.Builder
+@lombok.Data
+
+{{#vendorExtensions.x-custom-validate.date-range}}
+{{#-first}}
+@DateRange.List({
+{{/-first}}
+    @DateRange(
+        from ="{{from}}",
+        to = "{{to}}"
+    ),
+{{#-last}}
+})
+{{/-last}}
+{{/vendorExtensions.x-custom-validate.date-range}}
+
+public class {{classname}} {{#parent}}extends {{{parent}}}{{/parent}} { {{#vars}}
+    @JsonProperty("{{name}}"){{#useBeanValidation}}{{>beanValidation}}{{/useBeanValidation}}
+    private {{{datatype}}} {{name}};
+    {{#allowableValues}}
+    //{{^min}}public enum {{name}}Enum { {{#values}} {{.}}, {{/values}} };
+    {{/min}}
+    {{/allowableValues}}
+    {{/vars}}
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("class {{classname}} {\n");{{#parent}}
+        sb.append(" " + super.toString()).append("\n");{{/parent}}{{#vars}}
+        sb.append(" {{name}}: ").append({{name}}).append("\n");{{/vars}}
+        sb.append("}\n");
+        return sb.toString();
+    }
+}
+{{/model}}
+{{/models}}

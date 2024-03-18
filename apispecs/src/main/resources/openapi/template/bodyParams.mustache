@@ -1,0 +1,15 @@
+{{#isBodyParam}}
+{{^isFile}}
+@ApiParam(value = "{{{description}}}"{{#required}}, required = true{{/required}}{{#allowableValues}}, allowableValues = "{{#values}}{{{.}}}{{^-last}}, {{/-last}}{{#-last}}{{/-last}}{{/values}}"{{/allowableValues}}{{^isContainer}}{{#defaultValue}}, defaultValue = {{^isString}}"{{/isString}}{{#isString}}{{#isEnum}}"{{/isEnum}}{{/isString}}{{{defaultValue}}}{{^isString}}"{{/isString}}{{#isString}}{{#isEnum}}"{{/isEnum}}{{/isString}}{{/defaultValue}}{{/isContainer}})
+{{#useBeanValidation}}
+        @Valid
+{{/useBeanValidation}}
+        @RequestBody {{{dataType}}} {{paramName}}
+{{/isFile}}
+{{#isFile}}
+@ApiParam(value = "{{{description}}}")
+{{#useBeanValidation}}
+@Valid
+{{/useBeanValidation}}
+    @RequestBody {{#isListContainer}}List<{{/isListContainer}}MultipartFile{{#isListContainer}}>{{/isListContainer}} {{baseName}}{{/isFile}} {{#isModel}},
+    BindingResult bindingResult{{-index}}{{/isModel}}{{/isBodyParam}}
