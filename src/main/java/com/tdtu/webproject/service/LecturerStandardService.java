@@ -6,8 +6,7 @@ import com.tdtu.webproject.repository.LecturerRepository;
 import com.tdtu.webproject.utils.ArrayUtil;
 import com.tdtu.webproject.utils.DateUtil;
 import com.tdtu.webproject.utils.NumberUtil;
-import generater.openapi.model.MasterStandardDetailResponse;
-import generater.openapi.model.UniversityStandardDetailResponse;
+import generater.openapi.model.*;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -52,7 +51,7 @@ public class LecturerStandardService {
                 ? lecturerStandardRawData.stream()
                 .map(lecturer -> this.buildResponse(lecturer,
                         lecturerTrainingProcessMap.getOrDefault(lecturer.getId(), Collections.emptyList()),
-                        lecturerTotalNumberLessonsMap.getOrDefault(lecturer.getId(), null),
+                        lecturerTotalNumberLessonsMap.getOrDefault(lecturer.getId(), BigDecimal.ZERO),
                         trainingLanguageMap.getOrDefault(lecturer.getId(), Collections.emptyList()),
                         certificateMap.getOrDefault(lecturer.getId(), Collections.emptyList()),
                         satisfactionScoreMap.getOrDefault(lecturer.getId(), Collections.emptyList())))
@@ -74,8 +73,7 @@ public class LecturerStandardService {
         }
 
         String newSemesterStr = String.format("%04d%02d", year, month);
-
-        return NumberUtil.toBigDecimal(newSemesterStr).get();
+        return NumberUtil.toBigDecimal(newSemesterStr).orElse(null);
     }
 
     private UniversityStandardDetailResponse buildResponse(UniversityStandardDetailResponse lecturer,
@@ -90,7 +88,49 @@ public class LecturerStandardService {
         lecturer.setIsTeachingEnglish(this.checkHighQualityInspection(trainingProcessList, totalNumberLessons)
                 && this.checkTeachingEnglish(trainingProcessList, trainingLanguage, certificate, satisfactionScore));
         lecturer.setIsEnglishInternational(lecturer.getIsTeachingEnglish());
+        lecturer.setStandardDetail(this.setStandardDetail(trainingProcessList, trainingLanguage, totalNumberLessons, certificate, satisfactionScore));
         return lecturer;
+    }
+
+    private List<StandardDetail> setStandardDetail(List<LecturerTrainingProcessResult> trainingProcessList,
+                                                   List<LecturerTrainingLanguageResult> trainingLanguage,
+                                                   BigDecimal totalNumberLessons,
+                                                   List<LecturerCertificateResult> certificate,
+                                                   List<LecturerSatisfactionScoreResult> satisfactionScore) {
+
+        Map<String, Object> matchingProcessAndLanguage = this.findMatchingProcessAndLanguage(trainingProcessList, trainingLanguage);
+        TrainingProcessStandard trainingProcessStandard = TrainingProcessStandard.builder().build();
+        if (matchingProcessAndLanguage.containsKey("trainingProcess") && matchingProcessAndLanguage.containsKey("matchedLanguageResult")) {
+            LecturerTrainingProcessResult trainingProcess = (LecturerTrainingProcessResult) matchingProcessAndLanguage.get("trainingProcess");
+            LecturerTrainingLanguageResult matchedLanguageResult = (LecturerTrainingLanguageResult) matchingProcessAndLanguage.get("matchedLanguageResult");
+            trainingProcessStandard = TrainingProcessStandard.builder()
+                    .school(trainingProcess.getSchool())
+                    .majors(trainingProcess.getMajors())
+                    .graduationYear(trainingProcess.getGraduationYear())
+                    .graduationType(trainingProcess.getGraduationType())
+                    .level(trainingProcess.getLevel())
+                    .language(matchedLanguageResult.getLanguageName())
+                    .build();
+        }
+
+        LecturerCertificateResult certificateStandard = this.findCertificate(certificate).orElse(null);
+
+        LecturerTrainingProcessResult highestTrainingProcess = trainingProcessList.stream().min(Comparator.comparing(LecturerTrainingProcessResult::getDisplayOrder)).orElse(null);
+
+        return List.of(StandardDetail.builder()
+                .highestLevel(HighestLevel.builder()
+                        .level(Optional.ofNullable(highestTrainingProcess).isPresent() ? highestTrainingProcess.getLevel() : null)
+                        .graduationYear(Optional.ofNullable(highestTrainingProcess).isPresent() ? highestTrainingProcess.getGraduationYear() : null)
+                        .graduationType(Optional.ofNullable(highestTrainingProcess).isPresent() ? highestTrainingProcess.getGraduationType() : null)
+                        .build())
+                .trainingProcessStandard(trainingProcessStandard)
+                .totalNumberLessons(totalNumberLessons)
+                .certificate(CertificateStandard.builder()
+                        .certificateName(Optional.ofNullable(certificateStandard).isPresent() ? certificateStandard.getCertificateName() : null)
+                        .certificateScore(Optional.ofNullable(certificateStandard).isPresent() ? certificateStandard.getCertificateScore() : null)
+                        .build())
+                .averageSatisfaction(BigDecimal.valueOf(this.getAverageScore(satisfactionScore)))
+                .build());
     }
 
     private List<UniversityStandardDetailResponse> buildLecturerStandardDetailResponse(List<TdtLecturer> lecturerList) {
@@ -146,21 +186,43 @@ public class LecturerStandardService {
         return this.checkLanguage(trainingProcessList, trainingLanguage, certificate) && this.checkSatisfactionScore(satisfactionScore);
     }
 
-    private boolean checkLanguage(List<LecturerTrainingProcessResult> trainingProcessList, List<LecturerTrainingLanguageResult> trainingLanguage, List<LecturerCertificateResult> certificate) {
-        boolean languageCodeCondition = ArrayUtil.isNotNullAndNotEmptyList(trainingProcessList)
-                && ArrayUtil.isNotNullAndNotEmptyList(trainingLanguage)
-                && trainingProcessList.stream()
+    private Map<String, Object> findMatchingProcessAndLanguage(List<LecturerTrainingProcessResult> trainingProcessList, List<LecturerTrainingLanguageResult> trainingLanguage) {
+        Map<String, Object> result = new HashMap<>();
+
+        Optional<LecturerTrainingProcessResult> matchedTrainingProcess = trainingProcessList.stream()
+                .sorted(Comparator.comparing(LecturerTrainingProcessResult::getDisplayOrder))
                 .filter(trainingProcess -> trainingProcess.getDisplayOrder().compareTo(BigDecimal.valueOf(LEVEL_MASTER)) <= 0)
-                .anyMatch(trainingProcess ->
+                .filter(trainingProcess ->
                         trainingLanguage.stream()
                                 .anyMatch(languageResult ->
                                         languageResult.getTrainingProcessId().compareTo(trainingProcess.getTrainingProcessId()) == 0
                                                 && languageResult.getLanguageCode().compareTo(BigDecimal.valueOf(LANGUAGE_CODE_ENGLISH)) == 0
                                 )
-                );
+                )
+                .findFirst();
 
-        boolean certificateCondition = ArrayUtil.isNotNullAndNotEmptyList(certificate) && certificate.stream()
-                .anyMatch(result -> {
+        if (matchedTrainingProcess.isPresent()) {
+            LecturerTrainingProcessResult trainingProcess = matchedTrainingProcess.get();
+
+            LecturerTrainingLanguageResult matchedLanguageResult = trainingLanguage.stream()
+                    .filter(languageResult ->
+                            languageResult.getTrainingProcessId().compareTo(trainingProcess.getTrainingProcessId()) == 0
+                                    && languageResult.getLanguageCode().compareTo(BigDecimal.valueOf(LANGUAGE_CODE_ENGLISH)) == 0
+                    )
+                    .findFirst()
+                    .orElse(null);
+
+            result.put("trainingProcess", trainingProcess);
+            result.put("matchedLanguageResult", matchedLanguageResult);
+        }
+
+        return result;
+    }
+
+    private Optional<LecturerCertificateResult> findCertificate(List<LecturerCertificateResult> certificate) {
+        return certificate.stream()
+                .sorted(Comparator.comparing(LecturerCertificateResult::getCertificateCode))
+                .filter(result -> {
                     BigDecimal score = NumberUtil.toBigDecimal(result.getCertificateScore()).orElse(BigDecimal.ZERO);
                     BigDecimal threshold;
                     switch (Optional.ofNullable(result.getCertificateCode()).map(BigDecimal::intValue).orElse(Integer.MAX_VALUE)) {
@@ -182,21 +244,34 @@ public class LecturerStandardService {
                         default:
                             return false;
                     }
-
                     return score.compareTo(threshold) >= 0;
-                });
+                }).findFirst();
+    }
+
+    private boolean checkLanguage(List<LecturerTrainingProcessResult> trainingProcessList, List<LecturerTrainingLanguageResult> trainingLanguage, List<LecturerCertificateResult> certificate) {
+        Map<String, Object> matchingProcessAndLanguage = this.findMatchingProcessAndLanguage(trainingProcessList, trainingLanguage);
+        boolean languageCodeCondition = ArrayUtil.isNotNullAndNotEmptyList(trainingProcessList)
+                && ArrayUtil.isNotNullAndNotEmptyList(trainingLanguage)
+                && matchingProcessAndLanguage.containsKey("trainingProcess")
+                && matchingProcessAndLanguage.containsKey("matchedLanguageResult");
+
+        boolean certificateCondition = ArrayUtil.isNotNullAndNotEmptyList(certificate) && this.findCertificate(certificate).isPresent();
 
         return languageCodeCondition || certificateCondition;
+    }
+
+    private double getAverageScore(List<LecturerSatisfactionScoreResult> satisfactionScore) {
+        return satisfactionScore.stream()
+                .mapToDouble(result -> result.getSatisfactionScore().doubleValue())
+                .average()
+                .orElse(0.0);
     }
 
     private boolean checkSatisfactionScore(List<LecturerSatisfactionScoreResult> satisfactionScore) {
         if (!ArrayUtil.isNotNullAndNotEmptyList(satisfactionScore)) {
             return false;
         }
-        OptionalDouble averageScore = satisfactionScore.stream()
-                .mapToDouble(result -> result.getSatisfactionScore().doubleValue())
-                .average();
-        return averageScore.orElse(0.0) >= 5.2;
+        return this.getAverageScore(satisfactionScore) >= 5.2;
     }
 
     public List<MasterStandardDetailResponse> getMasterStandards() {
