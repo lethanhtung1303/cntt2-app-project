@@ -73,6 +73,7 @@ public class LecturerStandardService {
         }
 
         String newSemesterStr = String.format("%04d%02d", year, month);
+
         return NumberUtil.toBigDecimal(newSemesterStr).orElse(null);
     }
 
@@ -198,8 +199,7 @@ public class LecturerStandardService {
                                         languageResult.getTrainingProcessId().compareTo(trainingProcess.getTrainingProcessId()) == 0
                                                 && languageResult.getLanguageCode().compareTo(BigDecimal.valueOf(LANGUAGE_CODE_ENGLISH)) == 0
                                 )
-                )
-                .findFirst();
+                ).findFirst();
 
         if (matchedTrainingProcess.isPresent()) {
             LecturerTrainingProcessResult trainingProcess = matchedTrainingProcess.get();
@@ -244,6 +244,7 @@ public class LecturerStandardService {
                         default:
                             return false;
                     }
+
                     return score.compareTo(threshold) >= 0;
                 }).findFirst();
     }
