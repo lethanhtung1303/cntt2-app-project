@@ -2298,6 +2298,54 @@ components:
           type: boolean
           description: Is English International
           example: true
+        standardDetail:
+          type: array
+          items:
+            $ref: '#/components/schemas/StandardDetail'
+    StandardDetail:
+      type: object
+      properties:
+        highestLevel:
+          $ref: '#/components/schemas/HighestLevel'
+        trainingProcessStandard:
+          $ref: '#/components/schemas/TrainingProcessStandard'
+        totalNumberLessons:
+          type: number
+        certificate:
+          $ref: '#/components/schemas/CertificateStandard'
+        averageSatisfaction:
+          type: number
+    TrainingProcessStandard:
+      type: object
+      properties:
+        school:
+          type: string
+        majors:
+          type: string
+        graduationYear:
+          type: number
+        graduationType:
+          type: string
+        level:
+          type: string
+        language:
+          type: string
+    CertificateStandard:
+      type: object
+      properties:
+        certificateName:
+          type: string
+        certificateScore:
+          type: string
+    HighestLevel:
+      type: object
+      properties:
+        level:
+          type: string
+        graduationYear:
+          type: number
+        graduationType:
+          type: string
     MasterStandardsResponse:
       type: object
       properties:
