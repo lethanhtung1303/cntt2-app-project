@@ -4,6 +4,8 @@ import com.tdtu.webproject.service.TeachingAssignmentService;
 import generater.openapi.api.AssignmentApi;
 import generater.openapi.model.AssignmentRequest;
 import generater.openapi.model.AssignmentResponse;
+import generater.openapi.model.UploadAssignmentRequest;
+import generater.openapi.model.UploadAssignmentResponse;
 import io.swagger.annotations.ApiParam;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -30,6 +32,18 @@ public class TeachingAssignmentController implements AssignmentApi {
         return ResponseEntity.ok(AssignmentResponse.builder()
                 .status(HttpStatus.OK.value())
                 .message(teachingAssignmentService.createAssignment(assignmentRequest.getAssignment(), assignmentRequest.getCreateBy()))
+                .build());
+    }
+
+    @Override
+    public ResponseEntity<UploadAssignmentResponse> uploadLectureTime(
+            @ApiParam(value = "")
+            @Valid
+            @RequestBody UploadAssignmentRequest uploadAssignmentRequest,
+            BindingResult bindingResult1) {
+        return ResponseEntity.ok(UploadAssignmentResponse.builder()
+                .status(HttpStatus.OK.value())
+                .message(teachingAssignmentService.uploadAssignment(uploadAssignmentRequest.getAssignments(), uploadAssignmentRequest.getCreateBy()))
                 .build());
     }
 }

@@ -73,7 +73,6 @@ public class LecturerStandardService {
         }
 
         String newSemesterStr = String.format("%04d%02d", year, month);
-
         return NumberUtil.toBigDecimal(newSemesterStr).orElse(null);
     }
 
@@ -293,7 +292,9 @@ public class LecturerStandardService {
                 .filter(master -> {
                     List<LecturerTrainingProcessResult> matchingResults =
                             lecturerTrainingProcessMap.getOrDefault(master.getId(), Collections.emptyList()).stream()
-                                    .filter(result -> (result.getDisplayOrder().intValue() <= 3) && ((currentYear - result.getGraduationYear().intValue()) >= 2))
+                                    .filter(result ->
+                                            Optional.ofNullable(result.getDisplayOrder()).map(BigDecimal::intValue).orElse(Integer.MAX_VALUE) <= 3 // Handle null display order
+                                                    && currentYear - Optional.ofNullable(result.getGraduationYear()).map(BigDecimal::intValue).orElse(Integer.MAX_VALUE) >= 2) // Handle null graduation year
                                     .toList();
                     return !matchingResults.isEmpty();
                 })

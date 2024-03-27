@@ -47,11 +47,6 @@ public class HistoryTeachingRepositoryImp implements HistoryTeachingRepository {
 
     @Override
     public int create(TdtTeachingHistory record) {
-        int insert = teachingHistoryMapper.insertSelective(record);
-        if (insert == 0) {
-            return 0;
-        }
-
         HistoryTeachingCondition condition = HistoryTeachingCondition.builder()
                 .lecturerId(record.getLecturerId())
                 .semester(record.getSemesterId())
@@ -66,7 +61,18 @@ public class HistoryTeachingRepositoryImp implements HistoryTeachingRepository {
         Optional.ofNullable(condition.getSubjectId()).ifPresent(criteria::andSubjectIdEqualTo);
         Optional.ofNullable(condition.getTrainingSysId()).ifPresent(criteria::andSystemIdEqualTo);
 
-        TdtTeachingHistory historyTeaching = teachingHistoryMapper.selectByExample(example).stream().findFirst().orElse(null);
+        TdtTeachingHistory historyTeaching;
+        historyTeaching = teachingHistoryMapper.selectByExample(example).stream().findFirst().orElse(null);
+        if (Optional.ofNullable(historyTeaching).isPresent()) {
+            return teachingHistoryMapper.updateByExampleSelective(record, example);
+        }
+
+        int insert = teachingHistoryMapper.insertSelective(record);
+        if (insert == 0) {
+            return 0;
+        }
+
+        historyTeaching = teachingHistoryMapper.selectByExample(example).stream().findFirst().orElse(null);
         if (Optional.ofNullable(historyTeaching).isEmpty()) {
             return 0;
         }
